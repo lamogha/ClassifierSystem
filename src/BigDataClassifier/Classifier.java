@@ -7,8 +7,11 @@ package BigDataClassifier;
 
 /**
  *
- * @author u1457710
+ * @author lamogha
  */
 public class Classifier {
-    
+     public static void main(String args[]) throws Exception {
+        FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
+        f.fileEntry();
+    }
 }
