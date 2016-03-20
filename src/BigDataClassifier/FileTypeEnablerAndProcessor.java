@@ -4,6 +4,11 @@ and determine what classifier to use based on filetype
  */
 package BigDataClassifier;
 import java.io.*;
+
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
+
+
 import java.util.*;
 /**
  *
@@ -14,20 +19,31 @@ public class FileTypeEnablerAndProcessor {
     private static HashSet<String> unstructuredDataSetExt = new HashSet<String>();
     
     public void fileEntry () throws Exception{
-    File folder = new File("path_to_folder_containing_files");
+    File folder = new File("/workspace/data");
     
     FileTypeEnablerAndProcessor fp = new FileTypeEnablerAndProcessor();
-        
     fp.enableFileTypes();
         
-    for (final File fileEntry : folder.listFiles()) {
+    for (final File fileEntry : folder.listFiles()) 
+    {
             if (fileEntry.isDirectory()) {
                 fp.listFilesForFolder(fileEntry);
-            } else {
+            } else
+            {
                 //manipulate file here
                 String fileName = fileEntry.getName();
+                System.out.println(fileName);
+                if(!fileName.startsWith("."))
+                {
+                DataSource source = new DataSource(fileEntry.getAbsolutePath());
+                Instances dataset = source.getDataSet();
                 
-                callClassifier(fileEntry.getAbsolutePath(), fp.getFileExtension(fileName));
+                //Instances dataset = new Instances(new BufferedReader(new FileReader(fileEntry.getAbsolutePath())));
+           	  	System.out.println(dataset.toSummaryString());
+           	  	source.reset();
+           	  	
+                }
+                //callClassifier(fileEntry.getAbsolutePath(), fp.getFileExtension(fileName));
             }
     }
     
@@ -37,6 +53,7 @@ public class FileTypeEnablerAndProcessor {
         //structured data sets
         structuredDataSetExt.add("csv");
         structuredDataSetExt.add("xls");
+        structuredDataSetExt.add("arff");
         
         //unstructured data sets
         unstructuredDataSetExt.add("mp3");
@@ -51,8 +68,9 @@ public class FileTypeEnablerAndProcessor {
         } else {
             //manipulate file here
             String fileName = fileEntry.getName();
+            System.out.println(fileName);
             
-            callClassifier(fileEntry.getAbsolutePath(), this.getFileExtension(fileName));
+            //callClassifier(fileEntry.getAbsolutePath(), this.getFileExtension(fileName));
         }
     }
        
