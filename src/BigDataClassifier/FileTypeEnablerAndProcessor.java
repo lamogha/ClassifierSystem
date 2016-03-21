@@ -17,36 +17,45 @@ import java.util.*;
 public class FileTypeEnablerAndProcessor {
     private static HashSet<String> structuredDataSetExt = new HashSet<String>();
     private static HashSet<String> unstructuredDataSetExt = new HashSet<String>();
+    FileTypeEnablerAndProcessor fp;
     
     public void fileEntry () throws Exception{
-    File folder = new File("/workspace/data");
+    	
+    	File folder = new File("/workspace/data");
+    	fp  = new FileTypeEnablerAndProcessor();
+    	fp.enableFileTypes();
+        fp.processFolder(folder);
     
-    FileTypeEnablerAndProcessor fp = new FileTypeEnablerAndProcessor();
-    fp.enableFileTypes();
-        
-    for (final File fileEntry : folder.listFiles()) 
-    {
-            if (fileEntry.isDirectory()) {
-                fp.listFilesForFolder(fileEntry);
-            } else
-            {
-                //manipulate file here
-                String fileName = fileEntry.getName();
-                System.out.println(fileName);
-                if(!fileName.startsWith("."))
-                {
-                DataSource source = new DataSource(fileEntry.getAbsolutePath());
-                Instances dataset = source.getDataSet();
-                
-                //Instances dataset = new Instances(new BufferedReader(new FileReader(fileEntry.getAbsolutePath())));
-           	  	System.out.println(dataset.toSummaryString());
-           	  	source.reset();
-           	  	
-                }
-                //callClassifier(fileEntry.getAbsolutePath(), fp.getFileExtension(fileName));
-            }
     }
     
+    public void processFolder(File folder) throws Exception{
+    	
+        for (final File fileEntry : folder.listFiles()) 
+        {
+                if (fileEntry.isDirectory()) {
+                    this.processFolder(fileEntry);
+                    //fp.listFilesForFolder(fileEntry);
+                } else
+                {
+                    //manipulate file here
+                    String fileName = fileEntry.getName();
+                    System.out.println(fileName);
+                    
+                    if(!fileName.startsWith("."))
+                    {
+                    	
+                    DataSource source = new DataSource(fileEntry.getAbsolutePath());
+                    Instances dataset = source.getDataSet();
+                    
+                    //Instances dataset = new Instances(new BufferedReader(new FileReader(fileEntry.getAbsolutePath())));
+               	  	System.out.println(dataset.toSummaryString());
+               	  	source.reset();
+               	  	
+                    }
+                    //callClassifier(fileEntry.getAbsolutePath(), fp.getFileExtension(fileName));
+                }
+        }
+    	
     }
         
      public void enableFileTypes() {
