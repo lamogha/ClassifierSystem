@@ -5,8 +5,12 @@ and determine what classifier to use based on filetype
 package BigDataClassifier;
 import java.io.*;
 
+import weka.core.*;
 import weka.core.Instances;
+import weka.core.converters.CSVLoader;
 import weka.core.converters.ConverterUtils.DataSource;
+
+
 
 
 import java.util.*;
@@ -25,7 +29,7 @@ public class FileTypeEnablerAndProcessor {
     	fp  = new FileTypeEnablerAndProcessor();
     	fp.enableFileTypes();
         fp.processFolder(folder);
-    
+        
     }
     
     public void processFolder(File folder) throws Exception{
@@ -34,29 +38,44 @@ public class FileTypeEnablerAndProcessor {
         {
                 if (fileEntry.isDirectory()) {
                     this.processFolder(fileEntry);
-                    //fp.listFilesForFolder(fileEntry);
                 } else
                 {
                     //manipulate file here
                     String fileName = fileEntry.getName();
                     System.out.println(fileName);
                     
-                    if(!fileName.startsWith("."))
+                    if(!fileName.startsWith(".") && fileName.contains(".csv"))
                     {
-                    	
-                    DataSource source = new DataSource(fileEntry.getAbsolutePath());
-                    Instances dataset = source.getDataSet();
-                    
-                    //Instances dataset = new Instances(new BufferedReader(new FileReader(fileEntry.getAbsolutePath())));
-               	  	System.out.println(dataset.toSummaryString());
-               	  	source.reset();
-               	  	
+                    	CSVLoader loader = new CSVLoader();
+                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
+                    	Instances data = loader.getDataSet();
+                    	System.out.println(data.toSummaryString());
                     }
+                    
+                    else if (!fileName.startsWith(".") && fileName.contains(".txt")){
+                    	
+                    	System.out.println( "About to load text file " + fileName);
+                    	System.out.println("Name of path " + fileEntry.getParent());
+                    	
+                    	TextDirectoryToArff loader = new TextDirectoryToArff ();
+                		loader.createDataset(fileEntry.getParent());
+                		
+                		System.out.println("directory located " + fileEntry.getPath() );
+                		System.out.println((loader.createDataset(fileEntry.getParent())).toSummaryString());
+                		
+                    } else if (!fileName.startsWith(".")){
+                        
+                    	Instances data = new Instances(new BufferedReader(new FileReader(fileEntry.getAbsolutePath())));
+                    	System.out.println(data.toSummaryString());
+                    	
+                    }
+                    
+                  }
+                    
                     //callClassifier(fileEntry.getAbsolutePath(), fp.getFileExtension(fileName));
-                }
+             }
         }
     	
-    }
         
      public void enableFileTypes() {
         //structured data sets
