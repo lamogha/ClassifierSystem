@@ -58,7 +58,7 @@ public class FileTypeEnablerAndProcessor {
                     	System.out.println("Name of path " + fileEntry.getParent());
                     	
                     	TextDirectoryToArff loader = new TextDirectoryToArff ();
-                		loader.createDataset(fileEntry.getParent());
+                    	loader.createDataset(fileEntry.getParent());
                 		
                 		System.out.println("directory located " + fileEntry.getPath() );
                 		System.out.println((loader.createDataset(fileEntry.getParent())).toSummaryString());
