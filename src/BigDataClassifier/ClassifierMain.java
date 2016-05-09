@@ -12,7 +12,7 @@ import weka.core.Instances;
  *
  * @author lamogha
  */
-public class Classifier {
+public class ClassifierMain {
 
 	public static void main(String args[]) throws Exception {
     	//DataSource source = new DataSource("/workspace/data/Samsung-Galaxy-S3 Mini 2.csv");
