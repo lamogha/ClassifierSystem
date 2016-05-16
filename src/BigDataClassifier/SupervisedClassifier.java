@@ -28,7 +28,7 @@ public class SupervisedClassifier {
       public Classifier useNaiveBayes(Instances dataset) throws Exception{
     	  
     		  dataset.setClassIndex(dataset.numAttributes()-1);
-        	  NaiveBayes nb = new NaiveBayes();
+    		  NaiveBayes nb = new NaiveBayes();
         	  nb.buildClassifier(dataset);
         	  return nb;
         	 // System.out.println(nb.distributionForInstance(dataset.instance(15)));

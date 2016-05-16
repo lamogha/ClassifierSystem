@@ -20,7 +20,7 @@ public class UnsupervisedClassifier {
 		  newEm.buildClusterer(dataset);
    	 // System.out.println(nb.distributionForInstance(dataset.instance(15)));
    	 // System.out.println(nb.getCapabilities().toString());
- }
+     }
      
      public FarthestFirst useFarthestFirst(Instances dataset) throws Exception{
       	  
@@ -30,6 +30,10 @@ public class UnsupervisedClassifier {
   	     return newFf;
   	 // System.out.println(nb.distributionForInstance(dataset.instance(15)));
   	 // System.out.println(nb.getCapabilities().toString());
-}
+     }
+     
+     public void autoProbClass(Instances dataset) throws Exception {
+    	 
+     }
      
 }
