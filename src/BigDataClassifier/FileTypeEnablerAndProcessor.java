@@ -13,8 +13,8 @@ import java.util.*;
  * @author lamogha
  */
 public class FileTypeEnablerAndProcessor {
-    private static HashSet<String> structuredDataSetExt = new HashSet<String>();
-    private static HashSet<String> unstructuredDataSetExt = new HashSet<String>();
+    private static final HashSet<String> structuredDataSetExt = new HashSet<>();
+    private static final HashSet<String> unstructuredDataSetExt = new HashSet<>();
     FileTypeEnablerAndProcessor fp;
     SupervisedClassifier sc = new SupervisedClassifier();
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
@@ -23,7 +23,7 @@ public class FileTypeEnablerAndProcessor {
     
     public void fileEntry () throws Exception{
     	
-    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data");
+    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3");
     	fp  = new FileTypeEnablerAndProcessor();
     	fp.enableFileTypes();
         fp.processFolder(folder);
@@ -37,10 +37,6 @@ public class FileTypeEnablerAndProcessor {
     		testdata = new Instances(new BufferedReader(new FileReader
     				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3")));
         	System.out.println(traindata.toSummaryString());	
-        	sc.useNaiveBayesUpdateable(traindata);
-        	ce.evaluatorClassifier(traindata, traindata, sc.useNaiveBayesUpdateable(traindata));
-        	//ce.evaluatorClusterer(traindata, testdata);
-        	
     	}
     	else{
     		
@@ -60,8 +56,6 @@ public class FileTypeEnablerAndProcessor {
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
     	                    	System.out.println(traindata.toSummaryString());
-                                //sc.useNaiveBayesUpdateable(traindata);
-                                //ce.evaluatorClassifier(traindata, traindata, sc.useNaiveBayesUpdateable(traindata));
     	                    }
     	                    
     	                    else if (!fileName.startsWith(".") && fileName.contains(".txt"))
@@ -78,8 +72,8 @@ public class FileTypeEnablerAndProcessor {
     	                    	//create a new arff dataset instance from the text loader
     	                    	//Instances data = loader.createDataset(fileEntry.getParent());
 
-    	                		//System.out.println("directory located " + fileEntry.getPath() );
-    	                		System.out.println(traindata.toSummaryString());
+    	                	//System.out.println("directory located " + fileEntry.getPath() );
+    	                	System.out.println(traindata.toSummaryString());
     	                		
     	                    } else if (!fileName.startsWith("."))
                             {
@@ -87,9 +81,9 @@ public class FileTypeEnablerAndProcessor {
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(fileEntry.getAbsolutePath())));
     	                    	System.out.println(traindata.toSummaryString());
-                                //sc.useNaiveBayesUpdateable(traindata);
-                                //ce.evaluatorClassifier(traindata, traindata, sc.useNaiveBayesUpdateable(traindata));
-    	                    	//sc.useNaiveBayes(data);
+                                //sc.useNaiveBayes(traindata);
+                                ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
+    	                    	//sc.useNaiveBayes(traindata);
     	                    	//sc.useClassifierWithFilter(data);
     	                    	//uc.useEMClusterer(data);
     	                    	//uc.useFarthestFirst(data);
