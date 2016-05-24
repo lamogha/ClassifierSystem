@@ -4,7 +4,6 @@ import java.util.Random;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.clusterers.ClusterEvaluation;
-import weka.clusterers.Clusterer;
 import weka.core.Instances;
 
 public class ClassifierEvaluator {

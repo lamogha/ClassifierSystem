@@ -8,6 +8,9 @@ import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 import weka.core.converters.TextDirectoryLoader;
 import java.util.*;
+import weka.core.converters.DatabaseLoader;
+import weka.core.converters.JSONLoader;
+import weka.core.converters.XRFFLoader;
 /**
  *
  * @author lamogha
@@ -62,42 +65,41 @@ public class FileTypeEnablerAndProcessor {
                             {
     	                    	
     	                    	TextDirectoryLoader loader = new TextDirectoryLoader ();
-    	                    	System.out.println("loader object created");
-
     	                    	System.out.println( "About to load text file " + fileName);
     	                    	System.out.println("Name of path " + fileEntry.getAbsolutePath());
-    	                    	
     	                    	loader.setSource(folder);
     	                    	traindata = loader.getDataSet();
-    	                    	//create a new arff dataset instance from the text loader
-    	                    	//Instances data = loader.createDataset(fileEntry.getParent());
-
-    	                	//System.out.println("directory located " + fileEntry.getPath() );
     	                	System.out.println(traindata.toSummaryString());
     	                		
-    	                    } else if (!fileName.startsWith("."))
+    	                    } 
+                            else if (!fileName.startsWith(".") && fileName.contains(".json")){
+                                JSONLoader loader = new JSONLoader();
+    	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
+                            }
+                            else if (!fileName.startsWith(".") && fileName.contains(".xrff")){
+                                XRFFLoader loader = new XRFFLoader();
+    	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
+                            }
+                            else if (!fileName.startsWith("."))
                             {
-    	                        
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(fileEntry.getAbsolutePath())));
     	                    	System.out.println(traindata.toSummaryString());
                                 //sc.useNaiveBayes(traindata);
                                 ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
-    	                    	//sc.useNaiveBayes(traindata);
-    	                    	//sc.useClassifierWithFilter(data);
-    	                    	//uc.useEMClusterer(data);
-    	                    	//uc.useFarthestFirst(data);
     	                    }
-                            /**
-                            if (traindata.checkForStringAttributes() == false){
-                            sc.useNaiveBayesUpdateable(traindata);
-                            ce.evaluatorClassifier(traindata, traindata, sc.useNaiveBayesUpdateable(traindata));
+                            else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
+                                DatabaseLoader loader = new DatabaseLoader();
+                                loader.connectToDatabase();
+    	                    	loader.setSource("url", "username", "pwd" );
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
                             }
-                            else{
-                            System.out.println("string attibute present");
-                            }
-                                    */
-                            
+                        
     	                  }
                                 	
     	                    //callClassifier(fileEntry.getAbsolutePath(), fp.getFileExtension(fileName));
@@ -155,7 +157,4 @@ public class FileTypeEnablerAndProcessor {
             sc.supervisedClassifier(filePathName);
         }
     }
-          public static void useSupervisedML(){
-        	  
-          }
 }
