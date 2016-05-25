@@ -4,32 +4,29 @@ and determine what classifier to use based on filetype
  */
 package BigDataClassifier;
 import java.io.*;
-
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
-import weka.core.converters.ConverterUtils.DataSource;
-
-
-
-
 import weka.core.converters.TextDirectoryLoader;
-
 import java.util.*;
+import weka.core.converters.DatabaseLoader;
+import weka.core.converters.JSONLoader;
+import weka.core.converters.XRFFLoader;
 /**
  *
  * @author lamogha
  */
 public class FileTypeEnablerAndProcessor {
-    private static HashSet<String> structuredDataSetExt = new HashSet<String>();
-    private static HashSet<String> unstructuredDataSetExt = new HashSet<String>();
+    private static final HashSet<String> structuredDataSetExt = new HashSet<>();
+    private static final HashSet<String> unstructuredDataSetExt = new HashSet<>();
     FileTypeEnablerAndProcessor fp;
     SupervisedClassifier sc = new SupervisedClassifier();
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
     ClassifierEvaluator ce = new ClassifierEvaluator();
+    Instances traindata, testdata;
     
     public void fileEntry () throws Exception{
     	
-    	File folder = new File("/workspace/data");
+    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3");
     	fp  = new FileTypeEnablerAndProcessor();
     	fp.enableFileTypes();
         fp.processFolder(folder);
@@ -39,16 +36,10 @@ public class FileTypeEnablerAndProcessor {
     public void processFolder(File folder) throws Exception{
     	
     	if(!folder.isDirectory()){
-    		Instances traindata = new Instances(new BufferedReader(new FileReader(folder)));
-    		Instances testdata = new Instances(new BufferedReader(new FileReader
-    				("/workspace/data/data2/data3")));
+    		traindata = new Instances(new BufferedReader(new FileReader(folder)));
+    		testdata = new Instances(new BufferedReader(new FileReader
+    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3")));
         	System.out.println(traindata.toSummaryString());	
-        	//sc.useNaiveBayes(traindata);
-        	//ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
-        	//ce.evaluatorClusterer(traindata, testdata);
-        	//ce.evaluator(traindata, testdata, sc.useNaiveBayes(traindata));
-
-        	
     	}
     	else{
     		
@@ -66,38 +57,51 @@ public class FileTypeEnablerAndProcessor {
     	                    {
     	                    	CSVLoader loader = new CSVLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
-    	                    	Instances data = loader.getDataSet();
-    	                    	System.out.println(data.toSummaryString());
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
     	                    }
     	                    
-    	                    else if (!fileName.startsWith(".") && fileName.contains(".txt")){
+    	                    else if (!fileName.startsWith(".") && fileName.contains(".txt"))
+                            {
     	                    	
     	                    	TextDirectoryLoader loader = new TextDirectoryLoader ();
-    	                    	System.out.println("loader object created");
-
     	                    	System.out.println( "About to load text file " + fileName);
     	                    	System.out.println("Name of path " + fileEntry.getAbsolutePath());
-    	                    	
     	                    	loader.setSource(folder);
-    	                    	Instances data = loader.getDataSet();
-    	                    	//create a new arff dataset instance from the text loader
-    	                    	//Instances data = loader.createDataset(fileEntry.getParent());
-
-    	                		//System.out.println("directory located " + fileEntry.getPath() );
-    	                		System.out.println(data.toSummaryString());
+    	                    	traindata = loader.getDataSet();
+    	                	System.out.println(traindata.toSummaryString());
     	                		
-    	                    } else if (!fileName.startsWith(".")){
-    	                        
-    	                    	Instances data = new Instances(new BufferedReader(new FileReader
+    	                    } 
+                            else if (!fileName.startsWith(".") && fileName.contains(".json")){
+                                JSONLoader loader = new JSONLoader();
+    	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
+                            }
+                            else if (!fileName.startsWith(".") && fileName.contains(".xrff")){
+                                XRFFLoader loader = new XRFFLoader();
+    	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
+                            }
+                            else if (!fileName.startsWith("."))
+                            {
+    	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(fileEntry.getAbsolutePath())));
-    	                    	System.out.println(data.toSummaryString());
-    	                    	//sc.useNaiveBayes(data);
-    	                    	//sc.useClassifierWithFilter(data);
-    	                    	//uc.useEMClusterer(data);
-    	                    	//uc.useFarthestFirst(data);
+    	                    	System.out.println(traindata.toSummaryString());
+                                //sc.useNaiveBayes(traindata);
+                                ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
     	                    }
-    	                    
+                            else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
+                                DatabaseLoader loader = new DatabaseLoader();
+                                loader.connectToDatabase();
+    	                    	loader.setSource("url", "username", "pwd" );
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
+                            }
+                        
     	                  }
+                                	
     	                    //callClassifier(fileEntry.getAbsolutePath(), fp.getFileExtension(fileName));
     	             }
     		
@@ -153,7 +157,4 @@ public class FileTypeEnablerAndProcessor {
             sc.supervisedClassifier(filePathName);
         }
     }
-          public static void useSupervisedML(){
-        	  
-          }
 }
