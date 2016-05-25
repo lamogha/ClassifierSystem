@@ -12,7 +12,7 @@ public class JdbcConnectorTest {
            String url = "jdbc:mysql://adegokeobasa.me:3306/classic_models";
            Class.forName ("com.mysql.jdbc.Driver");
            System.out.println("Driver loaded...");
-           conn = DriverManager.getConnection (url,"lamogha","@mmyPHD");
+           conn = DriverManager.getConnection (url,"lamogha","l@mmyPHD");
            System.out.println ("Database connection established");
        }
        catch (Exception e)
