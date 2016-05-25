@@ -4,15 +4,11 @@
  * and open the template in the editor.
  */
 package BigDataClassifier;
-import java.io.*;
-import weka.*;
-import weka.core.converters.*;
-import weka.core.Instances;
 /**
- *
+ *Starts the processing of the dataset to be classified or clustered
  * @author lamogha
  */
-public class Classifier {
+public class ClassifierMain {
 
 	public static void main(String args[]) throws Exception {
     	//DataSource source = new DataSource("/workspace/data/Samsung-Galaxy-S3 Mini 2.csv");
