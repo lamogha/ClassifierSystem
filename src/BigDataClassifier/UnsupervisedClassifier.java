@@ -15,10 +15,18 @@ public class UnsupervisedClassifier {
      
      public void useEMClusterer(Instances dataset) throws Exception{
    	  
-		  dataset.setClassIndex(dataset.numAttributes()-1);
+		  //dataset.setClassIndex(dataset.numAttributes()-1);
 		  EM newEm = new EM();
+                  newEm.setNumClusters(4);
 		  newEm.buildClusterer(dataset);
-   	 // System.out.println(nb.distributionForInstance(dataset.instance(15)));
+                  System.out.println(newEm);
+                  
+                  //to cluster a new instance
+                  //newEm.clusterInstance(instance);
+                  
+                  //return an array of class membership probabilities
+                  //newEm.distributionForInstance(instance);
+          // System.out.println(nb.distributionForInstance(dataset.instance(15)));
    	 // System.out.println(nb.getCapabilities().toString());
      }
      

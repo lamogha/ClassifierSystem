@@ -90,7 +90,8 @@ public class FileTypeEnablerAndProcessor {
     	                    			(fileEntry.getAbsolutePath())));
     	                    	System.out.println(traindata.toSummaryString());
                                 //sc.useNaiveBayes(traindata);
-                                ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
+                                uc.useEMClusterer(traindata);
+                                //ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
     	                    }
                             else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
                                 DatabaseLoader loader = new DatabaseLoader();
