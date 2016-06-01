@@ -4,6 +4,16 @@
  * and open the template in the editor.
  */
 package BigDataClassifier;
+
+import java.io.File;
+
+import weka.core.Instances;
+import weka.core.converters.ArffSaver;
+import weka.core.converters.DatabaseLoader;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 /**
  *Starts the processing of the dataset to be classified or clustered
  * @author lamogha
@@ -11,17 +21,27 @@ package BigDataClassifier;
 public class ClassifierMain {
 
 	public static void main(String args[]) throws Exception {
-    	//DataSource source = new DataSource("/workspace/data/Samsung-Galaxy-S3 Mini 2.csv");
-    	//Instances dataset = source.getDataSet();
-    	//Instances dataset = new Instances(new BufferedReader(new FileReader("/workspace/data/ReutersCorn-test.arff")));
+		/**
+		Class.forName ("com.mysql.jdbc.Driver");
+        System.out.println("Driver loaded...");
+        Connection conn = DriverManager.getConnection ("jdbc:mysql://adegokeobasa.me:3306/classic_models","lamogha","l@mmyPHD");
+        System.out.println("connection established...");
+        
+        DatabaseLoader loader = new DatabaseLoader();
+        loader.connectToDatabase();
+    	loader.setSource("jdbc:mysql://adegokeobasa.me:3306/classic_models/customers", "lamogha", "l@mmyPHD" );
+    	Instances traindata = loader.getDataSet();
+    	System.out.println(traindata.toSummaryString());
     	 
-    	 //System.out.println(dataset.toSummaryString());
+    	ArffSaver saver = new ArffSaver();
+    	 saver.setInstances(traindata);
+    	 saver.setFile(new File("/workspace/data/classic_models.arff"));
+    	 saver.writeBatch();
     	 
-    	 //ArffSaver saver = new ArffSaver();
-    	 //saver.setInstances(dataset);
-    	 //saver.setFile(new File("/workspace/data/ReutersCorn-test-new.arff"));
-    	 //saver.writeBatch();
-        FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
+    	 conn.close();
+    	 
+        */
+		FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
         f.fileEntry();
     }
 }
