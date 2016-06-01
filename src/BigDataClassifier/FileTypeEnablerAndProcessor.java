@@ -4,10 +4,14 @@ and determine what classifier to use based on filetype
  */
 package BigDataClassifier;
 import java.io.*;
+
 import weka.core.Instances;
+import weka.core.UnassignedClassException;
 import weka.core.converters.CSVLoader;
 import weka.core.converters.TextDirectoryLoader;
+
 import java.util.*;
+
 import weka.core.converters.DatabaseLoader;
 import weka.core.converters.JSONLoader;
 import weka.core.converters.XRFFLoader;
@@ -26,7 +30,7 @@ public class FileTypeEnablerAndProcessor {
     
     public void fileEntry () throws Exception{
     	
-    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3");
+    	File folder = new File("/workspace/data/data2/data3");
     	fp  = new FileTypeEnablerAndProcessor();
     	fp.enableFileTypes();
         fp.processFolder(folder);
@@ -38,7 +42,7 @@ public class FileTypeEnablerAndProcessor {
     	if(!folder.isDirectory()){
     		traindata = new Instances(new BufferedReader(new FileReader(folder)));
     		testdata = new Instances(new BufferedReader(new FileReader
-    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3")));
+    				("/workspace/data/data2/data3")));
         	System.out.println(traindata.toSummaryString());	
     	}
     	else{
@@ -52,7 +56,7 @@ public class FileTypeEnablerAndProcessor {
     	                    //manipulate file here
     	                    String fileName = fileEntry.getName();
     	                    System.out.println(fileName);
-    	                    
+    	                  
     	                    if(!fileName.startsWith(".") && (fileName.contains(".csv")||fileName.contains(".xls")))
     	                    {
     	                    	CSVLoader loader = new CSVLoader();
@@ -89,20 +93,38 @@ public class FileTypeEnablerAndProcessor {
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(fileEntry.getAbsolutePath())));
     	                    	System.out.println(traindata.toSummaryString());
+    	                    	
+    	                    	if(traindata.attribute("class") != null || traindata.attribute("Class") != null) {
+    	                    		System.out.println("class attribute found");
+    	                    		//use supervised algorithm
+    	                    	} else {
+    	                    		System.out.println("class attribute not found");
+    	                    	}
+    	                    	
+    	                    	/**
+    	                    	try {
+    	                    		traindata.classAttribute();
+    	                    		
+    	                    		//use supervised
+    	                    		System.out.println("Class attribute found.");
+    	                    	} catch(UnassignedClassException uce) {
+    	                    		//use unsupervised
+    	                    		System.out.println("Class attribute not found.");
+    	                    	}**/
                                 //sc.useNaiveBayes(traindata);
-                                uc.useEMClusterer(traindata);
+                                //uc.useEMClusterer(traindata);
                                 //ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
     	                    }
                             else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
                                 DatabaseLoader loader = new DatabaseLoader();
                                 loader.connectToDatabase();
-    	                    	loader.setSource("url", "username", "pwd" );
+    	                    	loader.setSource("jdbc:mysql://adegokeobasa.me:3306/classic_models", "lamogha", "l@mmyPHD" );
     	                    	traindata = loader.getDataSet();
     	                    	System.out.println(traindata.toSummaryString());
                             }
                         
     	                  }
-                                	
+    	                      	
     	                    //callClassifier(fileEntry.getAbsolutePath(), fp.getFileExtension(fileName));
     	             }
     		

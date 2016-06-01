@@ -101,7 +101,7 @@
 @attribute breast {'left','right'}
 @attribute breast-quad {'left_up','left_low','right_up','right_low','central'}
 @attribute 'irradiat' {'yes','no'}
-@attribute 'Class' {'no-recurrence-events','recurrence-events'}
+@attribute 'class' {'no-recurrence-events','recurrence-events'}
 @data
 '40-49','premeno','15-19','0-2','yes','3','right','left_up','no','recurrence-events'
 '50-59','ge40','15-19','0-2','no','1','right','central','no','no-recurrence-events'
