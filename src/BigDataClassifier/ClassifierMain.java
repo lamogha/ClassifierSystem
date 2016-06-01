@@ -21,7 +21,7 @@ import java.sql.DriverManager;
 public class ClassifierMain {
 
 	public static void main(String args[]) throws Exception {
-		/**
+	/**
 		Class.forName ("com.mysql.jdbc.Driver");
         System.out.println("Driver loaded...");
         Connection conn = DriverManager.getConnection ("jdbc:mysql://adegokeobasa.me:3306/classic_models","lamogha","l@mmyPHD");
@@ -41,7 +41,7 @@ public class ClassifierMain {
     	 conn.close();
     	 
         */
-		FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
+	FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
         f.fileEntry();
     }
 }

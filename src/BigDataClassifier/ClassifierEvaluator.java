@@ -8,6 +8,9 @@ import weka.clusterers.Clusterer;
 import weka.core.Instances;
 
 public class ClassifierEvaluator {
+    
+    public int trainSize;
+    public int testSize;
 	
 	 public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception{
    	  
@@ -24,19 +27,30 @@ public class ClassifierEvaluator {
               if (randData.classAttribute().isNominal())
                   randData.stratify(folds);
               //cross-validate
-              for(int n=0; n<folds; n++){
+                for(int n=0; n<folds; n++)
+                {
                    Evaluation eval = new Evaluation (trainDataset);
                     trainDataset = randData.trainCV(folds, n);
+                    System.out.println("Train dataset size is = "+ trainDataset.size());
                     testDataset = randData.testCV(folds, n);
+                    System.out.println("Test dataset size is = "+ testDataset.size());
                     eval.evaluateModel(cs, testDataset);
                     System.out.println(eval.toSummaryString("Evaluation results:\n", false));
                     System.out.println(eval.toMatrixString("Confusion Matrix for this " + (n+1) +"/" + folds));
-              }
+                    this.trainSize = trainDataset.size();
+                    this.testSize = testDataset.size();
+                }
               //eval.crossValidateModel(cs, trainDataset, folds, rand);
- 		  
-     }
-	 
-	 public void evaluatorClusterer(Instances trainDataset, Instances testDataset, Clusterer clusterer) throws Exception{
+         }
+
+    /**
+     *
+     * @param trainDataset
+     * @param testDataset
+     * @param clusterer
+     * @throws Exception
+     */
+    public void evaluatorClusterer(Instances trainDataset, Instances testDataset, Clusterer clusterer) throws Exception{
 	   
   	      ClusterEvaluation eval = new ClusterEvaluation ();
               eval.setClusterer(clusterer);

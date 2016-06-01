@@ -25,7 +25,9 @@ public class SupervisedClassifier {
       
       /**
        * TODO 
+     * @param dataset
      * @return a probabilistic classifier type 
+     * @throws java.lang.Exception 
       */
       public Classifier useNaiveBayes(Instances dataset) throws Exception{
     	  

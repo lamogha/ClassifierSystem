@@ -11,6 +11,8 @@ import weka.core.converters.CSVLoader;
 import weka.core.converters.TextDirectoryLoader;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import weka.core.converters.DatabaseLoader;
 import weka.core.converters.JSONLoader;
@@ -30,7 +32,7 @@ public class FileTypeEnablerAndProcessor {
     
     public void fileEntry () throws Exception{
     	
-    	File folder = new File("/workspace/data/data2/data3");
+    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3");
     	fp  = new FileTypeEnablerAndProcessor();
     	fp.enableFileTypes();
         fp.processFolder(folder);
@@ -42,7 +44,7 @@ public class FileTypeEnablerAndProcessor {
     	if(!folder.isDirectory()){
     		traindata = new Instances(new BufferedReader(new FileReader(folder)));
     		testdata = new Instances(new BufferedReader(new FileReader
-    				("/workspace/data/data2/data3")));
+    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3")));
         	System.out.println(traindata.toSummaryString());	
     	}
     	else{
@@ -93,24 +95,7 @@ public class FileTypeEnablerAndProcessor {
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(fileEntry.getAbsolutePath())));
     	                    	System.out.println(traindata.toSummaryString());
-    	                    	
-    	                    	if(traindata.attribute("class") != null || traindata.attribute("Class") != null) {
-    	                    		System.out.println("class attribute found");
-    	                    		//use supervised algorithm
-    	                    	} else {
-    	                    		System.out.println("class attribute not found");
-    	                    	}
-    	                    	
-    	                    	/**
-    	                    	try {
-    	                    		traindata.classAttribute();
-    	                    		
-    	                    		//use supervised
-    	                    		System.out.println("Class attribute found.");
-    	                    	} catch(UnassignedClassException uce) {
-    	                    		//use unsupervised
-    	                    		System.out.println("Class attribute not found.");
-    	                    	}**/
+                                this.chooseClassifier();
                                 //sc.useNaiveBayes(traindata);
                                 //uc.useEMClusterer(traindata);
                                 //ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
@@ -169,15 +154,38 @@ public class FileTypeEnablerAndProcessor {
         return ext;
     }
     
-          public static void callClassifier(String filePathName, String ext) {
-        if (unstructuredDataSetExt.contains(ext)) {
+        public static void callClassifier(String filePathName, String ext) {
+           if (unstructuredDataSetExt.contains(ext)) {
             UnsupervisedClassifier uc = new UnsupervisedClassifier();
             uc.unsupervisedClassifier(filePathName);
-        }
+           }
         
-        if (structuredDataSetExt.contains(ext)) {
+           if (structuredDataSetExt.contains(ext)) {
             SupervisedClassifier sc = new SupervisedClassifier();
             sc.supervisedClassifier(filePathName);
+           }
+       }
+        
+        public void chooseClassifier(){
+            /**Choose supervised classifier if a class attribute already exists in the dataset
+             OR if the size of the training data is greater than or equal to the test data size
+             */
+            
+            if(traindata.attribute("class") != null || traindata.attribute("Class") != null 
+                    && traindata.size()>= testdata.size()) 
+            {
+    	        System.out.println("class attribute found....");
+                try {
+                    //use supervised algorithm
+                    ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
+                } catch (Exception ex) {
+                    Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+    	    } else 
+            {
+    	        System.out.println("class attribute not found");
+                 //use unsupervised
+    	    }
+            
         }
-    }
 }
