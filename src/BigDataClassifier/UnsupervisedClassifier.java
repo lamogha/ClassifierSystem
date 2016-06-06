@@ -3,10 +3,13 @@
  */
 package BigDataClassifier;
 
+import java.util.HashSet;
+import java.util.Vector;
 import weka.clusterers.*;
 import weka.core.Instances;
 
 public class UnsupervisedClassifier {
+    private static final HashSet<String> cloud = new HashSet<>();
     
      public void unsupervisedClassifier(String filePathName) {
         //call your unsupervised classifier here with the path to the file 
@@ -41,7 +44,31 @@ public class UnsupervisedClassifier {
      }
      
      public void autoProbClass(Instances dataset) throws Exception {
-    	 //
+    	 //Define the intial zone of influence ZI
+         double initialZI = 0.3;
+         int k = 1;
+         Instances xk = new Instances(dataset);
+         double ncZI= initialZI;
+         
+         //start reading in the instances
+         while (!dataset.isEmpty() && xk.equals(dataset.containsAll(dataset))){
+             if (k == 1)
+             {
+                 String nc = dataset.get(k).toString() + " Class " + k;
+                 double ncFocalpoint = xk.meanOrMode(k);
+                 //ncZI= initialZI;
+                 int ncPoints = 1;
+                 cloud.add(nc);
+             }
+             else{
+                 if (xk.get(k).attribute(0).numValues()<2*ncZI){
+                     
+                 }
+                 
+             }
+           
+                
+         }
          
      }
      
