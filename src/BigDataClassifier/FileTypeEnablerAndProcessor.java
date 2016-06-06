@@ -96,9 +96,6 @@ public class FileTypeEnablerAndProcessor {
     	                    			(fileEntry.getAbsolutePath())));
     	                    	System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
-                                //sc.useNaiveBayes(traindata);
-                                //uc.useEMClusterer(traindata);
-                                //ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
     	                    }
                             else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
                                 DatabaseLoader loader = new DatabaseLoader();
@@ -109,8 +106,6 @@ public class FileTypeEnablerAndProcessor {
                             }
                         
     	                  }
-    	                      	
-    	                    //callClassifier(fileEntry.getAbsolutePath(), fp.getFileExtension(fileName));
     	             }
     		
     	}
@@ -167,21 +162,31 @@ public class FileTypeEnablerAndProcessor {
        }
         
         public void chooseClassifier(){
-            /**Choose supervised classifier if a class attribute already exists in the dataset
-             OR if the size of the training data is greater than or equal to the test data size
+            /**We can use either a supervised or an un-supervised algorithm if a class attribute already
+             * exists in the dataset (meaning some labeled instances exists),
+             * depending on the size of the training set, the decision is taken.
              */
             
-            if(traindata.attribute("class") != null || traindata.attribute("Class") != null 
-                    && traindata.size()>= testdata.size()) 
+            if(traindata.attribute("class") != null || traindata.attribute("Class") != null
+                    && traindata.size()>= testdata.size())
             {
-    	        System.out.println("class attribute found....");
+    	        System.out.println("class attribute found...." );
+                System.out.println("Initial training set is larger than the test set...." + traindata.size() );
+                
+                //Go ahead to generate folds
                 try {
-                    //use supervised algorithm
-                    ce.evaluatorClassifier(traindata, testdata, sc.useNaiveBayes(traindata));
+                    ce.generateFolds(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }
-    	    } else 
+
+    	    }
+            /**
+             * When there is no class attribute to show labeled instances exists
+             * then use an un-supervised algorithm straight;
+             * no need for the cross-validation folds.
+            */
+            else 
             {
     	        System.out.println("class attribute not found");
                  //use unsupervised

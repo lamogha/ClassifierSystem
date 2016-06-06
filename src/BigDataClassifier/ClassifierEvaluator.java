@@ -9,40 +9,61 @@ import weka.core.Instances;
 
 public class ClassifierEvaluator {
     
-    public int trainSize;
-    public int testSize;
-	
-	 public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception{
-   	  
-     	 // testDataset.setClassIndex(testDataset.numAttributes()-1);
-   	      //Evaluation eval = new Evaluation (trainDataset);
-              //randomize data
+    Instances trainDataset2;
+    Instances testDataset2;
+    int trainDatasetSize;
+    int testDatasetSize;
+    SupervisedClassifier sc = new SupervisedClassifier();
+    //set folds
+    int folds = 3;
+    
+	public void generateFolds(Instances trainDataset) throws Exception{
+            
+            //randomize data
               Random rand = new Random(1);
-              //set folds
-              int folds = 3;
+             
               //create random dataset
               Instances randData = new Instances(trainDataset);
               randData.randomize(rand);
-              //stratify
-              if (randData.classAttribute().isNominal())
-                  randData.stratify(folds);
+            
               //cross-validate
                 for(int n=0; n<folds; n++)
                 {
-                   Evaluation eval = new Evaluation (trainDataset);
                     trainDataset = randData.trainCV(folds, n);
                     System.out.println("Train dataset size is = "+ trainDataset.size());
-                    testDataset = randData.testCV(folds, n);
+                    Instances testDataset = randData.testCV(folds, n);
                     System.out.println("Test dataset size is = "+ testDataset.size());
-                    eval.evaluateModel(cs, testDataset);
-                    System.out.println(eval.toSummaryString("Evaluation results:\n", false));
-                    System.out.println(eval.toMatrixString("Confusion Matrix for this " + (n+1) +"/" + folds));
-                    this.trainSize = trainDataset.size();
-                    this.testSize = testDataset.size();
+                    trainDataset2 = trainDataset;
+                    testDataset2 = testDataset;
+                   if(trainDataset2.size() >= testDataset2.size())
+                   {
+                       this.evaluatorClassifier(trainDataset, testDataset, sc.useNaiveBayes(trainDataset));
+                   }
+                   else
+                   {
+                       //use unsupervised classifier
+                   }
                 }
-              //eval.crossValidateModel(cs, trainDataset, folds, rand);
+                
          }
-
+	 
+        public int getTrainDataSize(){
+          return trainDatasetSize;
+      }
+      
+        public int getTestDataSize(){
+          return testDatasetSize;
+      }
+        
+        public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception
+        {
+              testDataset.setClassIndex(testDataset.numAttributes()-1);
+   	      Evaluation eval = new Evaluation (trainDataset);
+              eval.evaluateModel(cs, testDataset);
+ 	      System.out.println(eval.toSummaryString("Evaluation results:\n", false));
+ 	      System.out.println(eval.toMatrixString("Confusion Matrix for this"));
+        }
+      
     /**
      *
      * @param trainDataset
