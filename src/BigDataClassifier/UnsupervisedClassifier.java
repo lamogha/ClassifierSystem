@@ -4,6 +4,7 @@
 package BigDataClassifier;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Vector;
 import weka.clusterers.*;
 import weka.core.Instances;
@@ -61,8 +62,12 @@ public class UnsupervisedClassifier {
                  cloud.add(nc);
              }
              else{
-                 if (xk.get(k).attribute(0).numValues()<2*ncZI){
-                     
+                 if (xk.get(k).numValues()<=(2*ncZI))
+                 {
+                     for (Iterator<String> it = cloud.iterator(); it.hasNext();) {
+                         String j = it.next();
+                         //double jFocalpoint = (jFocalpoint * jPoints + xk.get(k).numValues()) / (jPoints + 1);
+                     }                     
                  }
                  
              }

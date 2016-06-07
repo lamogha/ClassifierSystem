@@ -44,7 +44,7 @@ public class FileTypeEnablerAndProcessor {
     	if(!folder.isDirectory()){
     		traindata = new Instances(new BufferedReader(new FileReader(folder)));
     		testdata = new Instances(new BufferedReader(new FileReader
-    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3")));
+    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2")));
         	System.out.println(traindata.toSummaryString());	
     	}
     	else{
@@ -166,20 +166,19 @@ public class FileTypeEnablerAndProcessor {
              * exists in the dataset (meaning some labeled instances exists),
              * depending on the size of the training set, the decision is taken.
              */
-            
-            if(traindata.attribute("class") != null || traindata.attribute("Class") != null
-                    && traindata.size()>= testdata.size())
+            //traindata.setClassIndex(traindata.numAttributes()-1);
+            if( traindata.attribute("class") != null || traindata.attribute("Class") != null
+                     && traindata.size()>= testdata.size())
             {
     	        System.out.println("class attribute found...." );
                 System.out.println("Initial training set is larger than the test set...." + traindata.size() );
                 
-                //Go ahead to generate folds
+                //Go ahead to generate folds, then call classifier
                 try {
                     ce.generateFolds(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
     	    }
             /**
              * When there is no class attribute to show labeled instances exists
@@ -189,7 +188,13 @@ public class FileTypeEnablerAndProcessor {
             else 
             {
     	        System.out.println("class attribute not found");
-                 //use unsupervised
+                try {
+                    ce.generateFolds(traindata); //still generate folds, 
+                    //class index set to last att index
+                    //another decision made to use either supervised or unsupervised
+                } catch (Exception ex) {
+                    Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
+                }
     	    }
             
         }

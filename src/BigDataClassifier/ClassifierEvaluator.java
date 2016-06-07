@@ -1,6 +1,8 @@
 package BigDataClassifier;
 
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.clusterers.ClusterEvaluation;
@@ -35,18 +37,28 @@ public class ClassifierEvaluator {
                     System.out.println("Test dataset size is = "+ testDataset.size());
                     trainDataset2 = trainDataset;
                     testDataset2 = testDataset;
-                   if(trainDataset2.size() >= testDataset2.size())
+                    trainDataset.setClassIndex(trainDataset.numAttributes()-1);
+                    System.out.println("The number of class labels is:- " + trainDataset.numClasses());
+                    this.callClassifier();
+                }
+                
+         }
+        
+        public void callClassifier(){
+             if((trainDataset2.size() >= testDataset2.size()) && trainDataset2.numClasses()!= 0)
                    {
-                       this.evaluatorClassifier(trainDataset, testDataset, sc.useNaiveBayes(trainDataset));
+                 try {
+                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useNaiveBayes(trainDataset2));
+                 } catch (Exception ex) {
+                     Logger.getLogger(ClassifierEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                 }
                    }
                    else
                    {
                        //use unsupervised classifier
                    }
-                }
-                
-         }
-	 
+        }
+	/** 
         public int getTrainDataSize(){
           return trainDatasetSize;
       }
@@ -54,6 +66,7 @@ public class ClassifierEvaluator {
         public int getTestDataSize(){
           return testDatasetSize;
       }
+      * */
         
         public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception
         {
