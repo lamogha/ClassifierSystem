@@ -188,13 +188,8 @@ public class FileTypeEnablerAndProcessor {
             else 
             {
     	        System.out.println("class attribute not found");
-                try {
-                    ce.generateFolds(traindata); //still generate folds, 
-                    //class index set to last att index
-                    //another decision made to use either supervised or unsupervised
-                } catch (Exception ex) {
-                    Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                traindata.setClassIndex(traindata.numAttributes()-1);
+                System.out.println("Class to predict is = " + traindata.classAttribute() + "\n" );
     	    }
             
         }
