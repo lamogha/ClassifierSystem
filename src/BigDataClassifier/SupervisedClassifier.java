@@ -7,7 +7,9 @@ import weka.classifiers.*;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.bayes.NaiveBayesUpdateable;
 import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.meta.FilteredClassifier;
+import weka.classifiers.trees.DecisionStump;
 import weka.filters.unsupervised.attribute.Remove;
 
 /**
@@ -23,7 +25,9 @@ public class SupervisedClassifier {
       
       /**
        * TODO 
+     * @param dataset
      * @return a probabilistic classifier type 
+     * @throws java.lang.Exception 
       */
       public Classifier useNaiveBayes(Instances dataset) throws Exception{
     	  
@@ -55,8 +59,6 @@ public class SupervisedClassifier {
       public Classifier useClassifierWithFilter(Instances dataset) throws Exception{
     	  
 		  dataset.setClassIndex(dataset.numAttributes()-1);
-		  NaiveBayes nb = new NaiveBayes();
-		  
 		  //the filter
 		  Remove remove = new Remove();
 		  //remove.setAttributeIndices ("1");
@@ -68,10 +70,19 @@ public class SupervisedClassifier {
     	  //specify filter
     	  fc.setFilter(remove);
     	  //specify the base classifier 
-    	  fc.setClassifier(nb);
+    	  fc.setClassifier(new NaiveBayes());
     	  //build the meta-classifier
     	  fc.buildClassifier(dataset);
     	  return fc;	  
+      } 
+     public Classifier adaBoost(Instances dataset) throws Exception{
+    	  
+          dataset.setClassIndex(dataset.numAttributes()-1);
+    	  AdaBoostM1 m1 = new AdaBoostM1();
+          m1.setClassifier(new DecisionStump());
+          m1.setNumIterations(20);
+    	  m1.buildClassifier(dataset);
+    	  return m1;
       } 
       
       

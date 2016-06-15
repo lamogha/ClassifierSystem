@@ -1,5 +1,8 @@
 package BigDataClassifier;
 
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.clusterers.ClusterEvaluation;
@@ -7,23 +10,85 @@ import weka.clusterers.Clusterer;
 import weka.core.Instances;
 
 public class ClassifierEvaluator {
-	
-	 public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception{
-   	  
-     	  testDataset.setClassIndex(testDataset.numAttributes()-1);
+    
+    Instances trainDataset2;
+    Instances testDataset2;
+    int trainDatasetSize;
+    int testDatasetSize;
+    SupervisedClassifier sc = new SupervisedClassifier();
+    //set folds
+    int folds = 3;
+    
+	public void generateFolds(Instances trainDataset) throws Exception{
+            
+            //randomize data
+              Random rand = new Random(1);
+             
+              //create random dataset
+              Instances randData = new Instances(trainDataset);
+              randData.randomize(rand);
+            
+              //cross-validate
+                for(int n=0; n<folds; n++)
+                {
+                    trainDataset = randData.trainCV(folds, n);
+                    System.out.println("Train dataset size is = "+ trainDataset.size());
+                    Instances testDataset = randData.testCV(folds, n);
+                    System.out.println("Test dataset size is = "+ testDataset.size());
+                    trainDataset2 = trainDataset;
+                    testDataset2 = testDataset;
+                    trainDataset.setClassIndex(trainDataset.numAttributes()-1);
+                    System.out.println("The number of class labels is:- " + trainDataset.numClasses());
+                    this.callClassifier();
+                }
+                
+         }
+        
+        public void callClassifier(){
+             if((trainDataset2.size() >= testDataset2.size()) && trainDataset2.numClasses()!= 0)
+                   {
+                 try {
+                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useNaiveBayes(trainDataset2));
+                 } catch (Exception ex) {
+                     Logger.getLogger(ClassifierEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+                   }
+                   else
+                   {
+                       //use unsupervised classifier
+                   }
+        }
+	/** 
+        public int getTrainDataSize(){
+          return trainDatasetSize;
+      }
+      
+        public int getTestDataSize(){
+          return testDatasetSize;
+      }
+      * */
+        
+        public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception
+        {
+              testDataset.setClassIndex(testDataset.numAttributes()-1);
    	      Evaluation eval = new Evaluation (trainDataset);
- 		  eval.evaluateModel(cs, testDataset);
+              eval.evaluateModel(cs, testDataset);
  	      System.out.println(eval.toSummaryString("Evaluation results:\n", false));
  	      System.out.println(eval.toMatrixString("Confusion Matrix for this"));
-     }
-	 
-	 public void evaluatorClusterer(Instances trainDataset, Instances testDataset) throws Exception{
-	   	  
-		 UnsupervisedClassifier uc = new UnsupervisedClassifier();
-		 uc.useFarthestFirst(trainDataset);
-		 testDataset.setClassIndex(testDataset.numAttributes()-1);
+        }
+      
+    /**
+     *
+     * @param trainDataset
+     * @param testDataset
+     * @param clusterer
+     * @throws Exception
+     */
+    public void evaluatorClusterer(Instances trainDataset, Instances testDataset, Clusterer clusterer) throws Exception{
+	   
   	      ClusterEvaluation eval = new ClusterEvaluation ();
-		  eval.evaluateClusterer(testDataset);
+              eval.setClusterer(clusterer);
+              eval.evaluateClusterer(testDataset);
 	      System.out.println(eval.clusterResultsToString());
 	      //System.out.print(eval.evaluateClusterer(testDataset, null, false);
     }
