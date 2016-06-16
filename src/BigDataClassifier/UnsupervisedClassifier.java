@@ -9,21 +9,28 @@ import static java.lang.Math.min;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.stream.Stream;
 import weka.clusterers.*;
 import weka.core.Instances;
 import weka.core.EuclideanDistance;
 import weka.core.Instance;
 import weka.clusterers.AbstractDensityBasedClusterer;
+import weka.core.DenseInstance;
 
-public abstract class UnsupervisedClassifier extends  AbstractDensityBasedClusterer {
+public class UnsupervisedClassifier {
     private static final HashSet<Instances> cloud = new HashSet<>();
     private static final HashSet<Instances> outliers = new HashSet<>();
+    AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
     
-     public void unsupervisedClassifier(String filePathName) {
-        //call your unsupervised classifier here with the path to the file 
+    /**
+     *
+     */
+    public void UnsupervisedClassifier() {
+        //constructor 
     }
      
      
@@ -46,6 +53,20 @@ public abstract class UnsupervisedClassifier extends  AbstractDensityBasedCluste
   	 // System.out.println(nb.getCapabilities().toString());
      }
      
+     /**
+     public <K, V extends Comparable<? super V>> Map<K, V> 
+    sortByValue( Map<K, V> map )
+{
+    Map<K, V> cloud = new LinkedHashMap<>();
+    Stream<Map.Entry<K, V>> st = map.entrySet().stream();
+
+    st.sorted( Map.Entry.comparingByValue() )
+        .forEachOrdered( e -> cloud.put(e.getKey(), e.getValue()) );
+
+    return cloud;
+}
+    */
+     
     /**
      *
      * @param dataset
@@ -58,7 +79,7 @@ public abstract class UnsupervisedClassifier extends  AbstractDensityBasedCluste
          Instances xk = new Instances(dataset);
          double ncZI= initialZI;
          int ncPoints = 0; double ncFocalpoint=0;
-         ListIterator iterator = dataset.listIterator();
+         ListIterator iterator = xk.listIterator();
          EuclideanDistance eu = new EuclideanDistance();
          //start reading in the instances
          while (iterator.hasNext())
@@ -69,7 +90,8 @@ public abstract class UnsupervisedClassifier extends  AbstractDensityBasedCluste
                  ncFocalpoint = xk.meanOrMode(k);
                  ncZI= initialZI;
                  ncPoints = 1;
-                 cloud.add(nc);
+                 cloud.add((Instances) nc);
+                 System.out.println("First cloud added");
              }
              else
              {
@@ -114,14 +136,14 @@ public abstract class UnsupervisedClassifier extends  AbstractDensityBasedCluste
                          System.out.println(sc.toString());
                         }
                         double minPoints = max(3, (ncPoints*0.15) );
-                        double density = this.logDensityForInstance(out.instance(k));
+                        double density = densityClass.logDensityForInstance(out.instance(k));
                      
                             int sumDense = 0;
                             int i = 0;
                             //to get the density of all existing clouds, to use in findind average density
                             while (i<cloudInstances.size())
                             {
-                                double densityOfEach = this.logDensityForInstance(cloudInstances.instance(i));
+                                double densityOfEach = densityClass.logDensityForInstance(cloudInstances.instance(i));
                                 sumDense += densityOfEach;
                                 i++;
                              }
