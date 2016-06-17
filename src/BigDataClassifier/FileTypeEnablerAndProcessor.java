@@ -13,6 +13,7 @@ import weka.core.converters.TextDirectoryLoader;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import weka.core.Instance;
 
 import weka.core.converters.DatabaseLoader;
 import weka.core.converters.JSONLoader;
@@ -27,16 +28,15 @@ public class FileTypeEnablerAndProcessor {
     FileTypeEnablerAndProcessor fp;
     SupervisedClassifier sc = new SupervisedClassifier();
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
-    ClassifierEvaluator ce = new ClassifierEvaluator();
+    ClassEvaluator ce = new ClassEvaluator();
     Instances traindata, testdata;
     
     public void fileEntry () throws Exception{
     	
-    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3");
+    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3\\contact-lenses.arff\\");
     	fp  = new FileTypeEnablerAndProcessor();
     	fp.enableFileTypes();
         fp.processFolder(folder);
-        
     }
     
     public void processFolder(File folder) throws Exception{
@@ -44,8 +44,9 @@ public class FileTypeEnablerAndProcessor {
     	if(!folder.isDirectory()){
     		traindata = new Instances(new BufferedReader(new FileReader(folder)));
     		testdata = new Instances(new BufferedReader(new FileReader
-    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2")));
-        	System.out.println(traindata.toSummaryString());	
+    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3\\contact-lenses-test.arff\\")));
+        	System.out.println(traindata.toSummaryString());
+                this.chooseClassifier();
     	}
     	else{
     		
@@ -148,27 +149,17 @@ public class FileTypeEnablerAndProcessor {
             
         return ext;
     }
-    
-        public static void callClassifier(String filePathName, String ext) {
-           if (unstructuredDataSetExt.contains(ext)) {
-            UnsupervisedClassifier uc = new UnsupervisedClassifier();
-            uc.unsupervisedClassifier(filePathName);
-           }
-        
-           if (structuredDataSetExt.contains(ext)) {
-            SupervisedClassifier sc = new SupervisedClassifier();
-            sc.supervisedClassifier(filePathName);
-           }
-       }
         
         public void chooseClassifier(){
+            int classIndex = 0; //number of attributes must be greater than 1
             /**We can use either a supervised or an un-supervised algorithm if a class attribute already
              * exists in the dataset (meaning some labeled instances exists),
              * depending on the size of the training set, the decision is taken.
              */
-            //traindata.setClassIndex(traindata.numAttributes()-1);
+            //classIndex = traindata.numAttributes()-1;
+            //traindata.setClassIndex(classIndex);
             if( traindata.attribute("class") != null || traindata.attribute("Class") != null
-                     && traindata.size()>= testdata.size())
+                     || classIndex == traindata.numAttributes()-1 && traindata.size()>= testdata.size())
             {
     	        System.out.println("class attribute found...." );
                 System.out.println("Initial training set is larger than the test set...." + traindata.size() );
@@ -187,11 +178,12 @@ public class FileTypeEnablerAndProcessor {
             */
             else 
             {
-    	        System.out.println("class attribute not found");
                 try {
-                    ce.generateFolds(traindata); //still generate folds, 
-                    //class index set to last att index
-                    //another decision made to use either supervised or unsupervised
+                    System.out.println("class attribute not found");
+                    classIndex = traindata.numAttributes()-1;
+                    traindata.setClassIndex(classIndex);
+                    System.out.println("Class to predict is = " + traindata.classAttribute() + "\n" );
+                    uc.autoProbClass(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }

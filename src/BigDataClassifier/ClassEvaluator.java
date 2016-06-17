@@ -9,7 +9,7 @@ import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
 import weka.core.Instances;
 
-public class ClassifierEvaluator {
+public class ClassEvaluator {
     
     Instances trainDataset2;
     Instances testDataset2;
@@ -50,7 +50,7 @@ public class ClassifierEvaluator {
                  try {
                      this.evaluatorClassifier(trainDataset2, testDataset2, sc.useNaiveBayes(trainDataset2));
                  } catch (Exception ex) {
-                     Logger.getLogger(ClassifierEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                  }
                    }
                    else
