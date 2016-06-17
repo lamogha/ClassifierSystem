@@ -1,7 +1,7 @@
  /*
  * supervisedClassifier algorithm
  */
-package BigDataClassifier;
+package src.BigDataClassifier;
 import weka.core.Instances;
 import weka.classifiers.*;
 import weka.classifiers.bayes.NaiveBayes;

@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package BigDataClassifier;
+package src.BigDataClassifier;
 
 import java.io.File;
 
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.DatabaseLoader;
+import weka.experiment.InstanceQuery;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -39,9 +40,18 @@ public class ClassifierMain {
     	 saver.writeBatch();
     	 
     	 conn.close();
-    	 
-        */
-	FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
-        f.fileEntry();
+
+		InstanceQuery query = new InstanceQuery();
+		 query.setUsername("lamogha");
+		 query.setPassword("l@mmyPHD");
+		 query.setQuery("select * from customers");
+		 // You can declare that your data set is sparse
+		 // query.setSparseData(true);
+		 Instances data = query.retrieveInstances();
+		 System.out.println(data.toSummaryString());
+		 */
+
+		 FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
+         f.fileEntry();
     }
 }

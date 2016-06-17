@@ -1,7 +1,7 @@
 /*
  * unsupervised classifier algorithm
  */
-package BigDataClassifier;
+package src.BigDataClassifier;
 
 import java.io.Reader;
 import static java.lang.Math.max;

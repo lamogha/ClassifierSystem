@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package BigDataClassifier;
+package src.BigDataClassifier;
 
 import java.util.Random;
 import weka.core.Instances;

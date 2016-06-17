@@ -1,4 +1,4 @@
-package BigDataClassifier;
+package src.BigDataClassifier;
 
 import java.util.Random;
 import java.util.logging.Level;
