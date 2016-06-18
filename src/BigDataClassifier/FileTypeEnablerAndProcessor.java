@@ -33,7 +33,7 @@ public class FileTypeEnablerAndProcessor {
     
     public void fileEntry () throws Exception{
     	
-    	File folder = new File("/workspace/data/data2/data3/contact-lenses.arff/");
+    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3\\contact-lenses.arff\\");
     	fp  = new FileTypeEnablerAndProcessor();
     	fp.enableFileTypes();
         fp.processFolder(folder);
@@ -44,7 +44,7 @@ public class FileTypeEnablerAndProcessor {
     	if(!folder.isDirectory()){
     		traindata = new Instances(new BufferedReader(new FileReader(folder)));
     		testdata = new Instances(new BufferedReader(new FileReader
-    				("/workspace/data/data2/data3/contact-lenses-test.arff/")));
+    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3\\contact-lenses-test.arff\\")));
         	System.out.println(traindata.toSummaryString());
                 this.chooseClassifier();
     	}

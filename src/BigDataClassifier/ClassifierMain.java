@@ -51,7 +51,7 @@ public class ClassifierMain {
 		 System.out.println(data.toSummaryString());
 		 */
 
-		 FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
-         f.fileEntry();
+		FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
+                f.fileEntry();
     }
 }

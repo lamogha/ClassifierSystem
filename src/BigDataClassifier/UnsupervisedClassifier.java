@@ -6,6 +6,7 @@ package src.BigDataClassifier;
 import java.io.Reader;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Stream;
+import oracle.net.aso.a;
 import weka.clusterers.*;
 import weka.core.Instances;
 import weka.core.EuclideanDistance;
@@ -22,9 +24,11 @@ import weka.clusterers.AbstractDensityBasedClusterer;
 import weka.core.DenseInstance;
 
 public class UnsupervisedClassifier {
-    private static final HashSet<Instances> cloud = new HashSet<>();
+    private static final HashSet<Object> cloud = new HashSet<>();
     private static final HashSet<Instances> outliers = new HashSet<>();
     AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
+    EuclideanDistance eu = new EuclideanDistance();
+
     
     /**
      *
@@ -69,37 +73,56 @@ public class UnsupervisedClassifier {
      
     /**
      *
-     * @param dataset
+     * @param dataset is the dataset parsed
      * @throws java.lang.Exception
      */
     public void autoProbClass(Instances dataset)throws Exception {
     	 //Define the intial zone of influence ZI
-         double initialZI = 0.3;
-         int k = 1;
+         double initialZI = 0.3; //can also use 0.4
+         int k;//first step 
          Instances xk = new Instances(dataset);
+         Object[] datasetArray = xk.toArray();
+         System.out.println(Arrays.toString(datasetArray));
+         System.out.println(Array.get(datasetArray, 0));
+         for (Object tp : datasetArray){
+             //System.out.println(tp.toString());
+             String[] tmp = tp.toString().split(",") ;
+             System.out.println(tmp[0]);
+         }
          double ncZI= initialZI;
          int ncPoints = 0; double ncFocalpoint=0;
-         ListIterator iterator = xk.listIterator();
-         EuclideanDistance eu = new EuclideanDistance();
+         //ListIterator iterator = xk.listIterator();
+        
          //start reading in the instances
-         while (iterator.hasNext())
+         for (k=0; k<datasetArray.length; k++)
          {
-             if (k == 1)
+             if (k == 0)
              {
-                 Instances nc = (Instances) xk.firstInstance();
+                 Object nc = Array.get(datasetArray, k);
+                 System.out.println(nc);
+                 System.out.println(nc.hashCode());
+                 //Instances nc = (Instances) xk.firstInstance();
                  ncFocalpoint = xk.meanOrMode(k);
                  ncZI= initialZI;
                  ncPoints = 1;
-                 cloud.add((Instances) nc);
+                 cloud.add(nc);
+                 //cloud.add((Instances) nc);
+                 System.out.print(cloud);
                  System.out.println("First cloud added");
              }
              else
              {
-                 if (xk.get(k).numValues()<=(2*ncZI))//xk is close to an existing cloud
+                 Object cc = Array.get(datasetArray, k);
+                 System.out.println(k);
+                 System.out.println(cc.hashCode());
+                 System.out.println(2*ncZI);
+                 if (cc.hashCode()<=(2*ncZI))//is close to an existing cloud
                  {
-                     System.out.println(xk.get(k).numValues());
-                     System.out.println(xk.get(k).value(k));
-                     System.out.println(xk.get(k).weight());
+                     System.out.println(cc);
+                     System.out.println(cc.hashCode());
+                     //System.out.println(xk.get(k).numValues());
+                    // System.out.println(xk.get(k).value(k));
+                     //System.out.println(xk.get(k).weight());
                      //update close clouds
                      for (Instances j : cloud) {
                          Integer cc = j.indexOf((int) (2*ncZI));
@@ -169,7 +192,6 @@ public class UnsupervisedClassifier {
                     }
                  }
              }
-           k = k+1;
                 
          }
          
