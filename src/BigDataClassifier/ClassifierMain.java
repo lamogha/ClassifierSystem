@@ -53,5 +53,6 @@ public class ClassifierMain {
 
 		FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
                 f.fileEntry();
+                
     }
 }

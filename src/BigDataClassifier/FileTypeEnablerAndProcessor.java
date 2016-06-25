@@ -14,10 +14,12 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.core.Instance;
+import weka.core.converters.DatabaseConnection;
 
 import weka.core.converters.DatabaseLoader;
 import weka.core.converters.JSONLoader;
 import weka.core.converters.XRFFLoader;
+import weka.experiment.InstanceQuery;
 /**
  *
  * @author lamogha
@@ -99,11 +101,16 @@ public class FileTypeEnablerAndProcessor {
                                 this.chooseClassifier();
     	                    }
                             else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
-                                DatabaseLoader loader = new DatabaseLoader();
+                                DatabaseConnection loader = new DatabaseConnection();
                                 loader.connectToDatabase();
-    	                    	loader.setSource("jdbc:mysql://adegokeobasa.me:3306/classic_models", "lamogha", "l@mmyPHD" );
-    	                    	traindata = loader.getDataSet();
-    	                    	System.out.println(traindata.toSummaryString());
+    	                    	InstanceQuery query = new InstanceQuery();
+                                query.setUsername("lamogha");
+                                query.setPassword("l@mmyPHD");
+                                query.setQuery("select * from customers");
+                                // You can declare that your data set is sparse
+                                // query.setSparseData(true);
+                                Instances data = query.retrieveInstances();
+                                System.out.println(data.toSummaryString());
                             }
                         
     	                  }

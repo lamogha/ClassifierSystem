@@ -59,7 +59,6 @@
 %
 % 24 instances
 %
-young,myope,no,reduced,none
 young,myope,no,normal,soft
 young,myope,yes,reduced,none
 young,myope,yes,normal,hard
@@ -67,6 +66,7 @@ young,hypermetrope,no,reduced,none
 young,hypermetrope,no,normal,soft
 young,hypermetrope,yes,reduced,none
 young,hypermetrope,yes,normal,hard
+pre-presbyopic,myope,no,reduced,none
 pre-presbyopic,myope,no,reduced,none
 pre-presbyopic,myope,no,normal,soft
 pre-presbyopic,myope,yes,reduced,none
