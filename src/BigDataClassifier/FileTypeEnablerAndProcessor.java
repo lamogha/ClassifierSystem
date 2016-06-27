@@ -35,7 +35,7 @@ public class FileTypeEnablerAndProcessor {
     
     public void fileEntry () throws Exception{
     	
-    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3\\contact-lenses.arff\\");
+    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2");
     	fp  = new FileTypeEnablerAndProcessor();
     	fp.enableFileTypes();
         fp.processFolder(folder);
@@ -46,7 +46,7 @@ public class FileTypeEnablerAndProcessor {
     	if(!folder.isDirectory()){
     		traindata = new Instances(new BufferedReader(new FileReader(folder)));
     		testdata = new Instances(new BufferedReader(new FileReader
-    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\data3\\contact-lenses-test.arff\\")));
+    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2")));
         	System.out.println(traindata.toSummaryString());
                 this.chooseClassifier();
     	}
@@ -68,6 +68,7 @@ public class FileTypeEnablerAndProcessor {
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
     	                    	System.out.println(traindata.toSummaryString());
+                                this.chooseClassifier();
     	                    }
     	                    
     	                    else if (!fileName.startsWith(".") && fileName.contains(".txt"))
@@ -79,6 +80,7 @@ public class FileTypeEnablerAndProcessor {
     	                    	loader.setSource(folder);
     	                    	traindata = loader.getDataSet();
     	                	System.out.println(traindata.toSummaryString());
+                                this.chooseClassifier();
     	                		
     	                    } 
                             else if (!fileName.startsWith(".") && fileName.contains(".json")){
@@ -86,12 +88,14 @@ public class FileTypeEnablerAndProcessor {
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
     	                    	System.out.println(traindata.toSummaryString());
+                                this.chooseClassifier();
                             }
                             else if (!fileName.startsWith(".") && fileName.contains(".xrff")){
                                 XRFFLoader loader = new XRFFLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
     	                    	System.out.println(traindata.toSummaryString());
+                                this.chooseClassifier();
                             }
                             else if (!fileName.startsWith("."))
                             {
@@ -111,6 +115,7 @@ public class FileTypeEnablerAndProcessor {
                                 // query.setSparseData(true);
                                 Instances data = query.retrieveInstances();
                                 System.out.println(data.toSummaryString());
+                                this.chooseClassifier();
                             }
                         
     	                  }
@@ -163,8 +168,8 @@ public class FileTypeEnablerAndProcessor {
              * exists in the dataset (meaning some labeled instances exists),
              * depending on the size of the training set, the decision is taken.
              */
-            //classIndex = traindata.numAttributes()-1;
-            //traindata.setClassIndex(classIndex);
+            classIndex = traindata.numAttributes()-1;
+            traindata.setClassIndex(classIndex);
             if( traindata.attribute("class") != null || traindata.attribute("Class") != null
                      || classIndex == traindata.numAttributes()-1 && traindata.size()>= testdata.size())
             {

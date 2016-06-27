@@ -9,7 +9,11 @@ import weka.classifiers.bayes.NaiveBayesUpdateable;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.meta.FilteredClassifier;
+import weka.classifiers.rules.M5Rules;
+import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.DecisionStump;
+import weka.classifiers.trees.M5P;
+import weka.classifiers.trees.RandomForest;
 import weka.filters.unsupervised.attribute.Remove;
 
 /**
@@ -39,24 +43,7 @@ public class SupervisedClassifier {
         	 // System.out.println(nb.getCapabilities().toString());
       } 
       
-      public Classifier useNaiveBayesUpdateable(Instances dataset) throws Exception{
-    	  
-		  dataset.setClassIndex(dataset.numAttributes()-1);
-		  NaiveBayesUpdateable nbu = new NaiveBayesUpdateable();
-		  nbu.buildClassifier(dataset);
-    	  return nbu;
-      
-      }
-      
-      public Classifier useBayesNet(Instances dataset) throws Exception{
-    	  
-		  dataset.setClassIndex(dataset.numAttributes()-1);
-    	  BayesNet bn = new BayesNet();
-    	  bn.buildClassifier(dataset);
-    	  return bn;
-      } 
-      
-      public Classifier useClassifierWithFilter(Instances dataset) throws Exception{
+    /**  public Classifier useClassifierWithFilter(Instances dataset) throws Exception{
     	  
 		  dataset.setClassIndex(dataset.numAttributes()-1);
 		  //the filter
@@ -75,6 +62,11 @@ public class SupervisedClassifier {
     	  fc.buildClassifier(dataset);
     	  return fc;	  
       } 
+      *
+     * @param dataset
+     * @return 
+     * @throws java.lang.Exception */
+      
      public Classifier adaBoost(Instances dataset) throws Exception{
     	  
           dataset.setClassIndex(dataset.numAttributes()-1);
@@ -83,7 +75,31 @@ public class SupervisedClassifier {
           m1.setNumIterations(20);
     	  m1.buildClassifier(dataset);
     	  return m1;
-      } 
+      }
+     
+      public Classifier useZeroR (Instances dataset) throws Exception{
+    	  
+          dataset.setClassIndex(dataset.numAttributes()-1);
+    	  ZeroR zeroR = new ZeroR();
+    	  zeroR.buildClassifier(dataset);
+    	  return zeroR;
+      }
+      
+       public Classifier useM5P(Instances dataset) throws Exception{
+    	  
+          dataset.setClassIndex(dataset.numAttributes()-1);
+    	  M5P m5P = new M5P();
+    	  m5P.buildClassifier(dataset);
+    	  return m5P;
+      }
+       
+       public Classifier useRandomForest(Instances dataset) throws Exception{
+    	  
+          dataset.setClassIndex(dataset.numAttributes()-1);
+    	  RandomForest randomForest = new RandomForest();
+    	  randomForest.buildClassifier(dataset);
+    	  return randomForest;
+      }
       
       
 }

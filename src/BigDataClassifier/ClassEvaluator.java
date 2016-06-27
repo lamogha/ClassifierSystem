@@ -7,6 +7,10 @@ import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
+import static weka.core.Attribute.NOMINAL;
+import static weka.core.Attribute.NUMERIC;
+import static weka.core.Attribute.RELATIONAL;
+import static weka.core.Attribute.STRING;
 import weka.core.Instances;
 
 public class ClassEvaluator {
@@ -39,24 +43,66 @@ public class ClassEvaluator {
                     testDataset2 = testDataset;
                     trainDataset.setClassIndex(trainDataset.numAttributes()-1);
                     System.out.println("The number of class labels is:- " + trainDataset.numClasses());
-                    this.callClassifier();
+                    this.callClassifier();     
                 }
                 
          }
         
         public void callClassifier(){
-             if((trainDataset2.size() >= testDataset2.size()) && trainDataset2.numClasses()!= 0)
-                   {
-                 try {
+            if((trainDataset2.size() >= testDataset2.size()) && trainDataset2.numClasses()!= 0)
+            {
+                if(trainDataset2.checkForAttributeType(NUMERIC))
+                {
+                    try {
+                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useRandomForest(trainDataset2));
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+                else if (trainDataset2.checkForAttributeType(RELATIONAL))
+                {
+                    try {
+                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useRandomForest(trainDataset2));
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }   
+                }
+                
+                else if (trainDataset2.checkForAttributeType(STRING))
+                {
+                    try {
+                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useZeroR(trainDataset2));
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+                
+                else if (trainDataset2.checkForAttributeType(NOMINAL))
+                {
+                   try {
                      this.evaluatorClassifier(trainDataset2, testDataset2, sc.useNaiveBayes(trainDataset2));
                  } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
-                 }
-                   }
-                   else
-                   {
+                 } 
+                   
+                }
+                 
+                else
+                {
+                    try {
+                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useRandomForest(trainDataset2));
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
+            else
+            {
                        //use unsupervised classifier
-                   }
+            }
         }
 	/** 
         public int getTrainDataSize(){
@@ -74,7 +120,7 @@ public class ClassEvaluator {
    	      Evaluation eval = new Evaluation (trainDataset);
               eval.evaluateModel(cs, testDataset);
  	      System.out.println(eval.toSummaryString("Evaluation results:\n", false));
- 	      System.out.println(eval.toMatrixString("Confusion Matrix for this"));
+ 	      //System.out.println(eval.toMatrixString("Confusion Matrix for this"));
         }
       
     /**

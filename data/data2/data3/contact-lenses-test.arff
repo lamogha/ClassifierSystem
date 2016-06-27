@@ -1,6 +1,6 @@
 % 1. Number of Instances: 10
 % 
-% 2. Number of Attributes: 4 (all nominal)
+% 2. Number of Attributes: 5 (all nominal)
 % 
 % 3. Attribute Information:
 %     -- 3 Classes
@@ -16,9 +16,9 @@
 % 4. Number of Missing Attribute Values:   0
 % 
 % 5. Class Distribution:
-%    1. hard contact lenses: 4
-%    2. soft contact lenses: 5
-%    3. no contact lenses: 15
+%    1. hard contact lenses: 2
+%    2. soft contact lenses: 3
+%    3. no contact lenses: 5
 
 @relation contact-lenses
 
