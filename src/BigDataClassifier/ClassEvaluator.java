@@ -1,5 +1,7 @@
 package src.BigDataClassifier;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +26,6 @@ public class ClassEvaluator {
     int folds = 3;
     
 	public void generateFolds(Instances trainDataset) throws Exception{
-            
             //randomize data
               Random rand = new Random(1);
              
@@ -48,13 +49,26 @@ public class ClassEvaluator {
                 
          }
         
+        public int numOfNominalAtt(){
+            int nom = 0;
+            for (int i=0; i<trainDataset2.numAttributes(); i++){
+                //boolean nominal = trainDataset2.checkForAttributeType(i);
+                if (trainDataset2.attribute(i).isNominal()){
+                    nom++;
+                }
+            }
+            System.out.println(nom);
+            return nom;
+        }
+        
         public void callClassifier(){
             if((trainDataset2.size() >= testDataset2.size()) && trainDataset2.numClasses()!= 0)
             {
-                if(trainDataset2.checkForAttributeType(NUMERIC))
+                if(this.numOfNominalAtt() < (trainDataset2.numAttributes()/2))
                 {
                     try {
                      this.evaluatorClassifier(trainDataset2, testDataset2, sc.useRandomForest(trainDataset2));
+                     System.out.println("Random Forest used");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -64,6 +78,7 @@ public class ClassEvaluator {
                 {
                     try {
                      this.evaluatorClassifier(trainDataset2, testDataset2, sc.useRandomForest(trainDataset2));
+                     System.out.println("Random Forest used");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }   
@@ -73,6 +88,7 @@ public class ClassEvaluator {
                 {
                     try {
                      this.evaluatorClassifier(trainDataset2, testDataset2, sc.useZeroR(trainDataset2));
+                     System.out.println("Zero R used");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -83,6 +99,7 @@ public class ClassEvaluator {
                 {
                    try {
                      this.evaluatorClassifier(trainDataset2, testDataset2, sc.useNaiveBayes(trainDataset2));
+                     System.out.println("Naive Bayes used");
                  } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                  } 
@@ -93,6 +110,7 @@ public class ClassEvaluator {
                 {
                     try {
                      this.evaluatorClassifier(trainDataset2, testDataset2, sc.useRandomForest(trainDataset2));
+                     System.out.println("Random Forest used");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -195,7 +195,7 @@ public class FileTypeEnablerAndProcessor {
                     classIndex = traindata.numAttributes()-1;
                     traindata.setClassIndex(classIndex);
                     System.out.println("Class to predict is = " + traindata.classAttribute() + "\n" );
-                    uc.autoProbClass(traindata);
+                    uc.probClass(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }
