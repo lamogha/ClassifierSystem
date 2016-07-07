@@ -111,17 +111,19 @@ public class UnsupervisedClassifier {
         return returnCloud;
     }
 
-//     public static DenseInstance getHighestDensityInOutliers(ArrayList<DenseInstance> outliers) {
-//        Cloud returnOutlier = null;
-//        double highest = Integer.MAX_VALUE;
-//        for (DenseInstance outlier : outliers) {
-//            if (outlier.) {
-//                highest = outlier.getPoint();
-//                returnOutlier = outlier;
-//            }
-//        }
-//        return returnOutlier;
-//    }
+public Double getHighestDensityInOutliers(ArrayList<DenseInstance> outliers) throws Exception {
+        Double returnHighest = null;
+        double highestDensity = Integer.MAX_VALUE;
+        //final double density;
+        for (DenseInstance outlier : outliers) {
+            double density = densityClass.logDensityForInstance(outlier);
+            if (density < highestDensity) {
+                highestDensity = densityClass.logDensityForInstance(outlier);
+                returnHighest = highestDensity;
+            }
+        }
+        return returnHighest;
+    }
      
     /**
      *
