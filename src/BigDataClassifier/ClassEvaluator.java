@@ -22,6 +22,8 @@ public class ClassEvaluator {
     int trainDatasetSize;
     int testDatasetSize;
     SupervisedClassifier sc = new SupervisedClassifier();
+    UnsupervisedClassifier uc = new UnsupervisedClassifier();
+
     //set folds
     int folds = 3;
     
@@ -119,7 +121,13 @@ public class ClassEvaluator {
             }
             else
             {
-                       //use unsupervised classifier
+                try {
+                    //use unsupervised classifier
+                    uc.probClass(testDataset2);
+                } catch (Exception ex) {
+                    Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
         }
 	/** 

@@ -170,8 +170,8 @@ public class FileTypeEnablerAndProcessor {
              */
             classIndex = traindata.numAttributes()-1;
             traindata.setClassIndex(classIndex);
-            if( traindata.attribute("class") != null || traindata.attribute("Class") != null
-                     || classIndex == traindata.numAttributes()-1 && traindata.size()>= testdata.size())
+            if( classIndex == traindata.numAttributes()-1 || traindata.attribute("class") != null || traindata.attribute("Class")!= null
+                     && traindata.size()>= testdata.size())
             {
     	        System.out.println("class attribute found...." );
                 System.out.println("Initial training set is larger than the test set...." + traindata.size() );
@@ -195,7 +195,7 @@ public class FileTypeEnablerAndProcessor {
                     classIndex = traindata.numAttributes()-1;
                     traindata.setClassIndex(classIndex);
                     System.out.println("Class to predict is = " + traindata.classAttribute() + "\n" );
-                    uc.probClass(traindata);
+                   // uc.probClass(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }

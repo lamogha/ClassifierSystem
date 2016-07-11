@@ -92,7 +92,20 @@ public class UnsupervisedClassifier {
                     int nOutliers = 2; //TODO Calculate this
                     Cloud sc = getCloudWithLessPoints(clouds);
                     double minPoints = Math.max(3, sc.getPoint() * 0.15);
-                    
+                    double density = getHighestDensityInOutliers(outliers);
+                    double averageDensity = getAverageDensityofClouds();
+                    if (nOutliers > minPoints &&  density > averageDensity){
+                        Cloud nc = new Cloud();
+                        double meanOfDataSamples = getMeanofInstances(outliers);
+                        nc.setFocalPoint(meanOfDataSamples);
+                        double meanZIforAllExistingClouds = getMeanOfZI(clouds);
+                        nc.setZoneOfInfluence(meanZIforAllExistingClouds * 0.5 + initialZI);
+                        nc.setPoint(clouds.size());
+                        clouds.add(nc);
+                    }
+                    else{
+                        //do nothing, because it is an outlier
+                    }
                 }
             }
             k++;
@@ -102,29 +115,59 @@ public class UnsupervisedClassifier {
     public static Cloud getCloudWithLessPoints(ArrayList<Cloud> clouds) {
         Cloud returnCloud = null;
         double point = Integer.MAX_VALUE;
-        for (Cloud cloud : clouds) {
-            if (cloud.getPoint() < point) {
-                point = cloud.getPoint();
-                returnCloud = cloud;
+        for (Cloud cloudLessPoint : clouds) {
+            if (cloudLessPoint.getPoint() < point) {
+                point = cloudLessPoint.getPoint();
+                returnCloud = cloudLessPoint;
             }
         }
         return returnCloud;
     }
 
-public Double getHighestDensityInOutliers(ArrayList<DenseInstance> outliers) throws Exception {
-        Double returnHighest = null;
+    public Double getHighestDensityInOutliers(ArrayList<DenseInstance> outliers) throws Exception {
         double highestDensity = Integer.MAX_VALUE;
-        //final double density;
         for (DenseInstance outlier : outliers) {
             double density = densityClass.logDensityForInstance(outlier);
-            if (density < highestDensity) {
-                highestDensity = densityClass.logDensityForInstance(outlier);
-                returnHighest = highestDensity;
+            if (density > highestDensity) {
+                highestDensity = density;
             }
         }
-        return returnHighest;
+        return highestDensity;
+    }
+    
+    public double getAverageDensityofClouds() throws Exception{
+        int sumDense = 0;
+        int i = 0;
+        //to get the density of all existing clouds, to use in findind average density
+            while (i<clouds.size())
+                {
+                    double densityOfEach = densityClass.logDensityForInstance(clouds.get(i).getDenseInstance());
+                    sumDense += densityOfEach;
+                    i++;
+                }
+        System.out.println("The sum of density for all existing cloud is: " + sumDense);
+        double averageDensity = sumDense / clouds.size();
+        return averageDensity;
     }
      
+     public static double getMeanofInstances(ArrayList<DenseInstance> outliers) {
+        double mean;
+        double weights = 0;
+        for (DenseInstance out : outliers) {
+            weights += out.weight();
+            }
+        mean = weights / outliers.size();
+        return mean;
+    }
+    
+     public static double getMeanOfZI(ArrayList<Cloud> clouds) {
+        double zoneOfInfluence = 0;
+        for (Cloud cloudZI : clouds) {
+            zoneOfInfluence += cloudZI.getZoneOfInfluence();
+        }
+        double meanZI = zoneOfInfluence / clouds.size();
+        return meanZI;
+    }
     /**
      *
      * @param dataset
