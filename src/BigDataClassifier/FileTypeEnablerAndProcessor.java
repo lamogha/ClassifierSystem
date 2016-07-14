@@ -35,7 +35,7 @@ public class FileTypeEnablerAndProcessor {
     
     public void fileEntry () throws Exception{
     	
-    	File folder = new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2");
+    	File folder = new File("/workspace/data/data2");
     	fp  = new FileTypeEnablerAndProcessor();
     	fp.enableFileTypes();
         fp.processFolder(folder);
@@ -46,7 +46,7 @@ public class FileTypeEnablerAndProcessor {
     	if(!folder.isDirectory()){
     		traindata = new Instances(new BufferedReader(new FileReader(folder)));
     		testdata = new Instances(new BufferedReader(new FileReader
-    				("H:\\NetBeansProjects\\BigDataClassification\\data\\data2")));
+    				("/workspace/data/data2")));
         	System.out.println(traindata.toSummaryString());
                 this.chooseClassifier();
     	}
@@ -79,7 +79,7 @@ public class FileTypeEnablerAndProcessor {
     	                    	System.out.println("Name of path " + fileEntry.getAbsolutePath());
     	                    	loader.setSource(folder);
     	                    	traindata = loader.getDataSet();
-    	                	System.out.println(traindata.toSummaryString());
+    	                    	System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	                		
     	                    } 
@@ -195,7 +195,7 @@ public class FileTypeEnablerAndProcessor {
                     classIndex = traindata.numAttributes()-1;
                     traindata.setClassIndex(classIndex);
                     System.out.println("Class to predict is = " + traindata.classAttribute() + "\n" );
-                   // uc.probClass(traindata);
+                    uc.autoProbClass(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }

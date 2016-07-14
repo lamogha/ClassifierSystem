@@ -17,7 +17,7 @@ import weka.core.DenseInstance;
 
 public class UnsupervisedClassifier {
 
-    private static final int CLOSENESS_THRESHOLD = 2;
+    private static final int CLOSENESS_THRESHOLD = 1;
     private static ArrayList<DenseInstance> cloud = new ArrayList<>();
     private static ArrayList<Cloud> clouds = new ArrayList<>();
     private static ArrayList<DenseInstance> outliers = new ArrayList<>();
@@ -173,38 +173,42 @@ public class UnsupervisedClassifier {
      * @param dataset
      * @throws java.lang.Exception
      */
-//    public void autoProbClass(Instances dataset) throws Exception {
-//        //Define the intial zone of influence ZI
-//        double initialZI = 0.3;
-//        int k = 0;
-//        Instances xk = new Instances(dataset);
-//        double ncZI = initialZI;
-//        int ncPoints = 0;
-//        double ncFocalpoint = 0;
-//        ListIterator iterator = xk.listIterator();
-//        EuclideanDistance eu = new EuclideanDistance();
-//        //start reading in the instances
-//        while (iterator.hasNext()) {
-//            if (k == 0) {
-//                DenseInstance nc = (DenseInstance) iterator.next();
-//                nc.setClassValue(k);
-//                ncFocalpoint = xk.meanOrMode(k);
-//                ncZI = initialZI;
-//                cloud.add(nc);
-//                ncPoints = 1;
-//                System.out.println("First cloud added");
-//            } else {
-//                DenseInstance nc = (DenseInstance) iterator.next();
-//                System.out.println(nc.numValues());
-//                System.out.println(getInstanceIdentifier(nc));
-//                System.out.println(nc.weight());
-//                System.out.println("==========");
-//
-//                //update close clouds
-//                for (DenseInstance cloudInstance : cloud) {
-//                    if (compareInstances(nc, cloudInstance) > (nc.numAttributes() - CLOSENESS_THRESHOLD)) {
-//
-//                    }
+    public void autoProbClass(Instances dataset) throws Exception {
+        //Define the intial zone of influence ZI
+        double initialZI = 0.3;
+        int k = 0;
+        Instances xk = new Instances(dataset);
+        double ncZI = initialZI;
+        int ncPoints = 0;
+        double ncFocalpoint = 0;
+        ListIterator iterator = xk.listIterator();
+        EuclideanDistance eu = new EuclideanDistance();
+        //start reading in the instances
+        while (iterator.hasNext()) {
+            if (k == 0) {
+                DenseInstance nc = (DenseInstance) iterator.next();
+                nc.setClassValue(k);
+                ncFocalpoint = xk.meanOrMode(k);
+                ncZI = initialZI;
+                cloud.add(nc);
+                ncPoints = 1;
+                System.out.println("First cloud added");
+            } else {
+                DenseInstance nc = (DenseInstance) iterator.next();
+                //System.out.println(nc.numValues());
+                System.out.println("Instance identifier for " + nc + " is: " + getInstanceIdentifier(nc));
+                //System.out.println(nc.weight());
+                System.out.println("==========");
+
+                //update close clouds
+                for (DenseInstance cloudInstance : cloud) {
+                    if (compareInstances(nc, cloudInstance)) {
+                    	System.out.println("Instance is close to previous instance, based on score");
+                    }
+                    else{
+                    	System.out.println("Instance is not close to previous");
+                    }
+                }
 //                    Integer cc = cloudInstance.indexOf((int) (2 * ncZI));
 //                    ncFocalpoint = (ncFocalpoint * ncPoints + (xk.get(k).numValues())) / (ncPoints + 1);
 //                    List<Double> attribute;
@@ -257,23 +261,24 @@ public class UnsupervisedClassifier {
 //                 * }
 //                 * } *
 //                 */
-//            }
-//            k = k + 1;
-//
-//        }
-//
-//    }
+            }
+            k = k + 1;
+
+            }
+
+    }
 
 
     private static boolean compareInstances(Instance instanceA, Instance instanceB) {
         String instanceAIdentifier = getInstanceIdentifier(instanceA);
         String instanceBIdentifier = getInstanceIdentifier(instanceB);
         int score = 0;
-        for (int i = 0; i < instanceAIdentifier.length(); i++) {
+        for (int i = 0; i < instanceBIdentifier.length(); i++) {
             if (instanceAIdentifier.charAt(i) == instanceBIdentifier.charAt(i)) {
-                score++;
+                score = score+1;
             }
         }
+        System.out.println(score);
         return instanceA.numAttributes() - score <= CLOSENESS_THRESHOLD;
     }
 
