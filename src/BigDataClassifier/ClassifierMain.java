@@ -5,16 +5,7 @@
  */
 package src.BigDataClassifier;
 
-import java.io.File;
-
-import weka.core.Instances;
-import weka.core.converters.ArffSaver;
-import weka.core.converters.DatabaseLoader;
-import weka.experiment.InstanceQuery;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-
+import BigDataClassifier.DirectoryChooser;
 /**
  *Starts the processing of the dataset to be classified or clustered
  * @author lamogha
@@ -22,37 +13,41 @@ import java.sql.DriverManager;
 public class ClassifierMain {
 
 	public static void main(String args[]) throws Exception {
-	/**
-		Class.forName ("com.mysql.jdbc.Driver");
-        System.out.println("Driver loaded...");
-        Connection conn = DriverManager.getConnection ("jdbc:mysql://adegokeobasa.me:3306/classic_models","lamogha","l@mmyPHD");
-        System.out.println("connection established...");
+          
+             /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(DirectoryChooser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DirectoryChooser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(DirectoryChooser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DirectoryChooser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new DirectoryChooser().setVisible(true);
+            }
+        });
         
-        DatabaseLoader loader = new DatabaseLoader();
-        loader.connectToDatabase();
-    	loader.setSource("jdbc:mysql://adegokeobasa.me:3306/classic_models/customers", "lamogha", "l@mmyPHD" );
-    	Instances traindata = loader.getDataSet();
-    	System.out.println(traindata.toSummaryString());
-    	 
-    	ArffSaver saver = new ArffSaver();
-    	 saver.setInstances(traindata);
-    	 saver.setFile(new File("/workspace/data/classic_models.arff"));
-    	 saver.writeBatch();
-    	 
-    	 conn.close();
-
-		InstanceQuery query = new InstanceQuery();
-		 query.setUsername("lamogha");
-		 query.setPassword("l@mmyPHD");
-		 query.setQuery("select * from customers");
-		 // You can declare that your data set is sparse
-		 // query.setSparseData(true);
-		 Instances data = query.retrieveInstances();
-		 System.out.println(data.toSummaryString());
-		 */
-
-		FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
-                f.fileEntry();
-                
+        /*call the FileTypeEnablerAndProcessor class*/
+//		FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
+//                f.fileEntry();
+//  
     }
 }

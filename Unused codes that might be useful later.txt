@@ -1,0 +1,36 @@
+	/**
+		Class.forName ("com.mysql.jdbc.Driver");
+        System.out.println("Driver loaded...");
+        Connection conn = DriverManager.getConnection ("jdbc:mysql://adegokeobasa.me:3306/classic_models","lamogha","l@mmyPHD");
+        System.out.println("connection established...");
+        
+        DatabaseLoader loader = new DatabaseLoader();
+        loader.connectToDatabase();
+    	loader.setSource("jdbc:mysql://adegokeobasa.me:3306/classic_models/customers", "lamogha", "l@mmyPHD" );
+    	Instances traindata = loader.getDataSet();
+    	System.out.println(traindata.toSummaryString());
+    	 
+    	ArffSaver saver = new ArffSaver();
+    	 saver.setInstances(traindata);
+    	 saver.setFile(new File("/workspace/data/classic_models.arff"));
+    	 saver.writeBatch();
+    	 
+    	 conn.close();
+
+		InstanceQuery query = new InstanceQuery();
+		 query.setUsername("lamogha");
+		 query.setPassword("l@mmyPHD");
+		 query.setQuery("select * from customers");
+		 // You can declare that your data set is sparse
+		 // query.setSparseData(true);
+		 Instances data = query.retrieveInstances();
+		 System.out.println(data.toSummaryString());
+		 */
+
+//		FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
+//                f.fileEntry();
+//   
+
+
+
+

@@ -5,16 +5,11 @@ package src.BigDataClassifier;
 import weka.core.Instances;
 import weka.classifiers.*;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.bayes.NaiveBayesUpdateable;
-import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.meta.AdaBoostM1;
-import weka.classifiers.meta.FilteredClassifier;
-import weka.classifiers.rules.M5Rules;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.DecisionStump;
 import weka.classifiers.trees.M5P;
 import weka.classifiers.trees.RandomForest;
-import weka.filters.unsupervised.attribute.Remove;
 
 /**
  *

@@ -1,7 +1,5 @@
 package src.BigDataClassifier;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,7 +8,6 @@ import weka.classifiers.Evaluation;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
 import static weka.core.Attribute.NOMINAL;
-import static weka.core.Attribute.NUMERIC;
 import static weka.core.Attribute.RELATIONAL;
 import static weka.core.Attribute.STRING;
 import weka.core.Instances;

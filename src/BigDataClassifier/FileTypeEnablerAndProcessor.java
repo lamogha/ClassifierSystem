@@ -4,19 +4,12 @@ and determine what classifier to use based on filetype
  */
 package src.BigDataClassifier;
 import java.io.*;
-
 import weka.core.Instances;
-import weka.core.UnassignedClassException;
 import weka.core.converters.CSVLoader;
 import weka.core.converters.TextDirectoryLoader;
-
-import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import weka.core.Instance;
 import weka.core.converters.DatabaseConnection;
-
-import weka.core.converters.DatabaseLoader;
 import weka.core.converters.JSONLoader;
 import weka.core.converters.XRFFLoader;
 import weka.experiment.InstanceQuery;
@@ -25,30 +18,83 @@ import weka.experiment.InstanceQuery;
  * @author lamogha
  */
 public class FileTypeEnablerAndProcessor {
-    private static final HashSet<String> structuredDataSetExt = new HashSet<>();
-    private static final HashSet<String> unstructuredDataSetExt = new HashSet<>();
     FileTypeEnablerAndProcessor fp;
     SupervisedClassifier sc = new SupervisedClassifier();
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
     ClassEvaluator ce = new ClassEvaluator();
     Instances traindata, testdata;
     
-    public void fileEntry () throws Exception{
+    public void fileEntry (File file) throws Exception{
     	
-    	File folder = new File("/workspace/data/data2");
+        File folder =  file;
     	fp  = new FileTypeEnablerAndProcessor();
-    	fp.enableFileTypes();
         fp.processFolder(folder);
     }
     
     public void processFolder(File folder) throws Exception{
     	
     	if(!folder.isDirectory()){
-    		traindata = new Instances(new BufferedReader(new FileReader(folder)));
-    		testdata = new Instances(new BufferedReader(new FileReader
-    				("/workspace/data/data2")));
-        	System.out.println(traindata.toSummaryString());
-                this.chooseClassifier();
+    		//manipulate file here
+    	        String fileName = folder.getName();
+    	        System.out.println(fileName);
+                //String extension = getFileExtension(fileName);
+                testdata = new Instances(new BufferedReader(new FileReader
+    			(folder)));
+    	            if(!fileName.startsWith(".") && (fileName.contains(".csv")||fileName.contains(".xls")))
+    	            {
+    	                CSVLoader loader = new CSVLoader();
+    	                loader.setSource(new File (folder.getAbsolutePath()));
+    	                traindata = loader.getDataSet();
+    	                System.out.println(traindata.toSummaryString());
+                        this.chooseClassifier();
+    	            }
+    	                    
+    	            else if (!fileName.startsWith(".") && fileName.contains(".txt")){
+    	                    	
+    	                    	TextDirectoryLoader loader = new TextDirectoryLoader ();
+    	                    	System.out.println( "About to load text file " + fileName);
+    	                    	System.out.println("Name of path " + folder.getAbsolutePath());
+    	                    	loader.setSource(folder);
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
+                                this.chooseClassifier();
+    	                		
+    	            } 
+                    else if (!fileName.startsWith(".") && fileName.contains(".json")){
+                                JSONLoader loader = new JSONLoader();
+    	                    	loader.setSource(new File (folder.getAbsolutePath()));
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
+                                this.chooseClassifier();
+                    }
+                    else if (!fileName.startsWith(".") && fileName.contains(".xrff")){
+                                XRFFLoader loader = new XRFFLoader();
+    	                    	loader.setSource(new File (folder.getAbsolutePath()));
+    	                    	traindata = loader.getDataSet();
+    	                    	System.out.println(traindata.toSummaryString());
+                                this.chooseClassifier();
+                    }
+                    else if (!fileName.startsWith(".") && fileName.contains(".arff")){
+    	                    	traindata = new Instances(new BufferedReader(new FileReader
+    	                    			(folder.getAbsolutePath())));
+                                testdata = new Instances(new BufferedReader(new FileReader
+                                                (folder)));
+    	                    	System.out.println(traindata.toSummaryString());
+                                this.chooseClassifier();
+    	            }
+                    else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
+                                DatabaseConnection loader = new DatabaseConnection();
+                                loader.connectToDatabase();
+    	                    	InstanceQuery query = new InstanceQuery();
+                                query.setUsername("lamogha");
+                                query.setPassword("l@mmyPHD");
+                                query.setQuery("select * from customers");
+                                // You can declare that your data set is sparse
+                                // query.setSparseData(true);
+                                Instances data = query.retrieveInstances();
+                                System.out.println(data.toSummaryString());
+                                this.chooseClassifier();
+                    }
     	}
     	else{
     		
@@ -118,26 +164,13 @@ public class FileTypeEnablerAndProcessor {
                                 this.chooseClassifier();
                             }
                         
-    	                  }
+    	                }
     	             }
-    		
+    		   //System.exit(0);
     	}
        
-   }
-    	        
-     public void enableFileTypes() {
-        //structured data sets
-        structuredDataSetExt.add("csv");
-        structuredDataSetExt.add("xls");
-        structuredDataSetExt.add("arff");
-        
-        //unstructured data sets
-        unstructuredDataSetExt.add("mp3");
-        unstructuredDataSetExt.add("txt");
-        unstructuredDataSetExt.add("json");
-        unstructuredDataSetExt.add("xml");
-    }
-     
+   }    	        
+ 
        public void listFilesForFolder(File fileEntry) {
         if (fileEntry.isDirectory()) {
             listFilesForFolder(fileEntry);

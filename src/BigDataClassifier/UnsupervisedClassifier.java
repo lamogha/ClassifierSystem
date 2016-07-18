@@ -3,10 +3,7 @@
  */
 package src.BigDataClassifier;
 
-import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ListIterator;
 import weka.clusterers.*;
 import weka.core.Instances;
@@ -203,7 +200,7 @@ public class UnsupervisedClassifier {
                 //update close clouds
                 for (DenseInstance cloudInstance : cloud) {
                     if (compareInstances(nc, cloudInstance)) {
-                    	System.out.println("Instance is close to previous instance, based on score");
+                    	System.out.println("Instance is close to previous instance, based on score using identifier");
                     }
                     else{
                     	System.out.println("Instance is not close to previous");
