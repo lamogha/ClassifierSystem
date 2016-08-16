@@ -26,10 +26,7 @@
 		 Instances data = query.retrieveInstances();
 		 System.out.println(data.toSummaryString());
 		 */
-
-//		FileTypeEnablerAndProcessor f = new FileTypeEnablerAndProcessor ();
-//                f.fileEntry();
-//   
+ 
 
 
 
