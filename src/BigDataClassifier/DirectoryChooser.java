@@ -87,6 +87,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
         textField.setText(filename);
         redirectSystemStreams();
         if (textField.getText().equalsIgnoreCase(filename)) {
+            //start the file type enabler and processor class
             src.BigDataClassifier.FileTypeEnablerAndProcessor enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
             try {
                 enabler.fileEntry(file);
