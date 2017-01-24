@@ -23,10 +23,12 @@ public class FileTypeEnablerAndProcessor {
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
     ClassEvaluator ce = new ClassEvaluator();
     Instances traindata, testdata;
-    
-    public void fileEntry (File file) throws Exception{
+
+    public void fileEntry () throws Exception{
     	
-        File folder =  file;
+        //File folder =  file;
+        File folder = new File ("H:\\NetBeansProjects\\BigDataClassification\\data");
+        System.out.println("file location opened");
     	fp  = new FileTypeEnablerAndProcessor();
         fp.processFolder(folder);
     }
