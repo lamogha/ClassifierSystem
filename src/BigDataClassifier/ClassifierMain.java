@@ -46,8 +46,9 @@ public class ClassifierMain {
 //        });
         
         /*call the FileTypeEnablerAndProcessor class*/
-            src.BigDataClassifier.FileTypeEnablerAndProcessor enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
-            enabler.fileEntry();
+        src.BigDataClassifier.FileTypeEnablerAndProcessor enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
+        enabler.fileEntry();
+        
   
     }
 }

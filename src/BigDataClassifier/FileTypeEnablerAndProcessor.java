@@ -27,7 +27,7 @@ public class FileTypeEnablerAndProcessor {
     public void fileEntry () throws Exception{
     	
         //File folder =  file;
-        File folder = new File ("H:\\NetBeansProjects\\BigDataClassification\\data");
+        File folder = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\contact-lenses-test.arff");
         System.out.println("file location opened");
     	fp  = new FileTypeEnablerAndProcessor();
         fp.processFolder(folder);
@@ -203,8 +203,8 @@ public class FileTypeEnablerAndProcessor {
              * exists in the dataset (meaning some labeled instances exists),
              * depending on the size of the training set, the decision is taken.
              */
-            classIndex = traindata.numAttributes()-1;
-            traindata.setClassIndex(classIndex);
+//            classIndex = traindata.numAttributes()-1;
+//            traindata.setClassIndex(classIndex);
             if( classIndex == traindata.numAttributes()-1 || traindata.attribute("class") != null || traindata.attribute("Class")!= null
                      && traindata.size()>= testdata.size())
             {
