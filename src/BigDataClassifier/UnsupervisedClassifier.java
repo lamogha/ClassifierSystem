@@ -358,20 +358,31 @@ public class UnsupervisedClassifier {
     
 
     private static ArrayList<Boolean> compareInstancesTest(DenseInstance instanceA) {
-
-        String instanceAIdentifier = getInstanceIdentifier(instanceA);
+    	double instanceAIdentifier = 0, instanceBIdentifier = 0 ;
+        //String instanceAIdentifier = getInstanceIdentifier(instanceA);
+    	for (int i = 0; i<instanceA.numAttributes(); i++){
+            instanceAIdentifier = instanceA.value(i);
+            System.out.println("INSTANCE VALUE IS = " + instanceAIdentifier );
+    	}
         int score = 0;
         ArrayList<Boolean> howCloseList = new ArrayList<Boolean>();
         int counter = 0;
         
         for (DenseInstance instanceB : cloud) {
             
-            String instanceBIdentifier = getInstanceIdentifier(instanceB);
+            //String instanceBIdentifier = getInstanceIdentifier(instanceB);
             for (int i = 0; i < instanceA.numAttributes(); i++) {
-                
-                if (instanceAIdentifier.charAt(i) == instanceBIdentifier.charAt(i)) {
-                    score = score + 1;
+                instanceBIdentifier = instanceB.value(i);
+                System.out.println("====INSTANCE VALUE IS = " + instanceBIdentifier );
+                if (instanceAIdentifier == instanceBIdentifier) {
+                	System.out.println("true they are same");
                 }
+                else
+                	System.out.println("false they are the same");
+                	
+//                if (instanceAIdentifier.charAt(i) == instanceBIdentifier.charAt(i)) {
+//                    score = score + 1;
+//                }
             }
 
             howCloseList.add(instanceB.numAttributes() - score <= CLOSENESS_THRESHOLD);

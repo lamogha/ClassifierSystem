@@ -27,7 +27,7 @@ public class FileTypeEnablerAndProcessor {
     public void fileEntry () throws Exception{
     	
         //File folder =  file;
-        File folder = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\contact-lenses-test.arff");
+        File folder = new File ("/workspace/data/data2/soybean.arff");
         System.out.println("file location opened");
     	fp  = new FileTypeEnablerAndProcessor();
         fp.processFolder(folder);

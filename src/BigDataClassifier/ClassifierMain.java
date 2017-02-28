@@ -5,7 +5,7 @@
  */
 package src.BigDataClassifier;
 
-import BigDataClassifier.DirectoryChooser;
+import src.BigDataClassifier.DirectoryChooser;
 /**
  *Starts the processing of the dataset to be classified or clustered
  * @author lamogha
@@ -46,9 +46,8 @@ public class ClassifierMain {
 //        });
         
         /*call the FileTypeEnablerAndProcessor class*/
-        src.BigDataClassifier.FileTypeEnablerAndProcessor enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
-        enabler.fileEntry();
-        
+            src.BigDataClassifier.FileTypeEnablerAndProcessor enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
+            enabler.fileEntry();
   
     }
 }
