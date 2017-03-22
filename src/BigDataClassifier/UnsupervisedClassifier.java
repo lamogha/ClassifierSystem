@@ -358,41 +358,41 @@ public class UnsupervisedClassifier {
     
 
     private static ArrayList<Boolean> compareInstancesTest(DenseInstance instanceA) {
-    	double instanceAIdentifier = 0, instanceBIdentifier = 0 ;
         //String instanceAIdentifier = getInstanceIdentifier(instanceA);
-    	for (int i = 0; i<instanceA.numAttributes(); i++){
-            instanceAIdentifier = instanceA.value(i);
-            System.out.println("INSTANCE VALUE IS = " + instanceAIdentifier );
-    	}
-        int score = 0;
+        int trueScore = 0;
+        int falseScore = 0;
         ArrayList<Boolean> howCloseList = new ArrayList<Boolean>();
-        int counter = 0;
         
         for (DenseInstance instanceB : cloud) {
-            
+            System.out.println("==================");
             //String instanceBIdentifier = getInstanceIdentifier(instanceB);
             for (int i = 0; i < instanceA.numAttributes(); i++) {
-                instanceBIdentifier = instanceB.value(i);
-                System.out.println("====INSTANCE VALUE IS = " + instanceBIdentifier );
+               double instanceAIdentifier = instanceA.value(i);
+               System.out.println("INSTANCE VALUE OF NEW A @ INDEX POINT " + i + " IS  = " + instanceAIdentifier );
+               double instanceBIdentifier = instanceB.value(i);
+               System.out.println("INSTANCE VALUE OF EXISTING B @ INDEX POINT " + i + " IS  = " + instanceBIdentifier );
                 if (instanceAIdentifier == instanceBIdentifier) {
-                	System.out.println("true they are same");
+                	System.out.println("true they are same \n");
+                        trueScore = trueScore + 1;
                 }
-                else
-                	System.out.println("false they are the same");
-                	
+                else if(instanceAIdentifier != instanceBIdentifier) {
+                    falseScore = falseScore + 1;
+                	System.out.println("false they are the same \n");
+                }
+                    
+                        
 //                if (instanceAIdentifier.charAt(i) == instanceBIdentifier.charAt(i)) {
 //                    score = score + 1;
 //                }
             }
 
-            howCloseList.add(instanceB.numAttributes() - score <= CLOSENESS_THRESHOLD);
-
-            System.out.println("SCORE = "+score);
-            score = 0;
-            
-            counter++; 
+            howCloseList.add(instanceB.numAttributes() - trueScore <= CLOSENESS_THRESHOLD);
+            System.out.println("TRUE SCORE = "+trueScore);
+            System.out.println("FALSE SCORE = " + falseScore);
+            trueScore = 0;
+            falseScore = 0;
         }
-
+        
         cloud.add(instanceA);
         
         return howCloseList;

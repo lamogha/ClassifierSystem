@@ -5,7 +5,6 @@
  */
 package src.BigDataClassifier;
 
-import src.BigDataClassifier.DirectoryChooser;
 /**
  *Starts the processing of the dataset to be classified or clustered
  * @author lamogha
