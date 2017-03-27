@@ -1,0 +1,27 @@
+SIMILAR : DISSIMILAR USe 0.8 : 0.2 OR 90% : 10%
+if you say 1 out of 5, you will have more results but if we say 1 out of 10, then it means it'll reduce amount of alerts.
+
+25/36 = 0.694  
+11/36 = o.306 = 3.6 (10% of 36 for dissimilar). 11 > 4 (not close enough)
+
+Ex 2
+29/36 = 0.806
+7/36 = 0.194 = 7 > 4 (not close enough)
+
+24/36 = 0.667
+12/26 = 0.333 = 12 > 4 (not close enough)
+
+
+OR 
+
+Using proportions and percentages we would find 'what is 11 false result as a %percent of 36 (total no of att)?'
+11/36 * 100% =  30.55
+7/36 * 100% = 19.4%
+12/36 * 100% = 33.3%
+
+if it is like 3 false out of 36
+3/36 * 100% = 8.33% 
+
+IF 'ANS' <= 10% (+ or - 1) THEN WE CAN SAY ITS CLOSE ENOUGH. Is this an effective way of doing this? 
+
+Find out and compare it to using a distance measurement method to calculate the distance between 2 identifiers.

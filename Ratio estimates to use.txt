@@ -1,0 +1,16 @@
+4:1 1st choice
+3:2 = 1.5 2nd choice
+5:2	third choice
+8:2 OR 
+12:3
+
+
+X:Y
+Q:R
+
+Q/R should be = X +/- 0.45
+R/R should be = Y +/- 0.45
+
+For example: say we have 27:3 as the ratio of similar:unsimilar
+
+Then it must satisfy the ratio statement that 27/3 must be = 4 +/- 0.44 if reduced to its smallest form

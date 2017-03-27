@@ -30,11 +30,12 @@
 
 @data
 %
-% 10 instances
+% 11 instances
 %
 young,myope,no,reduced,none
 young,myope,no,normal,soft
 young,myope,yes,reduced,none
+young,myope,no,reduced,none
 young,myope,yes,normal,hard
 young,hypermetrope,no,reduced,none
 young,hypermetrope,no,normal,soft
