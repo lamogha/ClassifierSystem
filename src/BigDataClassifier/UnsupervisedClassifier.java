@@ -11,6 +11,7 @@ import weka.core.EuclideanDistance;
 import weka.core.Instance;
 import weka.clusterers.AbstractDensityBasedClusterer;
 import weka.core.DenseInstance;
+import java.math.*;
 
 public class UnsupervisedClassifier {
 
@@ -257,12 +258,12 @@ public class UnsupervisedClassifier {
 
                     DenseInstance nc = (DenseInstance) iterator.next();
                     //System.out.println(nc.numValues());
-                    System.out.println("Instance identifier for " + nc + " is: " + getInstanceIdentifier(nc));
+                    System.out.println("\n" + "Instance identifier for " + nc + " is: " + getInstanceIdentifier(nc));
                     //System.out.println(nc.weight());
                     System.out.println("==========");
 
                     ArrayList<Boolean> booleanList = compareInstancesTest(nc);
-                    System.out.println("List of how close they are: "+booleanList);
+                    System.out.println("List of how close they are: " + booleanList);
 
                     /*for(boolean item : booleanList){
                         if (item == true) {
@@ -357,25 +358,25 @@ public class UnsupervisedClassifier {
     
     
 
-    private static ArrayList<Boolean> compareInstancesTest(DenseInstance instanceA) {
+    private static ArrayList<Boolean> compareInstancesTest(DenseInstance instanceNew) {
         //String instanceAIdentifier = getInstanceIdentifier(instanceA);
         int trueScore = 0;
         int falseScore = 0;
         ArrayList<Boolean> howCloseList = new ArrayList<Boolean>();
         
-        for (DenseInstance instanceB : cloud) {
+        for (DenseInstance instanceOld : cloud) {
             System.out.println("==================");
             //String instanceBIdentifier = getInstanceIdentifier(instanceB);
-            for (int i = 0; i < instanceA.numAttributes(); i++) {
-               double instanceAIdentifier = instanceA.value(i);
-               System.out.println("INSTANCE VALUE OF NEW A @ INDEX POINT " + i + " IS  = " + instanceAIdentifier );
-               double instanceBIdentifier = instanceB.value(i);
-               System.out.println("INSTANCE VALUE OF EXISTING B @ INDEX POINT " + i + " IS  = " + instanceBIdentifier );
-                if (instanceAIdentifier == instanceBIdentifier) {
+            for (int i = 0; i < instanceNew.numAttributes(); i++) {
+               double instanceNewIdentifier = instanceNew.value(i);
+               System.out.println("INSTANCE VALUE OF NEW data @ INDEX POINT " + i + " IS  = " + instanceNewIdentifier );
+               double instanceOldIdentifier = instanceOld.value(i);
+               System.out.println("INSTANCE VALUE OF EXISTING data @ INDEX POINT " + i + " IS  = " + instanceOldIdentifier );
+                if (instanceNewIdentifier == instanceOldIdentifier) {
                 	System.out.println("true they are same \n");
                         trueScore = trueScore + 1;
                 }
-                else if(instanceAIdentifier != instanceBIdentifier) {
+                else if(instanceNewIdentifier != instanceOldIdentifier) {
                     falseScore = falseScore + 1;
                 	System.out.println("false they are the same \n");
                 }
@@ -385,15 +386,25 @@ public class UnsupervisedClassifier {
 //                    score = score + 1;
 //                }
             }
+            
+            System.out.println("Disimilar estimate " + (float)falseScore/instanceOld.numAttributes());
+            float similarityMeasure = (float)falseScore/instanceOld.numAttributes() * 100;
+            System.out.println("SCORE PERCENTAGE OF THE NUMBER OF FALSE MATCHES " + similarityMeasure);
+            
+            if (similarityMeasure > 10.04){
+                howCloseList.add(false);
+            }
+            else{
+                howCloseList.add(true);
+            }
 
-            howCloseList.add(instanceB.numAttributes() - trueScore <= CLOSENESS_THRESHOLD);
             System.out.println("TRUE SCORE = "+trueScore);
             System.out.println("FALSE SCORE = " + falseScore);
             trueScore = 0;
             falseScore = 0;
         }
         
-        cloud.add(instanceA);
+        cloud.add(instanceNew);
         
         return howCloseList;
 
@@ -425,7 +436,7 @@ public class UnsupervisedClassifier {
             e.printStackTrace();
         }
         return instanceB.numAttributes() - score <= CLOSENESS_THRESHOLD;
-    }
+  }
 
     private static String getInstanceIdentifier(Instance instance) {
 
