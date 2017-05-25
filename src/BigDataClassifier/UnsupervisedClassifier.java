@@ -389,7 +389,7 @@ public class UnsupervisedClassifier {
             
             System.out.println("Disimilar estimate " + (float)falseScore/instanceOld.numAttributes());
             float similarityMeasure = (float)falseScore/instanceOld.numAttributes() * 100;
-            System.out.println("SCORE PERCENTAGE OF THE NUMBER OF FALSE MATCHES " + similarityMeasure);
+            System.out.println("SCORE PERCENTAGE OF THE NUMBER OF FALSE MATCHES " + similarityMeasure + "%");
             
             if (similarityMeasure > 10.04){
                 howCloseList.add(false);
