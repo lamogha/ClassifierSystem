@@ -398,8 +398,8 @@ public class UnsupervisedClassifier {
                 howCloseList.add(true);
             }
 
-            System.out.println("TRUE SCORE = "+trueScore);
-            System.out.println("FALSE SCORE = " + falseScore);
+            System.out.println("--TRUE SCORE = " + trueScore);
+            System.out.println("--FALSE SCORE = " + falseScore);
             trueScore = 0;
             falseScore = 0;
         }
