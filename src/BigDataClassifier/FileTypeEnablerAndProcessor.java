@@ -27,7 +27,7 @@ public class FileTypeEnablerAndProcessor {
     public void fileEntry () throws Exception{
     	
         //File folder =  file;
-        File folder = new File ("/Users/lamogha/git/ClassifierSystem/data/data3/soy-test.arff");
+        File folder = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
         System.out.println("file location opened");
         System.out.println("file location opened");
         System.out.println("file location opened");
