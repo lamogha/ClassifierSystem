@@ -59,73 +59,73 @@ public class UnsupervisedClassifier {
         return newFf;
     }
 
-    public void probClass(Instances dataset) {
-
-        try {
-
-            int k = 0;
-            //Define the intial zone of influence ZI
-            double initialZI = 0.3;
-            Instances xk = new Instances(dataset);
-            ListIterator iterator = xk.listIterator();
-            EuclideanDistance eu = new EuclideanDistance();
-
-            while (iterator.hasNext()) {
-                DenseInstance instance = (DenseInstance) iterator.next();
-                if (k == 0) {
-                    /**
-                     * Create First Cloud *
-                     */
-                    Cloud nc = new Cloud();
-                    nc.setFocalPoint(Double.parseDouble(getInstanceIdentifier(instance)));
-                    nc.setZoneOfInfluence(initialZI);
-                    nc.setPoint(1);
-                    clouds.add(nc);
-                } else {
-                    Cloud existingCloud = clouds.get(k);
-                    if (compareInstances(instance, existingCloud.getDenseInstance())) {
-                        for (int j = 0; j < clouds.size(); j++) {
-                            Cloud cc = clouds.get(j);
-                            double identifier = Double.parseDouble(getInstanceIdentifier(cc.getDenseInstance()));
-                            double denominator = (cc.getPoint() + 1);
-                            cc.setFocalPoint((cc.getFocalPoint() * cc.getPoint() + identifier) / denominator);
-                            cc.setZoneOfInfluence((cc.getZoneOfInfluence() * cc.getPoint() + eu.distance(existingCloud.getDenseInstance(), instance)) / denominator);
-                            cc.setPoint(cc.getPoint() + 1);
-                        }
-                    } else {
-                        /**
-                         * It is an outlier
-                         */
-                        double identifier = Double.parseDouble(getInstanceIdentifier(instance));
-                        outliers.add(instance);
-                        if (outliers.size() > Math.min(100, k * 0.05)) {
-                            outliers.remove(0);
-                        }
-                        int nOutliers = 2; //TODO Calculate this
-                        Cloud sc = getCloudWithLessPoints(clouds);
-                        double minPoints = Math.max(3, sc.getPoint() * 0.15);
-                        double density = getHighestDensityInOutliers(outliers);
-                        double averageDensity = getAverageDensityofClouds();
-                        if (nOutliers > minPoints && density > averageDensity) {
-                            Cloud nc = new Cloud();
-                            double meanOfDataSamples = getMeanofInstances(outliers);
-                            nc.setFocalPoint(meanOfDataSamples);
-                            double meanZIforAllExistingClouds = getMeanOfZI(clouds);
-                            nc.setZoneOfInfluence(meanZIforAllExistingClouds * 0.5 + initialZI);
-                            nc.setPoint(clouds.size());
-                            clouds.add(nc);
-                        } else {
-                            //do nothing, because it is an outlier
-                        }
-                    }
-                }
-                k++;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void probClass(Instances dataset) {
+//
+//        try {
+//
+//            int k = 0;
+//            //Define the intial zone of influence ZI
+//            double initialZI = 0.3;
+//            Instances xk = new Instances(dataset);
+//            ListIterator iterator = xk.listIterator();
+//            EuclideanDistance eu = new EuclideanDistance();
+//
+//            while (iterator.hasNext()) {
+//                DenseInstance instance = (DenseInstance) iterator.next();
+//                if (k == 0) {
+//                    /**
+//                     * Create First Cloud *
+//                     */
+//                    Cloud nc = new Cloud();
+//                    nc.setFocalPoint(Double.parseDouble(getInstanceIdentifier(instance)));
+//                    nc.setZoneOfInfluence(initialZI);
+//                    nc.setPoint(1);
+//                    clouds.add(nc);
+//                } else {
+//                    Cloud existingCloud = clouds.get(k);
+//                    if (compareInstances(instance, existingCloud.getDenseInstance())) {
+//                        for (int j = 0; j < clouds.size(); j++) {
+//                            Cloud cc = clouds.get(j);
+//                            double identifier = Double.parseDouble(getInstanceIdentifier(cc.getDenseInstance()));
+//                            double denominator = (cc.getPoint() + 1);
+//                            cc.setFocalPoint((cc.getFocalPoint() * cc.getPoint() + identifier) / denominator);
+//                            cc.setZoneOfInfluence((cc.getZoneOfInfluence() * cc.getPoint() + eu.distance(existingCloud.getDenseInstance(), instance)) / denominator);
+//                            cc.setPoint(cc.getPoint() + 1);
+//                        }
+//                    } else {
+//                        /**
+//                         * It is an outlier
+//                         */
+//                        double identifier = Double.parseDouble(getInstanceIdentifier(instance));
+//                        outliers.add(instance);
+//                        if (outliers.size() > Math.min(100, k * 0.05)) {
+//                            outliers.remove(0);
+//                        }
+//                        int nOutliers = 2; //TODO Calculate this
+//                        Cloud sc = getCloudWithLessPoints(clouds);
+//                        double minPoints = Math.max(3, sc.getPoint() * 0.15);
+//                        double density = getHighestDensityInOutliers(outliers);
+//                        double averageDensity = getAverageDensityofClouds();
+//                        if (nOutliers > minPoints && density > averageDensity) {
+//                            Cloud nc = new Cloud();
+//                            double meanOfDataSamples = getMeanofInstances(outliers);
+//                            nc.setFocalPoint(meanOfDataSamples);
+//                            double meanZIforAllExistingClouds = getMeanOfZI(clouds);
+//                            nc.setZoneOfInfluence(meanZIforAllExistingClouds * 0.5 + initialZI);
+//                            nc.setPoint(clouds.size());
+//                            clouds.add(nc);
+//                        } else {
+//                            //do nothing, because it is an outlier
+//                        }
+//                    }
+//                }
+//                k++;
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public static Cloud getCloudWithLessPoints(ArrayList<Cloud> clouds) {
 
