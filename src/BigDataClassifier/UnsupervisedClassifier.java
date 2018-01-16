@@ -233,7 +233,7 @@ public class UnsupervisedClassifier {
 
         try {
 
-            //Define the intial zone of influence ZI
+            //Define the initial zone of influence ZI
             double initialZI = 0.3;
             int k = 0;
             Instances xk = new Instances(dataset);

@@ -29,10 +29,6 @@ public class FileTypeEnablerAndProcessor {
         //File folder =  file;
         File folder = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
         System.out.println("file location opened");
-        System.out.println("file location opened");
-        System.out.println("file location opened");
-        System.out.println("file location opened");
-
     	fp  = new FileTypeEnablerAndProcessor();
         fp.processFolder(folder);
     }
@@ -202,9 +198,9 @@ public class FileTypeEnablerAndProcessor {
     }
         
         public void chooseClassifier(){
-            int classIndex = 0; //number of attributes must be greater than 1
+            int classIndex = 0; //number of attributes must be 1 or greater
             /**We can use either a supervised or an un-supervised algorithm if a class attribute already
-             * exists in the dataset (meaning some labeled instances exists),
+             * exists in the dataset (meaning some labelled instances exists),
              * depending on the size of the training set, the decision is taken.
              */
 //            classIndex = traindata.numAttributes()-1;
@@ -223,7 +219,7 @@ public class FileTypeEnablerAndProcessor {
                 }
     	    }
             /**
-             * When there is no class attribute to show labeled instances exists
+             * When there is no class attribute to show labelled instances exists
              * then use an un-supervised algorithm straight;
              * no need for the cross-validation folds.
             */
