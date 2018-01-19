@@ -5,7 +5,7 @@
 12:3
 
 
-X:Y
+X:Y = 4:1
 Q:R
 
 Q/R should be = X +/- 0.45
@@ -13,4 +13,5 @@ R/R should be = Y +/- 0.45
 
 For example: say we have 27:3 as the ratio of similar:unsimilar
 
-Then it must satisfy the ratio statement that 27/3 must be = 4 +/- 0.44 if reduced to its smallest form
+Then it must satisfy the ratio statement that 27/3 must be >= 4 +/- 0.44 (if reduced to its smallest form)
+for us to say there is closeness. OR will be < 4 +/-0.44 for us to say there is no closeness.
