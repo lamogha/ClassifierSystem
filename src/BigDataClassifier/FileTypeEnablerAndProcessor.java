@@ -27,7 +27,7 @@ public class FileTypeEnablerAndProcessor {
     public void fileEntry () throws Exception{
     	
         //File folder =  file;
-        File folder = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
+        File folder = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soybean.arff");
         System.out.println("file location opened");
     	fp  = new FileTypeEnablerAndProcessor();
         fp.processFolder(folder);
@@ -231,6 +231,7 @@ public class FileTypeEnablerAndProcessor {
                     traindata.setClassIndex(classIndex);
                     System.out.println("Class to predict is = " + traindata.classAttribute() + "\n" );
                     uc.autoProbClass(traindata);
+                    //uc.evaluatorClusterer(traindata, uc.useSimpleKMeans(traindata) );
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }

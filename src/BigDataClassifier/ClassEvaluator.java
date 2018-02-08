@@ -5,12 +5,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
-import weka.clusterers.ClusterEvaluation;
-import weka.clusterers.Clusterer;
+import weka.classifiers.evaluation.ThresholdCurve;
 import static weka.core.Attribute.NOMINAL;
 import static weka.core.Attribute.RELATIONAL;
 import static weka.core.Attribute.STRING;
 import weka.core.Instances;
+import weka.core.Utils;
 
 public class ClassEvaluator {
     
@@ -20,6 +20,7 @@ public class ClassEvaluator {
     int testDatasetSize;
     SupervisedClassifier sc = new SupervisedClassifier();
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
+    //ClusterEvaluator clusterEval = new ClusterEvaluator();
 
     //set folds
     int folds = 3;
@@ -120,7 +121,8 @@ public class ClassEvaluator {
             {
                 try {
                     //use unsupervised classifier
-                    uc.probClass(testDataset2);
+                    uc.autoProbClass(testDataset2);
+                    //uc.evaluatorClusterer(trainDataset2, (SimpleKMeans) uc.useEMClusterer(trainDataset2));
                 } catch (Exception ex) {
                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -136,30 +138,15 @@ public class ClassEvaluator {
           return testDatasetSize;
       }
       * */
-        
+        Evaluation eval;
         public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception
         {
               testDataset.setClassIndex(testDataset.numAttributes()-1);
-   	      Evaluation eval = new Evaluation (trainDataset);
+   	      eval = new Evaluation (trainDataset);
               eval.evaluateModel(cs, testDataset);
  	      System.out.println(eval.toSummaryString("Evaluation results:\n", false));
+              System.out.println(eval.areaUnderROC(NOMINAL));
  	      //System.out.println(eval.toMatrixString("Confusion Matrix for this"));
-        }
+        }   
       
-    /**
-     *
-     * @param trainDataset
-     * @param testDataset
-     * @param clusterer
-     * @throws Exception
-     */
-    public void evaluatorClusterer(Instances trainDataset, Instances testDataset, Clusterer clusterer) throws Exception{
-	   
-  	      ClusterEvaluation eval = new ClusterEvaluation ();
-              eval.setClusterer(clusterer);
-              eval.evaluateClusterer(testDataset);
-	      System.out.println(eval.clusterResultsToString());
-	      //System.out.print(eval.evaluateClusterer(testDataset, null, false);
-    }
-
 }

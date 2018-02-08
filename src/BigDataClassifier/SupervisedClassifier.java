@@ -5,11 +5,14 @@ package src.BigDataClassifier;
 import weka.core.Instances;
 import weka.classifiers.*;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.meta.AdaBoostM1;
+import weka.classifiers.meta.FilteredClassifier;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.DecisionStump;
 import weka.classifiers.trees.M5P;
 import weka.classifiers.trees.RandomForest;
+import weka.filters.unsupervised.attribute.Remove;
 
 /**
  *
@@ -38,7 +41,7 @@ public class SupervisedClassifier {
         	 // System.out.println(nb.getCapabilities().toString());
       } 
       
-    /**  public Classifier useClassifierWithFilter(Instances dataset) throws Exception{
+      public Classifier useClassifierWithFilter(Instances dataset) throws Exception{
     	  
 		  dataset.setClassIndex(dataset.numAttributes()-1);
 		  //the filter
@@ -57,7 +60,7 @@ public class SupervisedClassifier {
     	  fc.buildClassifier(dataset);
     	  return fc;	  
       } 
-      *
+      /*
      * @param dataset
      * @return 
      * @throws java.lang.Exception */
@@ -95,6 +98,12 @@ public class SupervisedClassifier {
     	  randomForest.buildClassifier(dataset);
     	  return randomForest;
       }
+       
+       public Classifier useLinearRegression (Instances dataset) throws Exception{
+           LinearRegression lr = new LinearRegression();
+           lr.buildClassifier(dataset);
+           return lr;
+       }
       
       
 }

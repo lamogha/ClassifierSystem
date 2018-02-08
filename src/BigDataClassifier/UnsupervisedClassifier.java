@@ -12,6 +12,8 @@ import weka.core.Instance;
 import weka.clusterers.AbstractDensityBasedClusterer;
 import weka.core.DenseInstance;
 import java.math.*;
+import weka.clusterers.ClusterEvaluation;
+import weka.clusterers.Clusterer;
 
 public class UnsupervisedClassifier {
 
@@ -21,6 +23,7 @@ public class UnsupervisedClassifier {
     private static ArrayList<DenseInstance> outliers = new ArrayList<>();
     //private static ArrayList<DenseInstance> oldOutliers = new ArrayList<>();
     AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
+    //CheckClusterer check = new CheckClusterer();
 
     /**
      *
@@ -29,17 +32,37 @@ public class UnsupervisedClassifier {
         //constructor 
     }
 
-    public void useEMClusterer(Instances dataset) {
-
+      /**
+     *
+     * @param dataset
+     * @param clusterer
+     * @throws Exception
+     */
+    public void evaluatorClusterer(Instances dataset, SimpleKMeans clusterer) throws Exception{
+              
+  	      ClusterEvaluation eval = new ClusterEvaluation ();
+              eval.setClusterer(clusterer);
+              eval.evaluateClusterer(dataset);
+	      System.out.println(eval.clusterResultsToString());
+              System.out.println("# of clusters" + eval.getNumClusters());
+	      //System.out.print(eval.evaluateClusterer(testDataset, null, false);
+    }
+    
+    public Clusterer useEMClusterer(Instances dataset) {
+        EM newEm = new EM();
         try {
-            //dataset.setClassIndex(dataset.numAttributes()-1);
-            EM newEm = new EM();
+            dataset.setClassIndex(dataset.numAttributes()-1);
             newEm.setNumClusters(4);
+            //set distance function 
+            //newEm.setDistancefunction(new weka.core.ManhattanDistance);
             newEm.buildClusterer(dataset);
             System.out.println(newEm);
+            //return an array containing estimated membership probabilities of the test instance in each cluster
+            //newEm.distributionForInstance(instance);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return newEm;
     }
 
     public FarthestFirst useFarthestFirst(Instances dataset) {
@@ -159,7 +182,6 @@ public class UnsupervisedClassifier {
     /**
      *
      * @param dataset
-     * @throws java.lang.Exception
      */
     public void autoProbClass(Instances dataset) {
 
