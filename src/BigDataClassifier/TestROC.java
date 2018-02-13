@@ -7,6 +7,7 @@ package BigDataClassifier;
 
 import java.awt.BorderLayout;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.Random;
 import weka.classifiers.Classifier;
@@ -16,6 +17,7 @@ import weka.classifiers.evaluation.ThresholdCurve;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.Utils;
+import weka.core.converters.ArffSaver;
 import weka.gui.visualize.PlotData2D;
 import weka.gui.visualize.ThresholdVisualizePanel;
 
@@ -30,11 +32,11 @@ public class TestROC {
    */
 public static void main(String[] args) throws Exception {
     // load data
-    Instances data = new Instances(new BufferedReader(new FileReader("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\iris.arff")));
+    Instances data = new Instances(new BufferedReader(new FileReader("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\iris.arff")));
     data.setClassIndex(data.numAttributes() - 1);
     // train classifier
-    //Classifier cl = new NaiveBayes();
-    Classifier cl = new RandomForest();
+    Classifier cl = new NaiveBayes();
+    //Classifier cl = new RandomForest();
     // cl1.setSAXParams(42, 5, 5, "CLASSIC"); // CBF
     // Evaluation eval = new Evaluation(data);
     // eval.crossValidateModel(cl, data, 8, new Random(1));
@@ -44,6 +46,11 @@ public static void main(String[] args) throws Exception {
     ThresholdCurve tc = new ThresholdCurve();
     int classIndex = 0;
     Instances result = tc.getCurve(eval.predictions(), classIndex);
+    ArffSaver saver = new ArffSaver();
+    saver.setInstances(result);
+    saver.setFile(new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\results.arff"));
+    saver.writeBatch();
+    //f = System.currentTimeMillis();
     // plot curve
     ThresholdVisualizePanel vmc = new ThresholdVisualizePanel();
     vmc.setROCString("(Area under ROC = " + Utils.doubleToString(ThresholdCurve.getROCArea(result), 4) + ")");

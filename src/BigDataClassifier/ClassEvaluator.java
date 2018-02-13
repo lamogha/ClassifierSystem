@@ -1,5 +1,7 @@
 package src.BigDataClassifier;
 
+import java.awt.BorderLayout;
+import java.io.File;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +13,9 @@ import static weka.core.Attribute.RELATIONAL;
 import static weka.core.Attribute.STRING;
 import weka.core.Instances;
 import weka.core.Utils;
+import weka.core.converters.ArffSaver;
+import weka.gui.visualize.PlotData2D;
+import weka.gui.visualize.ThresholdVisualizePanel;
 
 public class ClassEvaluator {
     
@@ -43,10 +48,9 @@ public class ClassEvaluator {
                     trainDataset2 = trainDataset;
                     testDataset2 = testDataset;
                     trainDataset.setClassIndex(trainDataset.numAttributes()-1);
-                    System.out.println("The number of class labels is:- " + trainDataset.numClasses());
-                    this.callClassifier();     
+                    System.out.println("The number of class labels is:- " + trainDataset.numClasses());    
                 }
-                
+                 this.callClassifier();
          }
         
         public int numOfNominalAtt(){
@@ -145,8 +149,49 @@ public class ClassEvaluator {
    	      eval = new Evaluation (trainDataset);
               eval.evaluateModel(cs, testDataset);
  	      System.out.println(eval.toSummaryString("Evaluation results:\n", false));
+              this.plotROC();
               System.out.println(eval.areaUnderROC(NOMINAL));
  	      //System.out.println(eval.toMatrixString("Confusion Matrix for this"));
-        }   
+        } 
+        
+        public void plotROC()throws Exception
+        {
+            // generate curve
+            ThresholdCurve tc = new ThresholdCurve();
+            int classIndex = 0;
+            Instances result = tc.getCurve(eval.predictions(), classIndex);
+//            ArffSaver saver = new ArffSaver();
+//            saver.setInstances(result);
+//            saver.setFile(new File("H:\\NetBeansProjects\\BigDataClassification\\data\\result.arff"));
+//            saver.writeBatch();
+            //f = System.currentTimeMillis();
+            // plot curve
+            ThresholdVisualizePanel vmc = new ThresholdVisualizePanel();
+            vmc.setROCString("(Area under ROC = " + Utils.doubleToString(ThresholdCurve.getROCArea(result), 4) + ")");
+            vmc.setName(result.relationName());
+            PlotData2D tempd = new PlotData2D(result);
+            tempd.setPlotName(result.relationName());
+            tempd.addInstanceNumberAttribute();
+            // specify which points are connected
+            boolean[] cp = new boolean[result.numInstances()];
+            for (int n = 1; n < cp.length; n++) cp[n] = true;
+            tempd.setConnectPoints(cp);
+            // add plot
+            vmc.addPlot(tempd);
+            // display curve
+            String plotName = vmc.getName();
+            final javax.swing.JFrame jf = new javax.swing.JFrame("ROC Curve: " + plotName);
+            jf.setSize(500, 400);
+            jf.getContentPane().setLayout(new BorderLayout());
+            jf.getContentPane().add(vmc, BorderLayout.CENTER);
+            jf.addWindowListener(new java.awt.event.WindowAdapter() {
+
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    jf.dispose();
+                }
+            });
+            jf.setVisible(true);
+        }
       
 }
