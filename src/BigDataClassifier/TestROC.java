@@ -14,7 +14,16 @@ import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.evaluation.ThresholdCurve;
+import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.functions.SGD;
+import weka.classifiers.functions.SGDText;
+import weka.classifiers.meta.Bagging;
+import weka.classifiers.meta.Stacking;
+import weka.classifiers.rules.ZeroR;
+import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
+import static weka.core.Attribute.NOMINAL;
+import static weka.core.Attribute.NUMERIC;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ArffSaver;
@@ -32,24 +41,33 @@ public class TestROC {
    */
 public static void main(String[] args) throws Exception {
     // load data
-    Instances data = new Instances(new BufferedReader(new FileReader("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\iris.arff")));
+    Instances data = new Instances(new BufferedReader(new FileReader("H:\\ProgramFiles\\Weka-3-8\\data\\weather.numeric.arff")));
+    System.out.println(data.toSummaryString());
     data.setClassIndex(data.numAttributes() - 1);
     // train classifier
     Classifier cl = new NaiveBayes();
+    //Classifier cl = new SGD();
+    //Classifier cl = new SGDText();
+    //Classifier cl = new LinearRegression();
+    //Classifier cl = new Bagging();
+    //Classifier cl = new Stacking();
+    //Classifier cl = new ZeroR();
+    //Classifier cl = new J48();
     //Classifier cl = new RandomForest();
     // cl1.setSAXParams(42, 5, 5, "CLASSIC"); // CBF
     // Evaluation eval = new Evaluation(data);
     // eval.crossValidateModel(cl, data, 8, new Random(1));
     Evaluation eval = new Evaluation(data);
     eval.crossValidateModel(cl, data, 10, new Random(1));
+    System.out.println(eval.areaUnderROC(NOMINAL));
     // generate curve
     ThresholdCurve tc = new ThresholdCurve();
     int classIndex = 0;
     Instances result = tc.getCurve(eval.predictions(), classIndex);
-    ArffSaver saver = new ArffSaver();
-    saver.setInstances(result);
-    saver.setFile(new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\results.arff"));
-    saver.writeBatch();
+//    ArffSaver saver = new ArffSaver();
+//    saver.setInstances(result);
+//    saver.setFile(new File("H:\\NetBeansProjects\\BigDataClassification\\data\\data2\\results.arff"));
+//    saver.writeBatch();
     //f = System.currentTimeMillis();
     // plot curve
     ThresholdVisualizePanel vmc = new ThresholdVisualizePanel();
@@ -77,7 +95,7 @@ public static void main(String[] args) throws Exception {
             jf.dispose();
         }
     });
-    jf.setVisible(true);
+    jf.setVisible(false);
 }
     
 }
