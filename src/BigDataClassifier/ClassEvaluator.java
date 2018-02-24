@@ -8,11 +8,14 @@ import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.evaluation.ThresholdCurve;
 import static weka.core.Attribute.NOMINAL;
+import static weka.core.Attribute.NUMERIC;
 import static weka.core.Attribute.RELATIONAL;
 import static weka.core.Attribute.STRING;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ArffSaver;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.gui.visualize.PlotData2D;
 import weka.gui.visualize.ThresholdVisualizePanel;
 
@@ -145,13 +148,47 @@ public class ClassEvaluator {
         public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception
         {
               testDataset.setClassIndex(testDataset.numAttributes()-1);
-   	      eval = new Evaluation (trainDataset);
-              eval.evaluateModel(cs, testDataset);
- 	      System.out.println(eval.toSummaryString("Evaluation results:\n", false));
-              this.plotROC();
-              System.out.println(eval.areaUnderROC(NOMINAL));
+              if (testDataset.checkForAttributeType(NOMINAL)){
+                eval = new Evaluation (trainDataset);
+                eval.evaluateModel(cs, testDataset);
+                System.out.println(eval.toSummaryString("Evaluation results:\n", false));
+                System.out.println(eval.areaUnderROC(NOMINAL));
+                this.plotROC();
+              }
+              else if (testDataset.checkForAttributeType(NUMERIC)) {
+                this.numericToNominal(testDataset, cs);
+                //System.out.println(eval.areaUnderROC(NOMINAL));
+              }
  	      //System.out.println(eval.toMatrixString("Confusion Matrix for this"));
-        } 
+        }
+        
+        public void numericToNominal(Instances dataset, Classifier cs)throws Exception{
+                NumericToNominal convert= new NumericToNominal();
+                String[] options= new String[2];
+                options[0]="-R";
+                options[1]="first-last";  //range of variables to make nominal
+                
+                convert.setOptions(options);
+                convert.setInputFormat(dataset);
+
+                Instances newData=Filter.useFilter(dataset, convert);
+
+                System.out.println("Before");
+                for(int i=0; i<dataset.numAttributes(); i=i+1) {
+                    System.out.println("Nominal? "+dataset.attribute(i).isNominal());
+                }
+
+                System.out.println("After");
+                for(int i=0; i<dataset.numAttributes(); i=i+1) {
+                    System.out.println("Nominal? "+newData.attribute(i).isNominal());
+                }
+              System.out.println(newData.toSummaryString());  
+              newData.setClassIndex(newData.numAttributes()-1);
+              this.generateFolds(newData);
+   	      eval = new Evaluation (newData);
+              eval.evaluateModel(cs, newData);
+ 	      System.out.println(eval.toSummaryString("Evaluation results:\n", false));
+        }
         
         public void plotROC()throws Exception
         {

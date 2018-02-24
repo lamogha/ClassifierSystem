@@ -29,6 +29,8 @@ import weka.core.Utils;
 import weka.core.converters.ArffSaver;
 import weka.gui.visualize.PlotData2D;
 import weka.gui.visualize.ThresholdVisualizePanel;
+//import weka.dl4j.layers.DenseLayer;
+//import weka.dl4j.layers.OutputLayer;
 
 /**
  *

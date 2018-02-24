@@ -16,16 +16,15 @@ public class ClusterEvaluator {
     
      /**
      *
-     * @param trainDataset
-     * @param testDataset
+     * @param dataset
      * @param clusterer
      * @throws Exception
      */
-    public void evaluatorClusterer(Instances trainDataset, Instances testDataset, Clusterer clusterer) throws Exception{
+    public void evaluatorClusterer(Instances dataset, Clusterer clusterer) throws Exception{
 	   
   	      ClusterEvaluation eval = new ClusterEvaluation ();
               eval.setClusterer(clusterer);
-              eval.evaluateClusterer(testDataset);
+              eval.evaluateClusterer(dataset);
 	      System.out.println(eval.clusterResultsToString());
 	      //System.out.print(eval.evaluateClusterer(testDataset, null, false);
     }

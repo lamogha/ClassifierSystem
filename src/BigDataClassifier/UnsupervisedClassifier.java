@@ -24,6 +24,7 @@ public class UnsupervisedClassifier {
     //private static ArrayList<DenseInstance> oldOutliers = new ArrayList<>();
     AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
     //CheckClusterer check = new CheckClusterer();
+    ClusterEvaluator clustEval = new ClusterEvaluator();
 
     /**
      *
@@ -57,6 +58,7 @@ public class UnsupervisedClassifier {
             //newEm.setDistancefunction(new weka.core.ManhattanDistance);
             newEm.buildClusterer(dataset);
             System.out.println(newEm);
+            clustEval.evaluatorClusterer(dataset, newEm);
             //return an array containing estimated membership probabilities of the test instance in each cluster
             //newEm.distributionForInstance(instance);
         } catch (Exception e) {
@@ -72,7 +74,7 @@ public class UnsupervisedClassifier {
         try {
             dataset.setClassIndex(dataset.numAttributes() - 1);
             newFf.buildClusterer(dataset);
-
+            clustEval.evaluatorClusterer(dataset, newFf);
             // System.out.println(nb.distributionForInstance(dataset.instance(15)));
             // System.out.println(nb.getCapabilities().toString());
         } catch (Exception e) {
