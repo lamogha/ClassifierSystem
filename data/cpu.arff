@@ -13,7 +13,7 @@
 @attribute CACH numeric
 @attribute CHMIN numeric
 @attribute CHMAX numeric
-@attribute class numeric
+@attribute type numeric
 @data
 125,256,6000,256,16,128,198
 29,8000,32000,32,8,32,269

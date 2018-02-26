@@ -147,18 +147,20 @@ public class ClassEvaluator {
         Evaluation eval;
         public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception
         {
-              testDataset.setClassIndex(testDataset.numAttributes()-1);
-              if (testDataset.checkForAttributeType(NOMINAL)){
-                eval = new Evaluation (trainDataset);
-                eval.evaluateModel(cs, testDataset);
-                System.out.println(eval.toSummaryString("Evaluation results:\n", false));
+            testDataset.setClassIndex(testDataset.numAttributes()-1);
+            eval = new Evaluation (trainDataset);
+            eval.evaluateModel(cs, testDataset);
+            System.out.println(eval.toSummaryString("Evaluation results:\n", false));
+              
+            if (testDataset.classAttribute().isNominal()){
                 System.out.println(eval.areaUnderROC(NOMINAL));
                 this.plotROC();
-              }
-              else if (testDataset.checkForAttributeType(NUMERIC)) {
-                this.numericToNominal(testDataset, cs);
-                //System.out.println(eval.areaUnderROC(NOMINAL));
-              }
+            }
+            else if (testDataset.classAttribute().isNumeric()) {
+                //this.numericToNominal(testDataset, cs);
+                System.out.println("DONE");
+                //System.out.println(eval.areaUnderROC(NUMERIC));
+            }
  	      //System.out.println(eval.toMatrixString("Confusion Matrix for this"));
         }
         
