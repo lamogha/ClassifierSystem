@@ -6,6 +6,7 @@
 package src.BigDataClassifier;
 
 import weka.core.DenseInstance;
+import weka.core.Instance;
 
 /**
  *
@@ -16,7 +17,14 @@ public class Cloud {
     private double focalPoint;
     private double zoneOfInfluence;
     private int point;
-    private DenseInstance instance;
+    private Instance instance;
+    
+    public Cloud(double focalPoint2, double zoneOfInfluence2, int point2, DenseInstance instance2){
+        focalPoint = focalPoint2;
+        zoneOfInfluence = zoneOfInfluence2;
+        point = point2;
+        instance = instance2; 
+    }
 
     /**
      * Get the value of the focal point of the cloud
@@ -51,7 +59,7 @@ public class Cloud {
      * @return the instance
      */
     public DenseInstance getDenseInstance() {
-        return instance;
+        return (DenseInstance) instance;
     }
 
     /**
