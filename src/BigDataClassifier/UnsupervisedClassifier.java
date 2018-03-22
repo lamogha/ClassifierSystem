@@ -15,15 +15,19 @@ import java.math.*;
 import java.util.Collections;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
+import weka.core.NormalizableDistance;
 
 public class UnsupervisedClassifier {
 
     private static final int CLOSENESS_THRESHOLD = 1;
     private static ArrayList<DenseInstance> cloud = new ArrayList<>();
     private static ArrayList<String> cloudLabels = new ArrayList<>();
+    private static ArrayList<String> labels = new ArrayList<>();
     private static ArrayList<Cloud> clouds = new ArrayList<>();
     private static ArrayList<DenseInstance> outliers = new ArrayList<>();
     private static ArrayList<Float> simPercent = new ArrayList<>();
+    private static EuclideanDistance eu;
+    private static double instanceNewIdentifier,instanceOldIdentifier ;
     //private static ArrayList<DenseInstance> oldOutliers = new ArrayList<>();
     AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
     //CheckClusterer check = new CheckClusterer();
@@ -194,14 +198,14 @@ public class UnsupervisedClassifier {
 
             //Define the initial zone of influence ZI
             double initialZI = 0.3;
-            int k = 0;
+            int k = 0; int newLabelCounter = 1;
             Instances xk = new Instances(dataset);
+            eu = new EuclideanDistance(xk);
             double ncZI = initialZI;
             int ncPoints = 0;
             //nomenclature for the mean of the data samples
             double ncFocalpoint = 0;
             ListIterator iterator = xk.listIterator();
-            EuclideanDistance eu = new EuclideanDistance();
             //start reading in the instances
             while (iterator.hasNext()) {
                 if (k == 0) {
@@ -213,16 +217,18 @@ public class UnsupervisedClassifier {
                     //first inference rule
                     cloud.add(nc);
                     cloudLabels.add("Class"+k);
+                    labels.add("Class"+k);
                     System.out.println(cloudLabels);
-                    Cloud cloudtoadd = new Cloud(ncFocalpoint,ncZI,ncPoints, (DenseInstance) xk.instance(k));
-                    clouds.add(cloudtoadd);
+//                    Cloud cloudtoadd = new Cloud(ncFocalpoint,ncZI,ncPoints, (DenseInstance) xk.instance(k));
+//                    clouds.add(cloudtoadd);
                     System.out.println("First cloud added");
                     System.out.println("Instance identifier for first cloud " + nc + " is: " + getInstanceIdentifier(nc));
                     System.out.println("==========");
                 } else {
-
+                    //read next instance
                     DenseInstance nc = (DenseInstance) iterator.next();
                     //System.out.println(nc.numValues());
+                    //get the identifier for that instance
                     System.out.println("\n" + "Instance identifier for " + nc + " is: " + getInstanceIdentifier(nc));
                     //System.out.println(nc.weight());
                     System.out.println("==========");
@@ -231,15 +237,20 @@ public class UnsupervisedClassifier {
 //                    ArrayList<String> similarListMeasure = compareInstancesTest(nc);
                     System.out.println("List of how close they are: " + booleanList);
                     System.out.println("List of how close they are: " + simPercent);
-                    
-                    for (int i = 0; i<booleanList.size();i++){
-                        if(booleanList.get(i).equals(true)){
-                        float maximum = Collections.max(simPercent);
-                        System.out.println("The closest is " + maximum + "% at index point " + simPercent.indexOf(maximum) ); 
-                        }  
-                        else{
-                            System.out.println("Not relevant");
-                        }
+                   
+                    float maximum = Collections.max(simPercent);
+                    System.out.println("The closest is " + maximum + "% at index point " + simPercent.indexOf(maximum) ); 
+                    if(maximum!=0.0){
+                        //cloudLabels.add("Class"+ simPercent.indexOf(maximum));
+                        labels.add(labels.get(simPercent.indexOf(maximum)));
+                        System.out.println(labels);
+                    }
+                    else{
+                        cloudLabels.add("Class"+cloudLabels.size());
+                        labels.add(cloudLabels.get(cloudLabels.size()-1));
+                        System.out.println(labels);
+                        //newLabelCounter++;
+                        System.out.println(cloudLabels);
                     }
                     
                 }
@@ -257,17 +268,16 @@ public class UnsupervisedClassifier {
         //String instanceAIdentifier = getInstanceIdentifier(instanceA);
         int trueScore = 0;
         int falseScore = 0;
-        int j = 0;
         ArrayList<Boolean> howCloseList = new ArrayList<>();
-        ArrayList<String> trueList = new ArrayList<>();
+        simPercent = new ArrayList<>();
         
         for (DenseInstance instanceOld : cloud) {
             System.out.println("==================");
             //String instanceBIdentifier = getInstanceIdentifier(instanceB);
             for (int i = 0; i < instanceNew.numAttributes(); i++) {
-               double instanceNewIdentifier = instanceNew.value(i);
+               instanceNewIdentifier = instanceNew.value(i);
 //               System.out.println("INSTANCE VALUE OF NEW data " + getInstanceIdentifier(instanceNew) +" @ INDEX POINT " + i + " IS  = " + instanceNewIdentifier );
-               double instanceOldIdentifier = instanceOld.value(i);
+               instanceOldIdentifier = instanceOld.value(i);
 //               System.out.println("INSTANCE VALUE OF EXISTING data " + getInstanceIdentifier(instanceOld) + " @ INDEX POINT " + i + " IS  = " + instanceOldIdentifier );
                 if (instanceNewIdentifier == instanceOldIdentifier) {
 //                	System.out.println("true they are same \n");
@@ -283,39 +293,34 @@ public class UnsupervisedClassifier {
             //find the fraction of the number of dissimilar values in %
             float diSimilarityMeasure = (float)falseScore/instanceOld.numAttributes() * 100;
             float similarityMeasure = 100 - diSimilarityMeasure;
+            Instance instance1 = instanceNew; Instance instance2 = instanceOld;
+//            NormalizableDistance nd = new EuclideanDistance();
+//            double euclideandistanceMeasure = eu.distance(instance1, instance2);
+//            System.out.println("---------------- EUCdist " + euclideandistanceMeasure );
             System.out.println("THEY ARE " + similarityMeasure + "% SIMLIAR");
             System.out.println("SCORE PERCENTAGE OF THE NUMBER OF FALSE MATCHES " + diSimilarityMeasure + "%");
             
             if (diSimilarityMeasure > 20){
                 howCloseList.add(false);
-                if (j==0){
-                    simPercent.add(0.0f);
-                }
-                else {simPercent.set(j-1, 0.0f);}
-                trueList.add("No Similarity with any previous Instance");
+                //The distance measure between 
+                double distanceMeasure = eu.distance(instanceOld, instanceNew);
+                System.out.println("---EUCLIDEAN DISTANCE MEASURE IS--- = " + distanceMeasure);
+                simPercent.add(0.0f);
             }
             else{
                 howCloseList.add(true);
-                if (j==0){
-                    simPercent.add(similarityMeasure);
-                }
-                else
-                {simPercent.set(j-1, similarityMeasure);}
-                trueList.add("With a similarity of: " + similarityMeasure + "%, "+true);
+                double distanceMeasure = eu.distance(instanceOld, instanceNew);
+                System.out.println("---EUCLIDEAN DISTANCE MEASURE IS--- = " + distanceMeasure);
+                simPercent.add(similarityMeasure);
             }
 
             System.out.println("--TRUE SCORE = " + trueScore);
             System.out.println("--FALSE SCORE = " + falseScore);
             trueScore = 0;
             falseScore = 0;
-            j++;
         }
-       
         cloud.add(instanceNew);
-        
         return howCloseList;
-//          return trueList;
-
     } 
 
     private static String getInstanceIdentifier(Instance instance) {
