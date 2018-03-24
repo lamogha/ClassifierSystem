@@ -1,30 +1,58 @@
 /*
- * unsupervised classifier algorithm
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
-package src.BigDataClassifier;
+package BigDataClassifier;
 
-import BigDataClassifier.AutoProbClass;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ListIterator;
-import weka.clusterers.*;
-import weka.core.Instances;
+import weka.clusterers.AbstractDensityBasedClusterer;
+import weka.clusterers.Clusterer;
+import weka.clusterers.MakeDensityBasedClusterer;
+import weka.core.Capabilities;
+import weka.core.DenseInstance;
 import weka.core.EuclideanDistance;
 import weka.core.Instance;
-import weka.clusterers.AbstractDensityBasedClusterer;
-import weka.core.DenseInstance;
-import java.math.*;
-import java.util.Collections;
-import weka.clusterers.ClusterEvaluation;
-import weka.clusterers.Clusterer;
-import weka.core.NormalizableDistance;
+import weka.core.Instances;
 
-public class UnsupervisedClassifier {
+/**
+ *
+ * @author u1457710
+ */
+public class AutoProbClass implements Clusterer {
 
+    @Override
+    public void buildClusterer(Instances data) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int clusterInstance(Instance instance) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double[] distributionForInstance(Instance instance) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int numberOfClusters() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Capabilities getCapabilities() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     private static final int CLOSENESS_THRESHOLD = 1;
     private static ArrayList<DenseInstance> cloud = new ArrayList<>();
     private static ArrayList<String> cloudLabels = new ArrayList<>();
     private static ArrayList<String> labels = new ArrayList<>();
-    private static ArrayList<Cloud> clouds = new ArrayList<>();
+    private static ArrayList<src.BigDataClassifier.Cloud> clouds = new ArrayList<>();
     private static ArrayList<DenseInstance> outliers = new ArrayList<>();
     private static ArrayList<Float> simPercent = new ArrayList<>();
     private static EuclideanDistance eu;
@@ -32,71 +60,9 @@ public class UnsupervisedClassifier {
     //private static ArrayList<DenseInstance> oldOutliers = new ArrayList<>();
     AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
     //CheckClusterer check = new CheckClusterer();
-    ClusterEvaluator clustEval = new ClusterEvaluator();
-
-    /**
-     *
-     */
-    public void UnsupervisedClassifier(){
-        //constructor 
-    }
-
-      /**
-     *
-     * @param dataset
-     * @param clusterer
-     * @throws Exception
-     */
-    public void evaluatorClusterer(Instances dataset, Clusterer clusterer) throws Exception{
-              
-  	      ClusterEvaluation eval = new ClusterEvaluation ();
-              eval.setClusterer(clusterer);
-              eval.evaluateClusterer(dataset);
-	      System.out.println(eval.clusterResultsToString());
-              System.out.println("# of clusters" + eval.getNumClusters());
-	      //System.out.print(eval.evaluateClusterer(testDataset, null, false);
-    }
+    src.BigDataClassifier.ClusterEvaluator clustEval = new src.BigDataClassifier.ClusterEvaluator();
     
-    public Clusterer useEMClusterer(Instances dataset) {
-        EM newEm = new EM();
-        try {
-//            String[] options= new String[2];
-//            //number of folds to use when cross-validating to find best number of clusters
-//            options[0]="-X"; 
-//            options[1]="10";
-////            //set the number of clusters (-1 to select by cross validation)
-////            newEm.setNumClusters(-1);
-//            newEm.setOptions(options);
-            //set distance function 
-            //newEm.setDistancefunction(new weka.core.ManhattanDistance);
-            newEm.buildClusterer(dataset);
-            System.out.println(newEm);
-            //clustEval.evaluatorClusterer(dataset, newEm);
-            //return an array containing estimated membership probabilities of the test instance in each cluster
-            //newEm.distributionForInstance(instance);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return newEm;
-    }
-//    
-//       public Clusterer useAutoProbClass(Instances dataset) {
-//
-//        AutoProbClass autoClust = new AutoProbClass();
-//
-//        try {
-//            autoClust.buildClusterer(dataset);
-//            System.out.println(autoClust);
-//            // System.out.println(nb.distributionForInstance(dataset.instance(15)));
-//            // System.out.println(nb.getCapabilities().toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return autoClust;
-//    }
-
-    /**
+     /**
      *
      * @param dataset
      */
@@ -248,4 +214,5 @@ public class UnsupervisedClassifier {
         return identifier;
     }
 
+    
 }

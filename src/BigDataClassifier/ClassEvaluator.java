@@ -38,6 +38,7 @@ public class ClassEvaluator {
              
               //create random dataset
               Instances randData = new Instances(trainDataset);
+              int classIndex = trainDataset.numAttributes()-1;
               randData.randomize(rand);
             
               //cross-validate
@@ -49,17 +50,17 @@ public class ClassEvaluator {
                     System.out.println("Test dataset size is = "+ testDataset.size());
                     trainDataset2 = trainDataset;
                     testDataset2 = testDataset;
-                    trainDataset.setClassIndex(trainDataset.numAttributes()-1);
-                    System.out.println("The number of class labels is:- " + trainDataset.numClasses());    
+                    trainDataset2.setClassIndex(classIndex);
+                    System.out.println("The number of class labels is:- " + trainDataset2.numClasses());    
                 }
-                 this.callClassifier();
+                 this.callClassifier(trainDataset2,testDataset2,classIndex);
          }
         
-        public int numOfNominalAtt(){
+        public int numOfNominalAtt(Instances trainDataset, Instances testDataset){
             int nom = 0;
-            for (int i=0; i<trainDataset2.numAttributes(); i++){
+            for (int i=0; i<trainDataset.numAttributes(); i++){
                 //boolean nominal = trainDataset2.checkForAttributeType(i);
-                if (trainDataset2.attribute(i).isNominal()){
+                if (trainDataset.attribute(i).isNominal()){
                     nom++;
                 }
             }
@@ -67,33 +68,34 @@ public class ClassEvaluator {
             return nom;
         }
         
-        public void callClassifier(){
-            if((trainDataset2.size() >= testDataset2.size()) && trainDataset2.numClasses()!= 0)
+        public void callClassifier(Instances trainData, Instances testData, Integer classIndex){
+            trainData.setClassIndex(classIndex);
+            if((trainData.size() >= testData.size()) && trainData.numClasses()!= 0)
             {
-                if(this.numOfNominalAtt() < (trainDataset2.numAttributes()/2))
+                if(this.numOfNominalAtt(trainData, testData) < (trainData.numAttributes()/2))
                 {
                     try {
-                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useRandomForest(trainDataset2));
+                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData));
                      System.out.println("Random Forest used");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
-                else if (trainDataset2.checkForAttributeType(RELATIONAL))
+                else if (trainData.checkForAttributeType(RELATIONAL))
                 {
                     try {
-                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useRandomForest(trainDataset2));
+                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData));
                      System.out.println("Random Forest used");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }   
                 }
                 
-                else if (trainDataset2.checkForAttributeType(STRING))
+                else if (trainData.checkForAttributeType(STRING))
                 {
                     try {
-                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useZeroR(trainDataset2));
+                     this.evaluatorClassifier(trainData, testData, sc.useZeroR(trainData));
                      System.out.println("Zero R used");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
@@ -101,10 +103,10 @@ public class ClassEvaluator {
                     
                 }
                 
-                else if (trainDataset2.checkForAttributeType(NOMINAL))
+                else if (trainData.checkForAttributeType(NOMINAL))
                 {
                    try {
-                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useNaiveBayes(trainDataset2));
+                     this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData));
                      System.out.println("Naive Bayes used");
                  } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,7 +117,7 @@ public class ClassEvaluator {
                 else
                 {
                     try {
-                     this.evaluatorClassifier(trainDataset2, testDataset2, sc.useRandomForest(trainDataset2));
+                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData));
                      System.out.println("Random Forest used");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
@@ -127,7 +129,7 @@ public class ClassEvaluator {
             {
                 try {
                     //use unsupervised classifier
-                    uc.autoProbClass(testDataset2);
+                    uc.autoProbClass(trainData);
                     //uc.evaluatorClusterer(trainDataset2, (SimpleKMeans) uc.useEMClusterer(trainDataset2));
                 } catch (Exception ex) {
                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);

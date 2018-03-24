@@ -5,11 +5,14 @@
  */
 package src.BigDataClassifier;
 
+import BigDataClassifier.DirectoryChooser;
+
 /**
  *Starts the processing of the dataset to be classified or clustered
  * @author lamogha
  */
 public class ClassifierMain {
+     private static DirectoryChooser chooseDirectory =  new DirectoryChooser();
 
 	public static void main(String args[]) throws Exception {
           
@@ -36,17 +39,17 @@ public class ClassifierMain {
         }
         //</editor-fold>
 
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                new DirectoryChooser().setVisible(true);
-//            }
-//        });
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new DirectoryChooser().setVisible(true);
+            }
+        });
         
         /*call the FileTypeEnablerAndProcessor class*/
-            src.BigDataClassifier.FileTypeEnablerAndProcessor enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
-            enabler.fileEntry();
+//            src.BigDataClassifier.FileTypeEnablerAndProcessor enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
+//            enabler.fileEntry("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
   
     }
 }

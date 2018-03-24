@@ -28,6 +28,101 @@
 		 */
  
 
+public static Cloud getCloudWithLessPoints(ArrayList<Cloud> clouds) {
 
+        Cloud returnCloud = null;
+
+        try {
+
+            double point = Integer.MAX_VALUE;
+            for (Cloud cloudLessPoint : clouds) {
+                if (cloudLessPoint.getPoint() < point) {
+                    point = cloudLessPoint.getPoint();
+                    returnCloud = cloudLessPoint;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return returnCloud;
+    }
+
+    public Double getHighestDensityInOutliers(ArrayList<DenseInstance> outliers) {
+
+        double highestDensity = Integer.MAX_VALUE;
+
+        try {
+
+            for (DenseInstance outlier : outliers) {
+                double density = densityClass.logDensityForInstance(outlier);
+                if (density > highestDensity) {
+                    highestDensity = density;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return highestDensity;
+    }
+
+    public double getAverageDensityofClouds() {
+
+        double averageDensity = 0.0;
+
+        try {
+
+            int sumDense = 0;
+            int i = 0;
+            //to get the density of all existing clouds, to use in findind average density
+            while (i < clouds.size()) {
+                double densityOfEach = densityClass.logDensityForInstance(clouds.get(i).getDenseInstance());
+                sumDense += densityOfEach;
+                i++;
+            }
+            System.out.println("The sum of density for all existing cloud is: " + sumDense);
+            averageDensity = sumDense / clouds.size();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return averageDensity;
+    }
+
+    public static double getMeanofInstances(ArrayList<DenseInstance> outliers) {
+
+        double mean = 0.0;
+
+        try {
+            double weights = 0;
+            for (DenseInstance out : outliers) {
+                weights += out.weight();
+            }
+            mean = weights / outliers.size();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mean;
+    }
+
+    public static double getMeanOfZI(ArrayList<Cloud> clouds) {
+
+        double meanZI = 0.0;
+
+        try {
+            double zoneOfInfluence = 0;
+            for (Cloud cloudZI : clouds) {
+                zoneOfInfluence += cloudZI.getZoneOfInfluence();
+            }
+            meanZI = zoneOfInfluence / clouds.size();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return meanZI;
+    }
 
 

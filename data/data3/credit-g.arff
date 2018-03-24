@@ -297,7 +297,7 @@
 @attribute num_dependents numeric
 @attribute own_telephone { none, yes}
 @attribute foreign_worker { yes, no}
-@attribute class { good, bad}
+@attribute type { good, bad}
 @data
 '<0',6,'critical/other existing credit',radio/tv,1169,'no known savings','>=7',4,'male single',none,4,'real estate',67,none,own,2,skilled,1,yes,yes,good
 '0<=X<200',48,'existing paid',radio/tv,5951,'<100','1<=X<4',2,'female div/dep/mar',none,2,'real estate',22,none,own,1,skilled,1,none,yes,bad

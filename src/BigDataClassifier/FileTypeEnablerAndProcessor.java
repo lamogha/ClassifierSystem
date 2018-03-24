@@ -3,7 +3,9 @@
 and determine what classifier to use based on filetype
  */
 package src.BigDataClassifier;
+import BigDataClassifier.DirectoryChooser;
 import java.io.*;
+import java.util.ArrayList;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 import weka.core.converters.TextDirectoryLoader;
@@ -22,15 +24,47 @@ public class FileTypeEnablerAndProcessor {
     SupervisedClassifier sc = new SupervisedClassifier();
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
     ClassEvaluator ce = new ClassEvaluator();
-    Instances traindata, testdata;
+    Instances traindata;
+    Instances testdata = null;
+    File folder, folder2;
+    int classIndex; //number of attributes must be 1 or greater
+//    private static DirectoryChooser chooseDirectory =  new DirectoryChooser();
+    
+    public FileTypeEnablerAndProcessor(){
+        
+    }
 
-    public void fileEntry () throws Exception{
+    /**
+     *
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public FileTypeEnablerAndProcessor(String filename) throws FileNotFoundException, IOException {
+//        File folder2= file;
+//        folder2 = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
+        folder2 = new File (filename);
+        if(!filename.isEmpty()){
+           testdata = new Instances(new BufferedReader(new FileReader
+                            (folder2.getAbsolutePath()))); 
+        }
+        
+    }
+
+    public void fileEntry (String filename) throws Exception{
     	
         //File folder =  file;
-        File folder = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
+        folder = new File (filename);
         System.out.println("file location opened");
-    	fp  = new FileTypeEnablerAndProcessor();
-        fp.processFolder(folder);
+    	//fp  = new FileTypeEnablerAndProcessor();
+        this.processFolder(folder);
+    }
+    
+    public int getClassIndex(){
+        return this.classIndex;
+    }
+    
+    public void setClassIndex(int index){
+        classIndex = index;
     }
     
     public void processFolder(File folder) throws Exception{
@@ -40,7 +74,7 @@ public class FileTypeEnablerAndProcessor {
     	        String fileName = folder.getName();
     	        System.out.println(fileName);
                 //String extension = getFileExtension(fileName);
-                testdata = new Instances(new BufferedReader(new FileReader
+                traindata = new Instances(new BufferedReader(new FileReader
     			(folder)));
     	            if(!fileName.startsWith(".") && (fileName.contains(".csv")||fileName.contains(".xls")))
     	            {
@@ -79,8 +113,8 @@ public class FileTypeEnablerAndProcessor {
                     else if (!fileName.startsWith(".") && fileName.contains(".arff")){
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(folder.getAbsolutePath())));
-                                testdata = new Instances(new BufferedReader(new FileReader
-                                                (folder)));
+//                                testdata = new Instances(new BufferedReader(new FileReader
+//                                                (folder)));
     	                    	System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	            }
@@ -197,26 +231,32 @@ public class FileTypeEnablerAndProcessor {
         return ext;
     }
         
-        public void chooseClassifier(){
-            int classIndex = 0; //number of attributes must be 1 or greater
+        public void chooseClassifier() throws Exception{
             /**We can use either a supervised or an un-supervised algorithm if a class attribute already
              * exists in the dataset (meaning some labelled instances exists),
              * depending on the size of the training set, the decision is taken.
              */
 //            classIndex = traindata.numAttributes()-1;
-//            traindata.setClassIndex(classIndex);
-            if( classIndex == traindata.numAttributes()-1 || traindata.attribute("class") != null || traindata.attribute("Class")!= null
-                     && traindata.size()>= testdata.size())
+              classIndex = this.getClassIndex();
+              System.out.println("------SELECTED INDEX IS--------------" + classIndex);
+              traindata.setClassIndex(classIndex);
+            if(classIndex >= 0)
             {
     	        System.out.println("class attribute found...." );
-                System.out.println("Initial training set is larger than the test set...." + traindata.size() );
                 
                 //Go ahead to generate folds, then call classifier
-                try {
-                    ce.generateFolds(traindata);
-                } catch (Exception ex) {
-                    Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    if(testdata == null){
+                        System.out.println("NO test data");
+                        ce.generateFolds(traindata);
+                    }
+                    //Or call classifier directly if supplied a test set 
+                    else if (classIndex >= 0 && traindata.size()>= testdata.size()){
+                       System.out.println("Test Data Exists");
+                       System.out.println("Initial training set is larger than the test set...." + traindata.size());
+                       System.out.println(testdata.toSummaryString());
+                       ce.callClassifier(traindata, testdata, classIndex);
+                    }
+              
     	    }
             /**
              * When there is no class attribute to show labelled instances exists
@@ -226,18 +266,26 @@ public class FileTypeEnablerAndProcessor {
             else 
             {
                 try {
-                    System.out.println("class attribute not found");
-                    classIndex = traindata.numAttributes()-1;
-                    traindata.setClassIndex(classIndex);
-                    System.out.println("Class to predict is = " + traindata.classAttribute() + "\n" );
+                    System.out.println("class attribute not found, using a clusterer");
                     //uc.useFarthestFirst(traindata);
                     //uc.useEMClusterer(traindata);
-                    uc.autoProbClass(traindata);
-                    //uc.evaluatorClusterer(traindata, uc.useSimpleKMeans(traindata) );
+                    uc.useEMClusterer(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }
-    	    }
-            
+    	    }  
         }
+        
+        public ArrayList showSummary(File file) throws FileNotFoundException, IOException{
+           ArrayList attributeList = new ArrayList(); 
+           Instances traindata = new Instances(new BufferedReader(new FileReader
+    	                    			(file.getAbsolutePath())));
+            System.out.println(traindata.toSummaryString());
+            for(int i=0; i<traindata.numAttributes();i++){
+                attributeList.add(traindata.attribute(i).name());
+            }
+//              System.out.println(attributeList);
+        return attributeList;
+        }
+        
 }
