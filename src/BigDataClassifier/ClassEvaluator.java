@@ -1,4 +1,4 @@
-package src.BigDataClassifier;
+package BigDataClassifier;
 
 import java.awt.BorderLayout;
 import java.util.Random;
@@ -40,8 +40,7 @@ public class ClassEvaluator {
               Instances randData = new Instances(trainDataset);
               int classIndex = trainDataset.numAttributes()-1;
               randData.randomize(rand);
-            
-              //cross-validate
+                  //cross-validate with 3 folds
                 for(int n=0; n<folds; n++)
                 {
                     trainDataset = randData.trainCV(folds, n);
@@ -53,7 +52,11 @@ public class ClassEvaluator {
                     trainDataset2.setClassIndex(classIndex);
                     System.out.println("The number of class labels is:- " + trainDataset2.numClasses());    
                 }
+                 System.out.println("Calling the right Classifier ------ ");
                  this.callClassifier(trainDataset2,testDataset2,classIndex);
+              
+              
+              
          }
         
         public int numOfNominalAtt(Instances trainDataset, Instances testDataset){
@@ -76,7 +79,8 @@ public class ClassEvaluator {
                 {
                     try {
                      this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData));
-                     System.out.println("Random Forest used");
+                     System.out.println("Random Forest used" + "\n"
+                             + "-------------------------------------------------------");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -86,7 +90,8 @@ public class ClassEvaluator {
                 {
                     try {
                      this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData));
-                     System.out.println("Random Forest used");
+                     System.out.println("Random Forest used"+ "\n"
+                             + "-------------------------------------------------------");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }   
@@ -96,7 +101,8 @@ public class ClassEvaluator {
                 {
                     try {
                      this.evaluatorClassifier(trainData, testData, sc.useZeroR(trainData));
-                     System.out.println("Zero R used");
+                     System.out.println("Zero R used"+ "\n"
+                             + "-------------------------------------------------------");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -107,7 +113,8 @@ public class ClassEvaluator {
                 {
                    try {
                      this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData));
-                     System.out.println("Naive Bayes used");
+                     System.out.println("Naive Bayes used"+ "\n"
+                             + "-------------------------------------------------------");
                  } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                  } 
@@ -118,7 +125,8 @@ public class ClassEvaluator {
                 {
                     try {
                      this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData));
-                     System.out.println("Random Forest used");
+                     System.out.println("Random Forest used"+ "\n"
+                             + "-------------------------------------------------------");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -207,7 +215,7 @@ public class ClassEvaluator {
             //f = System.currentTimeMillis();
             // plot curve
             ThresholdVisualizePanel vmc = new ThresholdVisualizePanel();
-            vmc.setROCString("(Area under ROC = " + Utils.doubleToString(ThresholdCurve.getROCArea(result), 4) + ")");
+            vmc.setROCString("(AUC for " + trainDataset2.relationName() +" dataset = "+ Utils.doubleToString(ThresholdCurve.getROCArea(result), 4) + ")");
             vmc.setName(result.relationName());
             PlotData2D tempd = new PlotData2D(result);
             tempd.setPlotName(result.relationName());

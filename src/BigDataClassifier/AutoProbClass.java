@@ -52,7 +52,7 @@ public class AutoProbClass implements Clusterer {
     private static ArrayList<DenseInstance> cloud = new ArrayList<>();
     private static ArrayList<String> cloudLabels = new ArrayList<>();
     private static ArrayList<String> labels = new ArrayList<>();
-    private static ArrayList<src.BigDataClassifier.Cloud> clouds = new ArrayList<>();
+    private static ArrayList<BigDataClassifier.Cloud> clouds = new ArrayList<>();
     private static ArrayList<DenseInstance> outliers = new ArrayList<>();
     private static ArrayList<Float> simPercent = new ArrayList<>();
     private static EuclideanDistance eu;
@@ -60,7 +60,7 @@ public class AutoProbClass implements Clusterer {
     //private static ArrayList<DenseInstance> oldOutliers = new ArrayList<>();
     AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
     //CheckClusterer check = new CheckClusterer();
-    src.BigDataClassifier.ClusterEvaluator clustEval = new src.BigDataClassifier.ClusterEvaluator();
+    BigDataClassifier.ClusterEvaluator clustEval = new BigDataClassifier.ClusterEvaluator();
     
      /**
      *

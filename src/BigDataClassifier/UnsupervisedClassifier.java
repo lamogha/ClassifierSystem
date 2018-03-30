@@ -1,7 +1,7 @@
 /*
  * unsupervised classifier algorithm
  */
-package src.BigDataClassifier;
+package BigDataClassifier;
 
 import BigDataClassifier.AutoProbClass;
 import java.util.ArrayList;

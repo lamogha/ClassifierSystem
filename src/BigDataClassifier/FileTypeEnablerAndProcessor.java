@@ -2,7 +2,7 @@
  * Class to enable filetypes from input
 and determine what classifier to use based on filetype
  */
-package src.BigDataClassifier;
+package BigDataClassifier;
 import BigDataClassifier.DirectoryChooser;
 import java.io.*;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class FileTypeEnablerAndProcessor {
     Instances traindata;
     Instances testdata = null;
     File folder, folder2;
-    int classIndex; //number of attributes must be 1 or greater
+    int classIndex = -1; //number of attributes must be 1 or greater
 //    private static DirectoryChooser chooseDirectory =  new DirectoryChooser();
     
     public FileTypeEnablerAndProcessor(){
@@ -44,16 +44,16 @@ public class FileTypeEnablerAndProcessor {
 //        folder2 = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
         folder2 = new File (filename);
         if(!filename.isEmpty()){
-           testdata = new Instances(new BufferedReader(new FileReader
+        testdata = new Instances(new BufferedReader(new FileReader
                             (folder2.getAbsolutePath()))); 
         }
         
     }
 
-    public void fileEntry (String filename) throws Exception{
+    public void fileEntry (File filename) throws Exception{
     	
-        //File folder =  file;
-        folder = new File (filename);
+        File folder =  filename;
+        //folder = new File (filename);
         System.out.println("file location opened");
     	//fp  = new FileTypeEnablerAndProcessor();
         this.processFolder(folder);
@@ -81,7 +81,7 @@ public class FileTypeEnablerAndProcessor {
     	                CSVLoader loader = new CSVLoader();
     	                loader.setSource(new File (folder.getAbsolutePath()));
     	                traindata = loader.getDataSet();
-    	                System.out.println(traindata.toSummaryString());
+    	                //System.out.println(traindata.toSummaryString());
                         this.chooseClassifier();
     	            }
     	                    
@@ -92,7 +92,7 @@ public class FileTypeEnablerAndProcessor {
     	                    	System.out.println("Name of path " + folder.getAbsolutePath());
     	                    	loader.setSource(folder);
     	                    	traindata = loader.getDataSet();
-    	                    	System.out.println(traindata.toSummaryString());
+    	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	                		
     	            } 
@@ -100,14 +100,14 @@ public class FileTypeEnablerAndProcessor {
                                 JSONLoader loader = new JSONLoader();
     	                    	loader.setSource(new File (folder.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
-    	                    	System.out.println(traindata.toSummaryString());
+    	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                     }
                     else if (!fileName.startsWith(".") && fileName.contains(".xrff")){
                                 XRFFLoader loader = new XRFFLoader();
     	                    	loader.setSource(new File (folder.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
-    	                    	System.out.println(traindata.toSummaryString());
+    	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                     }
                     else if (!fileName.startsWith(".") && fileName.contains(".arff")){
@@ -115,7 +115,7 @@ public class FileTypeEnablerAndProcessor {
     	                    			(folder.getAbsolutePath())));
 //                                testdata = new Instances(new BufferedReader(new FileReader
 //                                                (folder)));
-    	                    	System.out.println(traindata.toSummaryString());
+    	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	            }
                     else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
@@ -128,7 +128,7 @@ public class FileTypeEnablerAndProcessor {
                                 // You can declare that your data set is sparse
                                 // query.setSparseData(true);
                                 Instances data = query.retrieveInstances();
-                                System.out.println(data.toSummaryString());
+                                //System.out.println(data.toSummaryString());
                                 this.chooseClassifier();
                     }
     	}
@@ -149,7 +149,9 @@ public class FileTypeEnablerAndProcessor {
     	                    	CSVLoader loader = new CSVLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
-    	                    	System.out.println(traindata.toSummaryString());
+                                classIndex = traindata.numAttributes()-1;
+                                this.setClassIndex(classIndex);
+    	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	                    }
     	                    
@@ -161,7 +163,9 @@ public class FileTypeEnablerAndProcessor {
     	                    	System.out.println("Name of path " + fileEntry.getAbsolutePath());
     	                    	loader.setSource(folder);
     	                    	traindata = loader.getDataSet();
-    	                    	System.out.println(traindata.toSummaryString());
+                                classIndex = traindata.numAttributes()-1;
+                                this.setClassIndex(classIndex);
+    	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	                		
     	                    } 
@@ -169,21 +173,27 @@ public class FileTypeEnablerAndProcessor {
                                 JSONLoader loader = new JSONLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
-    	                    	System.out.println(traindata.toSummaryString());
+                                classIndex = traindata.numAttributes()-1;
+                                this.setClassIndex(classIndex);
+    	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                             }
                             else if (!fileName.startsWith(".") && fileName.contains(".xrff")){
                                 XRFFLoader loader = new XRFFLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
-    	                    	System.out.println(traindata.toSummaryString());
+    	                    	//System.out.println(traindata.toSummaryString());
+                                classIndex = traindata.numAttributes()-1;
+                                this.setClassIndex(classIndex);
                                 this.chooseClassifier();
                             }
                             else if (!fileName.startsWith("."))
                             {
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(fileEntry.getAbsolutePath())));
-    	                    	System.out.println(traindata.toSummaryString());
+    	                    	//System.out.println(traindata.toSummaryString());
+                                classIndex = traindata.numAttributes()-1;
+                                this.setClassIndex(classIndex);
                                 this.chooseClassifier();
     	                    }
                             else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
@@ -196,7 +206,9 @@ public class FileTypeEnablerAndProcessor {
                                 // You can declare that your data set is sparse
                                 // query.setSparseData(true);
                                 Instances data = query.retrieveInstances();
-                                System.out.println(data.toSummaryString());
+                                //System.out.println(data.toSummaryString());
+                                classIndex = traindata.numAttributes()-1;
+                                this.setClassIndex(classIndex);
                                 this.chooseClassifier();
                             }
                         
@@ -238,7 +250,7 @@ public class FileTypeEnablerAndProcessor {
              */
 //            classIndex = traindata.numAttributes()-1;
               classIndex = this.getClassIndex();
-              System.out.println("------SELECTED INDEX IS--------------" + classIndex);
+              //System.out.println("------SELECTED INDEX IS--------------" + classIndex);
               traindata.setClassIndex(classIndex);
             if(classIndex >= 0)
             {
@@ -251,9 +263,8 @@ public class FileTypeEnablerAndProcessor {
                     }
                     //Or call classifier directly if supplied a test set 
                     else if (classIndex >= 0 && traindata.size()>= testdata.size()){
-                       System.out.println("Test Data Exists");
                        System.out.println("Initial training set is larger than the test set...." + traindata.size());
-                       System.out.println(testdata.toSummaryString());
+                       //System.out.println(testdata.toSummaryString());
                        ce.callClassifier(traindata, testdata, classIndex);
                     }
               

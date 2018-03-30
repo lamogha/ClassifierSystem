@@ -95,9 +95,9 @@ public class SimpleGUIFileChooserAndDisplay extends javax.swing.JFrame {
         redirectSystemStreams();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            src.BigDataClassifier.FileTypeEnablerAndProcessor enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
+            BigDataClassifier.FileTypeEnablerAndProcessor enabler = new BigDataClassifier.FileTypeEnablerAndProcessor();
             try {
-                    enabler.fileEntry(file);
+                    //enabler.fileEntry(file);
             } catch (Exception ex) {
                 System.out.println("problem accessing file "+file.getAbsolutePath());
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);

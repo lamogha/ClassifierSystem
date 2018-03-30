@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package src.BigDataClassifier;
+package BigDataClassifier;
 
 import weka.core.DenseInstance;
 import weka.core.Instance;

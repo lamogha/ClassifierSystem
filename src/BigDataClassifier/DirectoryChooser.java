@@ -22,7 +22,9 @@ import javax.swing.SwingUtilities;
  */
 public class DirectoryChooser extends javax.swing.JFrame {
     private static String trainFileName, testFileName;
-
+    BigDataClassifier.FileTypeEnablerAndProcessor fp;
+    File trainFile;
+    
     /**
      * Creates new form DirectoryChooser
      */
@@ -42,14 +44,14 @@ public class DirectoryChooser extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
-        attachButton = new javax.swing.JButton();
-        attachButton1 = new javax.swing.JButton();
-        textField = new javax.swing.JTextField();
-        textField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        trainSetSelectButton = new javax.swing.JButton();
+        testSetSelectButton = new javax.swing.JButton();
+        trainSetTextfield = new javax.swing.JTextField();
+        testDatasetField = new javax.swing.JTextField();
+        classLabelMenu = new javax.swing.JComboBox<>();
+        selectClassLabelText = new javax.swing.JTextField();
+        modelBuildProceedButton = new javax.swing.JButton();
+        predictButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,50 +59,50 @@ public class DirectoryChooser extends javax.swing.JFrame {
         textArea.setRows(5);
         jScrollPane1.setViewportView(textArea);
 
-        attachButton.setText("Train Dataset");
-        attachButton.addActionListener(new java.awt.event.ActionListener() {
+        trainSetSelectButton.setText("Train Dataset");
+        trainSetSelectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                attachButtonActionPerformed(evt);
+                trainSetSelectButtonActionPerformed(evt);
             }
         });
 
-        attachButton1.setText("Test Dataset");
-        attachButton1.addActionListener(new java.awt.event.ActionListener() {
+        testSetSelectButton.setText("Test Dataset");
+        testSetSelectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                attachButton1ActionPerformed(evt);
+                testSetSelectButtonActionPerformed(evt);
             }
         });
 
-        textField.setText("Select your dataset for testing your model");
+        trainSetTextfield.setText("Select your dataset for training your model");
 
-        textField1.setText("Select your dataset for training your model");
+        testDatasetField.setText("Select your dataset for testing your model");
 
-        jComboBox1.setMaximumRowCount(50);
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        classLabelMenu.setMaximumRowCount(50);
+        classLabelMenu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        classLabelMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                classLabelMenuActionPerformed(evt);
             }
         });
 
-        jTextField1.setText("Set Class index ");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        selectClassLabelText.setText("Set Class index ");
+        selectClassLabelText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                selectClassLabelTextActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Model Build Proceed");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        modelBuildProceedButton.setText("Model Build Proceed");
+        modelBuildProceedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                modelBuildProceedButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Predict");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        predictButton.setText("Predict");
+        predictButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                predictButtonActionPerformed(evt);
             }
         });
 
@@ -110,52 +112,52 @@ public class DirectoryChooser extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(attachButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(attachButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(testSetSelectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(selectClassLabelText, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(trainSetSelectButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(textField)
+                        .addComponent(trainSetTextfield)
                         .addGap(18, 18, 18))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(classLabelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(textField1, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE))
+                            .addComponent(testDatasetField, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE))
                         .addContainerGap())))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addComponent(modelBuildProceedButton)
                 .addGap(127, 127, 127)
-                .addComponent(jButton2)
+                .addComponent(predictButton)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(attachButton)
-                    .addComponent(textField))
+                    .addComponent(trainSetSelectButton)
+                    .addComponent(trainSetTextfield))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(selectClassLabelText, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(classLabelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(attachButton1)
+                        .addComponent(testSetSelectButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2)))
-                    .addComponent(textField1)))
+                            .addComponent(modelBuildProceedButton)
+                            .addComponent(predictButton)))
+                    .addComponent(testDatasetField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        textField.getAccessibleContext().setAccessibleName("test textfield");
-        textField1.getAccessibleContext().setAccessibleName("train text field");
-        jComboBox1.getAccessibleContext().setAccessibleName("jComboBox");
+        trainSetTextfield.getAccessibleContext().setAccessibleName("test textfield");
+        testDatasetField.getAccessibleContext().setAccessibleName("train text field");
+        classLabelMenu.getAccessibleContext().setAccessibleName("jComboBox");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,107 +178,135 @@ public class DirectoryChooser extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void attachButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attachButtonActionPerformed
+    private void trainSetSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trainSetSelectButtonActionPerformed
         // TODO add your handling code here:
-        JFileChooser chooser1 = new JFileChooser();
-        chooser1.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        chooser1.showOpenDialog(null);
-        File file1 = chooser1.getSelectedFile();
-        trainFileName = file1.getPath();
-        textField.setText(trainFileName);
+        JFileChooser chooseTrainData = new JFileChooser();
+        chooseTrainData.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        //chooser1.showOpenDialog(null);
+        int returnVal = chooseTrainData.showOpenDialog(this);
         redirectSystemStreams();
-        src.BigDataClassifier.FileTypeEnablerAndProcessor fp = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
-        try {
-            ArrayList items = fp.showSummary(file1);
-            Object[] obj = items.toArray();
-            jComboBox1.setModel(new DefaultComboBoxModel(obj));
-//            jComboBox1.setSelectedIndex(jComboBox1.getItemCount()-1);
-        } catch (IOException ex) {
-            Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            trainFile = chooseTrainData.getSelectedFile();
+            //trainFileName = trainFile.getPath();
+            trainSetTextfield.setText(trainFile.getPath());
+            fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
+            if(!trainFile.isDirectory()){
+                try {
+                    ArrayList items = fp.showSummary(trainFile);
+                    Object[] obj = items.toArray();
+                    classLabelMenu.setModel(new DefaultComboBoxModel(obj));
+//                  jComboBox1.setSelectedIndex(jComboBox1.getItemCount()-1);
+                } catch (IOException ex) {
+                    System.out.println("problem accessing file "+trainFile.getAbsolutePath());
+                    Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+                } 
+            }
+            else{
+                System.out.println("Processing Datasets");
+            }
+            
         }
-    }//GEN-LAST:event_attachButtonActionPerformed
+        else {
+             System.out.println("File access cancelled by user.");
+        }
+        
+    }//GEN-LAST:event_trainSetSelectButtonActionPerformed
 
-    private void attachButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attachButton1ActionPerformed
+    private void testSetSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testSetSelectButtonActionPerformed
         // TODO add your handling code here:
-        JFileChooser chooser2 = new JFileChooser();
-        chooser2.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        chooser2.showOpenDialog(null);
-        File file2 = chooser2.getSelectedFile();
-        testFileName = file2.getPath();
-        textField1.setText(testFileName);
+        JFileChooser chooseTestData = new JFileChooser();
+        chooseTestData.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        //chooser2.showOpenDialog(null);
+        int returnVal = chooseTestData.showOpenDialog(this);
         redirectSystemStreams();
-        src.BigDataClassifier.FileTypeEnablerAndProcessor fp = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
-        try {
-            fp.showSummary(file2);
-        } catch (IOException ex) {
-            Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File testFile = chooseTestData.getSelectedFile();
+            testFileName = testFile.getPath();
+            testDatasetField.setText(testFileName);
+            redirectSystemStreams();
+            fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
+            try {
+                System.out.println("Test Data Exists");
+                fp.showSummary(testFile);
+            } catch (IOException ex) {
+                System.out.println("problem accessing file "+testFile.getAbsolutePath());
+                Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-    }//GEN-LAST:event_attachButton1ActionPerformed
+        else{
+             System.out.println("File access cancelled by user.");
+        }
+        
+    }//GEN-LAST:event_testSetSelectButtonActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void selectClassLabelTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectClassLabelTextActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_selectClassLabelTextActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void modelBuildProceedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modelBuildProceedButtonActionPerformed
         // TODO add your handling code here:
-        src.BigDataClassifier.FileTypeEnablerAndProcessor enabler = null;
-        this.jComboBox1ActionPerformed(evt);
-        if (textField.getText().equalsIgnoreCase(trainFileName)&&
-                textField1.getText().equalsIgnoreCase(testFileName)) {
+        //BigDataClassifier.FileTypeEnablerAndProcessor enabler = null;
+        if (trainSetTextfield.getText().equalsIgnoreCase(trainFileName)&&
+                testDatasetField.getText().equalsIgnoreCase(testFileName)) {
             //start the file type enabler and processor class
             try {
-                enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor(textField1.getText());
-//                System.out.println("enabler class index = " + enabler.getClassIndex());
-                if (jComboBox1.getSelectedIndex()!=(enabler.getClassIndex())){
-                    enabler.setClassIndex(jComboBox1.getSelectedIndex());
+                fp = new BigDataClassifier.FileTypeEnablerAndProcessor(testDatasetField.getText());
+                //System.out.println("enabler class index = " + fp.getClassIndex());
+                if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
+                    //this.classLabelMenuActionPerformed(evt);
+                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
                 } else {
                     System.out.println("Class index was not selected");
                 }
-                enabler.fileEntry(textField.getText());
+                fp.fileEntry(trainFile);
             } catch (Exception ex) {
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
             }
         } 
         else {
             try {
-                enabler = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
-//                System.out.println("enabler class index = " + enabler.getClassIndex() );
-                if (jComboBox1.getSelectedIndex()!=(enabler.getClassIndex())){
-                    enabler.setClassIndex(jComboBox1.getSelectedIndex());
-                } else {
+                //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
+                System.out.println("FP class index = " + fp.getClassIndex());
+                System.out.println("chooser class index = " + classLabelMenu.getSelectedIndex());
+                if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
                     System.out.println("Class index was not selected");
+                    fp.fileEntry(trainFile);
+                } else {
+                    //this.classLabelMenuActionPerformed(evt);
+                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                    fp.fileEntry(trainFile);
                 }
-                enabler.fileEntry(textField.getText());
-            } catch (IOException ex) {
-                Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+//                fp.fileEntry(trainSetTextfield.getText());
             } catch (Exception ex) {
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_modelBuildProceedButtonActionPerformed
 
-    public int getSelectedClassIndex(){
-         //get selected item as an index
-//         int index = jComboBox1.getSelectedIndex();
-        int index = jComboBox1.getSelectedIndex();
-        return index;
-    }
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+//    public int getSelectedClassIndex(){
+//         //get selected item as an index
+////         int index = jComboBox1.getSelectedIndex();
+//        int index = classLabelMenu.getSelectedIndex();
+//        return index;
+//    }
+    
+    private void classLabelMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_classLabelMenuActionPerformed
         // TODO add your handling code here:
 //        src.BigDataClassifier.FileTypeEnablerAndProcessor enabler 
 //                = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
         //get selected item as an index
-        if(jComboBox1.getAction()==null){
-            jComboBox1.setSelectedIndex(jComboBox1.getSelectedIndex());
+        if(classLabelMenu.getAction()==null){
+            classLabelMenu.setSelectedIndex(classLabelMenu.getSelectedIndex());
+            fp.setClassIndex(classLabelMenu.getSelectedIndex());
         } else {
             System.out.println("No Action of selecting class index performed");
         }  
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_classLabelMenuActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void predictButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_predictButtonActionPerformed
         // TODO add your handling code here:
         
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_predictButtonActionPerformed
 
     private void updateTextArea(final String text) {
   SwingUtilities.invokeLater(new Runnable() {
@@ -310,16 +340,16 @@ private void redirectSystemStreams() {
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton attachButton;
-    private javax.swing.JButton attachButton1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> classLabelMenu;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton modelBuildProceedButton;
+    private javax.swing.JButton predictButton;
+    private javax.swing.JTextField selectClassLabelText;
+    private javax.swing.JTextField testDatasetField;
+    private javax.swing.JButton testSetSelectButton;
     private javax.swing.JTextArea textArea;
-    private javax.swing.JTextField textField;
-    private javax.swing.JTextField textField1;
+    private javax.swing.JButton trainSetSelectButton;
+    private javax.swing.JTextField trainSetTextfield;
     // End of variables declaration//GEN-END:variables
 }
