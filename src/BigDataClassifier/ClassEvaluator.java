@@ -28,17 +28,24 @@ public class ClassEvaluator {
     SupervisedClassifier sc = new SupervisedClassifier();
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
     //ClusterEvaluator clusterEval = new ClusterEvaluator();
+    private static FileTypeEnablerAndProcessor fp;
 
     //set folds
     int folds = 3;
+    int classIndex = 0; 
+
+    public ClassEvaluator() {
+        fp = new FileTypeEnablerAndProcessor();
+    }
     
-	public void generateFolds(Instances trainDataset) throws Exception{
+	public void generateFolds(Instances trainDataset, int classIndexPassed) throws Exception{
             //randomize data
               Random rand = new Random(1);
              
               //create random dataset
               Instances randData = new Instances(trainDataset);
-              int classIndex = trainDataset.numAttributes()-1;
+              classIndex = classIndexPassed;
+              //int classIndex = trainDataset.numAttributes()-1;
               randData.randomize(rand);
                   //cross-validate with 3 folds
                 for(int n=0; n<folds; n++)
@@ -71,25 +78,50 @@ public class ClassEvaluator {
             return nom;
         }
         
-        public void callClassifier(Instances trainData, Instances testData, Integer classIndex){
+        public int numOfNumericAtt(Instances trainDataset, Instances testDataset){
+            int num = 0;
+            for (int i=0; i<trainDataset.numAttributes(); i++){
+                //boolean nominal = trainDataset2.checkForAttributeType(i);
+                if (trainDataset.attribute(i).isNumeric()){
+                    num++;
+                }
+            }
+            System.out.println(num);
+            return num;
+        }
+        
+        public void callClassifier(Instances trainData, Instances testData, int classIndex){
             trainData.setClassIndex(classIndex);
             if((trainData.size() >= testData.size()) && trainData.numClasses()!= 0)
             {
-                if(this.numOfNominalAtt(trainData, testData) < (trainData.numAttributes()/2))
+                if(this.numOfNumericAtt(trainData, testData) > (trainData.numAttributes()/2))
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData));
+                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
                      System.out.println("Random Forest used" + "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+//                
+//                else if (trainData.checkForAttributeType(NUMERIC) 
+//                        && this.numOfNumericAtt(trainData, testData) == (trainData.numAttributes()))
+//                {
+//                    try {
+//                     this.evaluatorClassifier(trainData, testData, sc.useLinearRegression(trainData, classIndex));
+//                     System.out.println("Linear Regression used"+ "\n"
+//                             + "-------------------------------------------------------");
+//                    } catch (Exception ex) {
+//                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                    
+//                }
                 
                 else if (trainData.checkForAttributeType(RELATIONAL))
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData));
+                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
                      System.out.println("Random Forest used"+ "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -97,22 +129,10 @@ public class ClassEvaluator {
                     }   
                 }
                 
-                else if (trainData.checkForAttributeType(STRING))
-                {
-                    try {
-                     this.evaluatorClassifier(trainData, testData, sc.useZeroR(trainData));
-                     System.out.println("Zero R used"+ "\n"
-                             + "-------------------------------------------------------");
-                    } catch (Exception ex) {
-                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
-                }
-                
                 else if (trainData.checkForAttributeType(NOMINAL))
                 {
                    try {
-                     this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData));
+                     this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData, classIndex));
                      System.out.println("Naive Bayes used"+ "\n"
                              + "-------------------------------------------------------");
                  } catch (Exception ex) {
@@ -124,7 +144,7 @@ public class ClassEvaluator {
                 else
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData));
+                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
                      System.out.println("Random Forest used"+ "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -157,7 +177,7 @@ public class ClassEvaluator {
         Evaluation eval;
         public void evaluatorClassifier(Instances trainDataset, Instances testDataset, Classifier cs) throws Exception
         {
-            testDataset.setClassIndex(testDataset.numAttributes()-1);
+            testDataset.setClassIndex(classIndex);
             eval = new Evaluation (trainDataset);
             eval.evaluateModel(cs, testDataset);
             System.out.println(eval.toSummaryString("Evaluation results:\n", false));
@@ -196,7 +216,7 @@ public class ClassEvaluator {
                 }
               System.out.println(newData.toSummaryString());  
               newData.setClassIndex(newData.numAttributes()-1);
-              this.generateFolds(newData);
+              this.generateFolds(newData,classIndex);
    	      eval = new Evaluation (newData);
               eval.evaluateModel(cs, newData);
  	      System.out.println(eval.toSummaryString("Evaluation results:\n", false));

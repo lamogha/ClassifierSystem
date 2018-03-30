@@ -20,10 +20,10 @@ import weka.experiment.InstanceQuery;
  * @author lamogha
  */
 public class FileTypeEnablerAndProcessor {
-    FileTypeEnablerAndProcessor fp;
-    SupervisedClassifier sc = new SupervisedClassifier();
-    UnsupervisedClassifier uc = new UnsupervisedClassifier();
-    ClassEvaluator ce = new ClassEvaluator();
+    private static FileTypeEnablerAndProcessor fp;
+    private static SupervisedClassifier sc = new SupervisedClassifier();
+    private static UnsupervisedClassifier uc = new UnsupervisedClassifier();
+    private static ClassEvaluator ce = new ClassEvaluator();
     Instances traindata;
     Instances testdata = null;
     File folder, folder2;
@@ -259,13 +259,13 @@ public class FileTypeEnablerAndProcessor {
                 //Go ahead to generate folds, then call classifier
                     if(testdata == null){
                         System.out.println("NO test data");
-                        ce.generateFolds(traindata);
+                        ce.generateFolds(traindata, this.getClassIndex());
                     }
                     //Or call classifier directly if supplied a test set 
                     else if (classIndex >= 0 && traindata.size()>= testdata.size()){
                        System.out.println("Initial training set is larger than the test set...." + traindata.size());
                        //System.out.println(testdata.toSummaryString());
-                       ce.callClassifier(traindata, testdata, classIndex);
+                       ce.callClassifier(traindata, testdata, this.getClassIndex());
                     }
               
     	    }
