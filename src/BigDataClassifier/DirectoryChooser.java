@@ -187,19 +187,24 @@ public class DirectoryChooser extends javax.swing.JFrame {
         redirectSystemStreams();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             trainFile = chooseTrainData.getSelectedFile();
-            //trainFileName = trainFile.getPath();
-            trainSetTextfield.setText(trainFile.getPath());
+            trainFileName = trainFile.getPath();
+            trainSetTextfield.setText(trainFileName);
             fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
             if(!trainFile.isDirectory()){
-                try {
-                    ArrayList items = fp.showSummary(trainFile);
-                    Object[] obj = items.toArray();
-                    classLabelMenu.setModel(new DefaultComboBoxModel(obj));
-//                  jComboBox1.setSelectedIndex(jComboBox1.getItemCount()-1);
-                } catch (IOException ex) {
+                if (fp.getFileExtension(trainFileName).equals("arff")){
+                    try {
+                        ArrayList items = fp.showSummary(trainFile);
+                        Object[] obj = items.toArray();
+                        classLabelMenu.setModel(new DefaultComboBoxModel(obj));
+//                      jComboBox1.setSelectedIndex(jComboBox1.getItemCount()-1);
+                    } catch (IOException ex) {
                     System.out.println("problem accessing file "+trainFile.getAbsolutePath());
                     Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
-                } 
+                    } 
+                }
+                else{
+                   System.out.println("Processing Dataset");
+                }
             }
             else{
                 System.out.println("Processing Datasets");

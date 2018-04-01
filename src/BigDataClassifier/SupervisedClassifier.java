@@ -5,6 +5,7 @@ package BigDataClassifier;
 import weka.core.Instances;
 import weka.classifiers.*;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.bayes.NaiveBayesMultinomialText;
 import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.meta.FilteredClassifier;
@@ -86,6 +87,13 @@ public class SupervisedClassifier {
     	  return zeroR;
       }
       
+       public Classifier useNBMultinomialText (Instances dataset, int classIndex) throws Exception{
+    	  
+          dataset.setClassIndex(classIndex);
+    	  NaiveBayesMultinomialText nbMultiTxt = new NaiveBayesMultinomialText();
+    	  nbMultiTxt.buildClassifier(dataset);
+    	  return nbMultiTxt;
+      }
        public Classifier useM5P(Instances dataset, int classIndex) throws Exception{
     	  
           dataset.setClassIndex(classIndex);

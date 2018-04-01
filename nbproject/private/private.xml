@@ -5,6 +5,7 @@
         <group>
             <file>file:/Users/lamogha/NetBeansProjects/LamiClassify/src/BigDataClassifier/ClassifierMain.java</file>
             <file>file:/Users/lamogha/NetBeansProjects/LamiClassify/src/BigDataClassifier/ClassEvaluator.java</file>
+            <file>file:/Users/lamogha/NetBeansProjects/LamiClassify/src/BigDataClassifier/SupervisedClassifier.java</file>
             <file>file:/Users/lamogha/NetBeansProjects/LamiClassify/src/BigDataClassifier/FileTypeEnablerAndProcessor.java</file>
             <file>file:/Users/lamogha/NetBeansProjects/LamiClassify/src/BigDataClassifier/DirectoryChooser.java</file>
         </group>

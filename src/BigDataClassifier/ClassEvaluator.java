@@ -86,12 +86,13 @@ public class ClassEvaluator {
                     num++;
                 }
             }
-            System.out.println(num);
+            //System.out.println(num);
             return num;
         }
         
         public void callClassifier(Instances trainData, Instances testData, int classIndex){
             trainData.setClassIndex(classIndex);
+            System.out.println("CLASS INDEX " + classIndex);
             if((trainData.size() >= testData.size()) && trainData.numClasses()!= 0)
             {
                 if(this.numOfNumericAtt(trainData, testData) > (trainData.numAttributes()/2))
@@ -104,19 +105,18 @@ public class ClassEvaluator {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-//                
-//                else if (trainData.checkForAttributeType(NUMERIC) 
-//                        && this.numOfNumericAtt(trainData, testData) == (trainData.numAttributes()))
-//                {
-//                    try {
-//                     this.evaluatorClassifier(trainData, testData, sc.useLinearRegression(trainData, classIndex));
-//                     System.out.println("Linear Regression used"+ "\n"
-//                             + "-------------------------------------------------------");
-//                    } catch (Exception ex) {
-//                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                    
-//                }
+                
+                else if (trainData.checkForStringAttributes())
+                {
+                    try {
+                     this.evaluatorClassifier(trainData, testData, sc.useZeroR(trainData, classIndex));
+                     System.out.println("Zero R used"+ "\n"
+                             + "-------------------------------------------------------");
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
                 
                 else if (trainData.checkForAttributeType(RELATIONAL))
                 {
@@ -129,7 +129,8 @@ public class ClassEvaluator {
                     }   
                 }
                 
-                else if (trainData.checkForAttributeType(NOMINAL))
+                else if (trainData.classAttribute().isNominal() 
+                        && this.numOfNominalAtt(trainData, testData) > (trainData.numAttributes()/2))
                 {
                    try {
                      this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData, classIndex));
@@ -235,7 +236,7 @@ public class ClassEvaluator {
             //f = System.currentTimeMillis();
             // plot curve
             ThresholdVisualizePanel vmc = new ThresholdVisualizePanel();
-            vmc.setROCString("(AUC for " + trainDataset2.relationName() +" dataset = "+ Utils.doubleToString(ThresholdCurve.getROCArea(result), 4) + ")");
+            vmc.setROCString("(AUC for '" + trainDataset2.relationName() +"' dataset = "+ Utils.doubleToString(ThresholdCurve.getROCArea(result), 4) + ")");
             vmc.setName(result.relationName());
             PlotData2D tempd = new PlotData2D(result);
             tempd.setPlotName(result.relationName());

@@ -73,44 +73,56 @@ public class FileTypeEnablerAndProcessor {
     		//manipulate file here
     	        String fileName = folder.getName();
     	        System.out.println(fileName);
-                //String extension = getFileExtension(fileName);
-                traindata = new Instances(new BufferedReader(new FileReader
-    			(folder)));
-    	            if(!fileName.startsWith(".") && (fileName.contains(".csv")||fileName.contains(".xls")))
+                String extension = getFileExtension(fileName);
+                //traindata = new Instances(new BufferedReader(new FileReader(folder)));
+                if (!fileName.startsWith(".")){
+                    
+                    //if((fileName.contains(".csv")||fileName.contains(".xls")))
+                    if(extension.equals("csv")||extension.equals("xls"))
     	            {
+                        System.out.println("Opening CSV Loader");
     	                CSVLoader loader = new CSVLoader();
-    	                loader.setSource(new File (folder.getAbsolutePath()));
+                        loader.setFile(folder.getAbsoluteFile());
+    	                //loader.setSource(new File (folder.getAbsolutePath()));
     	                traindata = loader.getDataSet();
+                        System.out.println(traindata.toSummaryString());
+                        //assumes that if it is a csv file, the last attribute is its class attribute
+                        this.setClassIndex(traindata.numAttributes()-1);
     	                //System.out.println(traindata.toSummaryString());
                         this.chooseClassifier();
     	            }
     	                    
-    	            else if (!fileName.startsWith(".") && fileName.contains(".txt")){
+                    else if (extension.equals("txt")){
     	                    	
-    	                    	TextDirectoryLoader loader = new TextDirectoryLoader ();
-    	                    	System.out.println( "About to load text file " + fileName);
-    	                    	System.out.println("Name of path " + folder.getAbsolutePath());
-    	                    	loader.setSource(folder);
-    	                    	traindata = loader.getDataSet();
-    	                    	//System.out.println(traindata.toSummaryString());
-                                this.chooseClassifier();
+    	                TextDirectoryLoader loader = new TextDirectoryLoader ();
+    	                System.out.println( "About to load text file " + fileName);
+    	                System.out.println("Name of path " + folder.getAbsolutePath());
+    	                loader.setSource(folder);
+    	                //loader.setSource(new File (folder.getAbsolutePath()));
+    	                traindata = loader.getDataSet();
+                        System.out.println(loader.getStructure());
+                        System.out.println(traindata.toSummaryString());
+                        //assumes that if it is a csv file, the last attribute is its class attribute
+                        this.setClassIndex(traindata.numAttributes()-1);
+    	                //System.out.println(traindata.toSummaryString());
+                        this.chooseClassifier();
     	                		
     	            } 
-                    else if (!fileName.startsWith(".") && fileName.contains(".json")){
+                    else if (extension.equals("json")){
                                 JSONLoader loader = new JSONLoader();
     	                    	loader.setSource(new File (folder.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                     }
-                    else if (!fileName.startsWith(".") && fileName.contains(".xrff")){
+                    else if (extension.equals("xrff")){
                                 XRFFLoader loader = new XRFFLoader();
     	                    	loader.setSource(new File (folder.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                     }
-                    else if (!fileName.startsWith(".") && fileName.contains(".arff")){
+                    else if (extension.equals("arff")){
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(folder.getAbsolutePath())));
 //                                testdata = new Instances(new BufferedReader(new FileReader
@@ -118,7 +130,7 @@ public class FileTypeEnablerAndProcessor {
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	            }
-                    else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
+                    else if (extension.equals(".mdf")){
                                 DatabaseConnection loader = new DatabaseConnection();
                                 loader.connectToDatabase();
     	                    	InstanceQuery query = new InstanceQuery();
@@ -131,6 +143,8 @@ public class FileTypeEnablerAndProcessor {
                                 //System.out.println(data.toSummaryString());
                                 this.chooseClassifier();
                     }
+                }
+    	   
     	}
     	else{
     		
@@ -138,25 +152,29 @@ public class FileTypeEnablerAndProcessor {
     	        {
     	                if (fileEntry.isDirectory()) {
     	                    this.processFolder(fileEntry);
-    	                } else
-    	                {
+    	                } 
+                        else 
+                        {
     	                    //manipulate file here
     	                    String fileName = fileEntry.getName();
     	                    System.out.println(fileName);
-    	                  
-    	                    if(!fileName.startsWith(".") && (fileName.contains(".csv")||fileName.contains(".xls")))
-    	                    {
-    	                    	CSVLoader loader = new CSVLoader();
-    	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
-    	                    	traindata = loader.getDataSet();
-                                classIndex = traindata.numAttributes()-1;
-                                this.setClassIndex(classIndex);
-    	                    	//System.out.println(traindata.toSummaryString());
+                            String extension = getFileExtension(fileName);
+                            if(!fileName.startsWith(".")){
+                                if((extension.equals("csv")||extension.equals("xls")))
+                                {
+    	                    	System.out.println("Opening CSV Loader");
+                                CSVLoader loader = new CSVLoader();
+                                loader.setFile(folder.getAbsoluteFile());
+                                //loader.setSource(new File (folder.getAbsolutePath()));
+                                traindata = loader.getDataSet();
+                                System.out.println(traindata.toSummaryString());
+                                //assumes that if it is a csv file, the last attribute is its class attribute
+                                this.setClassIndex(traindata.numAttributes()-1);
+                                //System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
-    	                    }
-    	                    
-    	                    else if (!fileName.startsWith(".") && fileName.contains(".txt"))
-                            {
+                                }
+                                else if (extension.equals("txt"))
+                                {
     	                    	
     	                    	TextDirectoryLoader loader = new TextDirectoryLoader ();
     	                    	System.out.println( "About to load text file " + fileName);
@@ -168,8 +186,9 @@ public class FileTypeEnablerAndProcessor {
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	                		
-    	                    } 
-                            else if (!fileName.startsWith(".") && fileName.contains(".json")){
+                                } 
+                                else if (extension.equals("json"))
+                                {
                                 JSONLoader loader = new JSONLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
@@ -177,8 +196,8 @@ public class FileTypeEnablerAndProcessor {
                                 this.setClassIndex(classIndex);
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
-                            }
-                            else if (!fileName.startsWith(".") && fileName.contains(".xrff")){
+                                }
+                                else if (extension.equals("xrff")){
                                 XRFFLoader loader = new XRFFLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
@@ -186,17 +205,17 @@ public class FileTypeEnablerAndProcessor {
                                 classIndex = traindata.numAttributes()-1;
                                 this.setClassIndex(classIndex);
                                 this.chooseClassifier();
-                            }
-                            else if (!fileName.startsWith("."))
-                            {
+                                }
+                                else if (extension.equals("arff"))
+                                {
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(fileEntry.getAbsolutePath())));
     	                    	//System.out.println(traindata.toSummaryString());
                                 classIndex = traindata.numAttributes()-1;
                                 this.setClassIndex(classIndex);
                                 this.chooseClassifier();
-    	                    }
-                            else if (!fileName.startsWith(".") && fileName.contains(".mdf")){
+                                }
+                                else if (extension.equals("mdf")){
                                 DatabaseConnection loader = new DatabaseConnection();
                                 loader.connectToDatabase();
     	                    	InstanceQuery query = new InstanceQuery();
@@ -210,6 +229,7 @@ public class FileTypeEnablerAndProcessor {
                                 classIndex = traindata.numAttributes()-1;
                                 this.setClassIndex(classIndex);
                                 this.chooseClassifier();
+                                }
                             }
                         
     	                }
@@ -231,7 +251,7 @@ public class FileTypeEnablerAndProcessor {
         }
     }
        
-        private  String getFileExtension(String fileName) {
+        public  String getFileExtension(String fileName) {
         String ext = "";
         
         int indexOfDot = fileName.indexOf(".");
