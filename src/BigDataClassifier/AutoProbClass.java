@@ -21,7 +21,7 @@ import weka.core.Instances;
  *
  * @author u1457710
  */
-public class AutoProbClass implements Clusterer {
+public class AutoProbClass  extends weka.clusterers.AbstractClusterer implements Clusterer {
 
     @Override
     public void buildClusterer(Instances data) throws Exception {

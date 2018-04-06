@@ -80,21 +80,21 @@ public class UnsupervisedClassifier {
         return newEm;
     }
 //    
-//       public Clusterer useAutoProbClass(Instances dataset) {
-//
-//        AutoProbClass autoClust = new AutoProbClass();
-//
-//        try {
-//            autoClust.buildClusterer(dataset);
-//            System.out.println(autoClust);
-//            // System.out.println(nb.distributionForInstance(dataset.instance(15)));
-//            // System.out.println(nb.getCapabilities().toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return autoClust;
-//    }
+       public Clusterer useAutoProbClass(Instances dataset) {
+
+        AutoProbClass autoClust = new AutoProbClass();
+
+        try {
+            autoClust.buildClusterer(dataset);
+            System.out.println(autoClust);
+            // System.out.println(nb.distributionForInstance(dataset.instance(15)));
+            // System.out.println(nb.getCapabilities().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return autoClust;
+    }
 
     /**
      *
