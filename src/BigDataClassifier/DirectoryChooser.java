@@ -23,7 +23,7 @@ import javax.swing.SwingUtilities;
 public class DirectoryChooser extends javax.swing.JFrame {
     private static String trainFileName, testFileName;
     BigDataClassifier.FileTypeEnablerAndProcessor fp;
-    File trainFile;
+    File trainFile,testFile;
     
     /**
      * Creates new form DirectoryChooser
@@ -225,13 +225,12 @@ public class DirectoryChooser extends javax.swing.JFrame {
         int returnVal = chooseTestData.showOpenDialog(this);
         redirectSystemStreams();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File testFile = chooseTestData.getSelectedFile();
+            testFile = chooseTestData.getSelectedFile();
             testFileName = testFile.getPath();
             testDatasetField.setText(testFileName);
-            redirectSystemStreams();
-            fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
             try {
                 System.out.println("Test Data Exists");
+                //fp = new BigDataClassifier.FileTypeEnablerAndProcessor(testFileName); 
                 fp.showSummary(testFile);
             } catch (IOException ex) {
                 System.out.println("problem accessing file "+testFile.getAbsolutePath());
@@ -255,7 +254,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
                 testDatasetField.getText().equalsIgnoreCase(testFileName)) {
             //start the file type enabler and processor class
             try {
-                fp = new BigDataClassifier.FileTypeEnablerAndProcessor(testDatasetField.getText());
+                fp = new BigDataClassifier.FileTypeEnablerAndProcessor(testFile);
                 //System.out.println("enabler class index = " + fp.getClassIndex());
                 if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
                     //this.classLabelMenuActionPerformed(evt);

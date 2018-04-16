@@ -39,20 +39,18 @@ public class FileTypeEnablerAndProcessor {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public FileTypeEnablerAndProcessor(String filename) throws FileNotFoundException, IOException {
+    public FileTypeEnablerAndProcessor(File testFile) throws FileNotFoundException, IOException {
 //        File folder2= file;
 //        folder2 = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
-        folder2 = new File (filename);
-        if(!filename.isEmpty()){
+        folder2 = testFile;
         testdata = new Instances(new BufferedReader(new FileReader
                             (folder2.getAbsolutePath()))); 
-        }
         
     }
 
-    public void fileEntry (File filename) throws Exception{
+    public void fileEntry (File trainFile) throws Exception{
     	
-        File folder =  filename;
+        folder =  trainFile;
         //folder = new File (filename);
         System.out.println("file location opened");
     	//fp  = new FileTypeEnablerAndProcessor();
