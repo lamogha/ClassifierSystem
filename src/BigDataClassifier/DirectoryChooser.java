@@ -22,7 +22,7 @@ import javax.swing.SwingUtilities;
  */
 public class DirectoryChooser extends javax.swing.JFrame {
     private static String trainFileName, testFileName;
-    BigDataClassifier.FileTypeEnablerAndProcessor fp;
+    FileTypeEnablerAndProcessor fp = new FileTypeEnablerAndProcessor();
     File trainFile,testFile;
     
     /**
@@ -230,9 +230,9 @@ public class DirectoryChooser extends javax.swing.JFrame {
             trainFile = chooseTrainData.getSelectedFile();
             trainFileName = trainFile.getPath();
             trainSetTextfield.setText(trainFileName);
-            fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
+            //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
             if(!trainFile.isDirectory()){
-                if (fp.getFileExtension(trainFileName).equals("arff")){
+                fp.getFileExtension(trainFileName);
                     try {
                         ArrayList items = fp.showSummary(trainFile);
                         Object[] obj = items.toArray();
@@ -242,10 +242,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
                     System.out.println("problem accessing file "+trainFile.getAbsolutePath());
                     Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
                     } 
-                }
-                else{
-                   System.out.println("Processing Dataset");
-                }
+                
             }
             else{
                 System.out.println("Processing Datasets");
@@ -271,12 +268,14 @@ public class DirectoryChooser extends javax.swing.JFrame {
             testDatasetField.setText(testFileName);
             try {
                 System.out.println("Test Data Exists");
+                //fp.testFileEntry(testFile);
                 //fp = new BigDataClassifier.FileTypeEnablerAndProcessor(testFileName); 
-                fp.showSummary(testFile);
+                System.out.println("=====================This is a List of the Attributes in the test dataset===================== " 
+                        + "\n" + fp.showSummary(testFile) );
             } catch (IOException ex) {
-                System.out.println("problem accessing file "+testFile.getAbsolutePath());
+                System.out.println("Problem accessing file "+testFile.getAbsolutePath());
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } 
         }
         else{
              System.out.println("File access cancelled by user.");
@@ -292,17 +291,19 @@ public class DirectoryChooser extends javax.swing.JFrame {
         // TODO add your handling code here:
         //BigDataClassifier.FileTypeEnablerAndProcessor enabler = null;
         if (trainSetTextfield.getText().equalsIgnoreCase(trainFileName)&&
-                testDatasetField.getText().equalsIgnoreCase(testFileName)) {
+                testDatasetField.getText().equalsIgnoreCase(testFileName) &&
+                classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())) {
             //start the file type enabler and processor class
             try {
-                fp = new BigDataClassifier.FileTypeEnablerAndProcessor(testFile);
                 //System.out.println("enabler class index = " + fp.getClassIndex());
-                if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
-                    //this.classLabelMenuActionPerformed(evt);
-                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
-                } else {
-                    System.out.println("Class index was not selected");
-                }
+//                if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
+//                    //this.classLabelMenuActionPerformed(evt);
+//                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
+//                } else {
+//                    System.out.println("Class index was not selected");
+//                }
+                fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                fp.testFileEntry(testFile);
                 fp.fileEntry(trainFile);
             } catch (Exception ex) {
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);

@@ -36,10 +36,11 @@ public class FileTypeEnablerAndProcessor {
 
     /**
      *
+     * @param testFile
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public FileTypeEnablerAndProcessor(File testFile) throws FileNotFoundException, IOException {
+    public void testFileEntry (File testFile) throws Exception {
 //        File folder2= file;
 //        folder2 = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
         folder2 = testFile;
@@ -57,14 +58,17 @@ public class FileTypeEnablerAndProcessor {
         this.processFolder(folder);
     }
     
+    //Method to get the Class Index
     public int getClassIndex(){
         return this.classIndex;
     }
     
+    //Method for setting the classIndex 
     public void setClassIndex(int index){
         classIndex = index;
     }
     
+    //if the file is not a directory, then process the file
     public void processFolder(File folder) throws Exception{
     	
     	if(!folder.isDirectory()){
@@ -76,21 +80,20 @@ public class FileTypeEnablerAndProcessor {
                 if (!fileName.startsWith(".")){
                     
                     //if((fileName.contains(".csv")||fileName.contains(".xls")))
-                    if(extension.equals("csv")||extension.equals("xls"))
+                    if(extension.equalsIgnoreCase("csv")||extension.equalsIgnoreCase("xls"))
     	            {
                         System.out.println("Opening CSV Loader");
     	                CSVLoader loader = new CSVLoader();
                         loader.setFile(folder.getAbsoluteFile());
     	                //loader.setSource(new File (folder.getAbsolutePath()));
     	                traindata = loader.getDataSet();
-                        System.out.println(traindata.toSummaryString());
+                        //System.out.println(traindata.toSummaryString());
                         //assumes that if it is a csv file, the last attribute is its class attribute
                         this.setClassIndex(traindata.numAttributes()-1);
-    	                //System.out.println(traindata.toSummaryString());
                         this.chooseClassifier();
     	            }
     	                    
-                    else if (extension.equals("txt")){
+                    else if (extension.equalsIgnoreCase("txt")){
     	                    	
     	                TextDirectoryLoader loader = new TextDirectoryLoader ();
     	                System.out.println( "About to load text file " + fileName);
@@ -99,28 +102,27 @@ public class FileTypeEnablerAndProcessor {
     	                //loader.setSource(new File (folder.getAbsolutePath()));
     	                traindata = loader.getDataSet();
                         System.out.println(loader.getStructure());
-                        System.out.println(traindata.toSummaryString());
-                        //assumes that if it is a csv file, the last attribute is its class attribute
+                        //assumes that if it is a txt file, the last attribute is its class attribute
                         this.setClassIndex(traindata.numAttributes()-1);
     	                //System.out.println(traindata.toSummaryString());
                         this.chooseClassifier();
     	                		
     	            } 
-                    else if (extension.equals("json")){
+                    else if (extension.equalsIgnoreCase("json")){
                                 JSONLoader loader = new JSONLoader();
     	                    	loader.setSource(new File (folder.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                     }
-                    else if (extension.equals("xrff")){
+                    else if (extension.equalsIgnoreCase("xrff")){
                                 XRFFLoader loader = new XRFFLoader();
     	                    	loader.setSource(new File (folder.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                     }
-                    else if (extension.equals("arff")){
+                    else if (extension.equalsIgnoreCase("arff")){
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(folder.getAbsolutePath())));
 //                                testdata = new Instances(new BufferedReader(new FileReader
@@ -128,7 +130,7 @@ public class FileTypeEnablerAndProcessor {
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	            }
-                    else if (extension.equals(".mdf")){
+                    else if (extension.equalsIgnoreCase(".mdf")){
                                 DatabaseConnection loader = new DatabaseConnection();
                                 loader.connectToDatabase();
     	                    	InstanceQuery query = new InstanceQuery();
@@ -145,7 +147,7 @@ public class FileTypeEnablerAndProcessor {
     	   
     	}
     	else{
-    		
+    		//Once it is a file directory, it loops through each one and process it
     		 for (final File fileEntry : folder.listFiles()) 
     	        {
     	                if (fileEntry.isDirectory()) {
@@ -158,20 +160,20 @@ public class FileTypeEnablerAndProcessor {
     	                    System.out.println(fileName);
                             String extension = getFileExtension(fileName);
                             if(!fileName.startsWith(".")){
-                                if((extension.equals("csv")||extension.equals("xls")))
+                                if((extension.equalsIgnoreCase("csv")||extension.equalsIgnoreCase("xls")))
                                 {
     	                    	System.out.println("Opening CSV Loader");
                                 CSVLoader loader = new CSVLoader();
                                 loader.setFile(folder.getAbsoluteFile());
                                 //loader.setSource(new File (folder.getAbsolutePath()));
                                 traindata = loader.getDataSet();
-                                System.out.println(traindata.toSummaryString());
+                                //System.out.println(traindata.toSummaryString());
                                 //assumes that if it is a csv file, the last attribute is its class attribute
                                 this.setClassIndex(traindata.numAttributes()-1);
-                                //System.out.println(traindata.toSummaryString());
+                                System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                                 }
-                                else if (extension.equals("txt"))
+                                else if (extension.equalsIgnoreCase("txt"))
                                 {
     	                    	
     	                    	TextDirectoryLoader loader = new TextDirectoryLoader ();
@@ -181,39 +183,33 @@ public class FileTypeEnablerAndProcessor {
     	                    	traindata = loader.getDataSet();
                                 classIndex = traindata.numAttributes()-1;
                                 this.setClassIndex(classIndex);
-    	                    	//System.out.println(traindata.toSummaryString());
+    	                    	System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	                		
                                 } 
-                                else if (extension.equals("json"))
+                                else if (extension.equalsIgnoreCase("json"))
                                 {
                                 JSONLoader loader = new JSONLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
-                                classIndex = traindata.numAttributes()-1;
-                                this.setClassIndex(classIndex);
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                                 }
-                                else if (extension.equals("xrff")){
+                                else if (extension.equalsIgnoreCase("xrff")){
                                 XRFFLoader loader = new XRFFLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
     	                    	//System.out.println(traindata.toSummaryString());
-                                classIndex = traindata.numAttributes()-1;
-                                this.setClassIndex(classIndex);
                                 this.chooseClassifier();
                                 }
-                                else if (extension.equals("arff"))
+                                else if (extension.equalsIgnoreCase("arff"))
                                 {
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(fileEntry.getAbsolutePath())));
-    	                    	//System.out.println(traindata.toSummaryString());
-                                classIndex = traindata.numAttributes()-1;
-                                this.setClassIndex(classIndex);
+    	                    	System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                                 }
-                                else if (extension.equals("mdf")){
+                                else if (extension.equalsIgnoreCase("mdf")){
                                 DatabaseConnection loader = new DatabaseConnection();
                                 loader.connectToDatabase();
     	                    	InstanceQuery query = new InstanceQuery();
@@ -223,9 +219,8 @@ public class FileTypeEnablerAndProcessor {
                                 // You can declare that your data set is sparse
                                 // query.setSparseData(true);
                                 Instances data = query.retrieveInstances();
-                                //System.out.println(data.toSummaryString());
-                                classIndex = traindata.numAttributes()-1;
-                                this.setClassIndex(classIndex);
+                                System.out.println(data.toSummaryString());
+                                //this.setClassIndex(data.numAttributes()-1);
                                 this.chooseClassifier();
                                 }
                             }
@@ -268,7 +263,7 @@ public class FileTypeEnablerAndProcessor {
              */
 //            classIndex = traindata.numAttributes()-1;
               classIndex = this.getClassIndex();
-              //System.out.println("------SELECTED INDEX IS--------------" + classIndex);
+              System.out.println("------USED class INDEX IS--------------" + classIndex);
               traindata.setClassIndex(classIndex);
             if(classIndex >= 0)
             {
@@ -276,7 +271,7 @@ public class FileTypeEnablerAndProcessor {
                 
                 //Go ahead to generate folds, then call classifier
                     if(testdata == null){
-                        System.out.println("NO test data");
+                        System.out.println("NO test data" + "\n" + "--------------------------------");
                         ce.generateFolds(traindata, this.getClassIndex());
                     }
                     //Or call classifier directly if supplied a test set 

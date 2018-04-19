@@ -40,7 +40,8 @@ public class ClassEvaluator {
     
 	public void generateFolds(Instances trainDataset, int classIndexPassed) throws Exception{
             //randomize data
-              Random rand = new Random(1);
+              Random rand = new Random(System.currentTimeMillis());
+              //Random rand = new Random();
              
               //create random dataset
               Instances randData = new Instances(trainDataset);
@@ -57,9 +58,10 @@ public class ClassEvaluator {
                     trainDataset2 = trainDataset;
                     testDataset2 = testDataset;
                     trainDataset2.setClassIndex(classIndex);
-                    System.out.println("The number of class labels is:- " + trainDataset2.numClasses());    
+                    System.out.println("--------The number of class labels is:- " + trainDataset2.numClasses()); 
+                    //this.callClassifier(trainDataset2,testDataset2,classIndex);
                 }
-                 System.out.println("Calling the right Classifier ------ ");
+                 System.out.println("--------Calling the right Classifier ------ ");
                  this.callClassifier(trainDataset2,testDataset2,classIndex);
               
               
@@ -74,7 +76,7 @@ public class ClassEvaluator {
                     nom++;
                 }
             }
-            System.out.println(nom);
+            //System.out.println(nom);
             return nom;
         }
         
@@ -92,7 +94,8 @@ public class ClassEvaluator {
         
         public void callClassifier(Instances trainData, Instances testData, int classIndex){
             trainData.setClassIndex(classIndex);
-            System.out.println("CLASS INDEX " + classIndex);
+            //System.out.println("CLASS INDEX " + classIndex);
+            System.out.println("-------------------------------------------------------");
             if((trainData.size() >= testData.size()) && trainData.numClasses()!= 0)
             {
                 if (trainData.classAttribute().isNumeric()){
