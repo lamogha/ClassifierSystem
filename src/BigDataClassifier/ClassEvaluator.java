@@ -95,7 +95,29 @@ public class ClassEvaluator {
             System.out.println("CLASS INDEX " + classIndex);
             if((trainData.size() >= testData.size()) && trainData.numClasses()!= 0)
             {
-                if(this.numOfNumericAtt(trainData, testData) > (trainData.numAttributes()/2))
+                if (trainData.classAttribute().isNumeric()){
+                    
+                     try {
+                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
+                     System.out.println("Random Forest used" + "\n"
+                             + "-------------------------------------------------------");
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                else if(trainData.classAttribute().isNominal() && trainData.numInstances()<=50 && trainData.numAttributes()<=10 
+                        && trainData.numAttributes()==this.numOfNominalAtt(trainData, testData)){
+                    try {
+                     this.evaluatorClassifier(trainData, testData, sc.useJ48(trainData, classIndex));
+                     System.out.println("J48 used" + "\n"
+                             + "-------------------------------------------------------");
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+                else if(trainData.classAttribute().isNominal() && trainData.numInstances()>=500 && 
+                        this.numOfNumericAtt(trainData, testData) == (this.numOfNominalAtt(trainData, testData)/2))
                 {
                     try {
                      this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
@@ -105,7 +127,72 @@ public class ClassEvaluator {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                else if(trainData.classAttribute().isNominal() && trainData.numInstances()> 500 
+                        && trainData.numAttributes()<= 10 && this.numOfNumericAtt(trainData, testData) >= trainData.numAttributes()-1)
+                {
+                    try {
+                     this.evaluatorClassifier(trainData, testData, sc.useSGD(trainData, classIndex));
+                     System.out.println("SGD used"+ "\n"
+                             + "-------------------------------------------------------");
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+                else if(trainData.classAttribute().isNominal() && trainData.numInstances()< 500 
+                        && trainData.numAttributes()> 10 && this.numOfNumericAtt(trainData, testData) >= trainData.numAttributes()-1)
+                {
+                    try {
+                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
+                     System.out.println("Random Forest Used used"+ "\n"
+                             + "-------------------------------------------------------");
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
                 
+                 else if(trainData.classAttribute().isNominal() && trainData.numInstances()> 500 
+                        && trainData.numAttributes()> 10 
+                         && this.numOfNumericAtt(trainData, testData) >= this.numOfNominalAtt(trainData, testData))
+                {
+                    try {
+                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
+                     System.out.println("Random Forest Used used"+ "\n"
+                             + "-------------------------------------------------------");
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+                 
+                 else if(trainData.classAttribute().isNominal() && trainData.numInstances()> 500 
+                        && trainData.numAttributes() < 50 
+                         && this.numOfNominalAtt(trainData, testData) == trainData.numAttributes())
+                {
+                    try {
+                     this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData, classIndex));
+                     System.out.println("Naive Bayes Used"+ "\n"
+                             + "-------------------------------------------------------");
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+                 else if(trainData.classAttribute().isNominal() && trainData.numInstances()> 500 
+                        && trainData.numAttributes() > 100
+                         && this.numOfNominalAtt(trainData, testData) == trainData.numAttributes())
+                {
+                    try {
+                     this.evaluatorClassifier(trainData, testData, sc.useSGD(trainData, classIndex));
+                     System.out.println("SGD Used"+ "\n"
+                             + "-------------------------------------------------------");
+                    } catch (Exception ex) {
+                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+                 
                 else if (trainData.checkForStringAttributes())
                 {
                     try {
@@ -130,7 +217,7 @@ public class ClassEvaluator {
                 }
                 
                 else if (trainData.classAttribute().isNominal() 
-                        && this.numOfNominalAtt(trainData, testData) > (trainData.numAttributes()/2))
+                        && this.numOfNominalAtt(trainData, testData) > (2*this.numOfNumericAtt(trainData, testData)))
                 {
                    try {
                      this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData, classIndex));

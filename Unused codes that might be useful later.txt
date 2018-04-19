@@ -125,4 +125,61 @@ public static Cloud getCloudWithLessPoints(ArrayList<Cloud> clouds) {
         return meanZI;
     }
 
+public Classifier useClassifierWithFilter(Instances dataset, int classIndex) throws Exception{
+    	  
+		  dataset.setClassIndex(classIndex);
+		  //the filter
+		  RemoveUseless remove = new RemoveUseless();
+		  //remove.setAttributeIndices ("1");
+		  String[] opts = new String []{"-R", "first-last"};
+		  //set filter options
+		  remove.setOptions(opts);
+		  //create filtered classifier object
+    	  FilteredClassifier fc = new FilteredClassifier();
+    	  //specify filter
+    	  fc.setFilter(remove);
+    	  //specify the base classifier 
+    	  fc.setClassifier(new NaiveBayes());
+    	  //build the meta-classifier
+    	  fc.buildClassifier(dataset);
+    	  return fc;	  
+      } 
+      /*
+     * @param dataset
+     * @return 
+     * @throws java.lang.Exception */
+      
+     public Classifier adaBoost(Instances dataset, int classIndex) throws Exception{
+    	  
+          dataset.setClassIndex(classIndex);
+    	  AdaBoostM1 m1 = new AdaBoostM1();
+          m1.setClassifier(new DecisionStump());
+          m1.setNumIterations(20);
+    	  m1.buildClassifier(dataset);
+    	  return m1;
+      }
 
+    
+       public Classifier useNBMultinomialText (Instances dataset, int classIndex) throws Exception{
+    	  
+          dataset.setClassIndex(classIndex);
+    	  NaiveBayesMultinomialText nbMultiTxt = new NaiveBayesMultinomialText();
+    	  nbMultiTxt.buildClassifier(dataset);
+    	  return nbMultiTxt;
+      }
+       public Classifier useM5P(Instances dataset, int classIndex) throws Exception{
+    	  
+          dataset.setClassIndex(classIndex);
+    	  M5P m5P = new M5P();
+    	  m5P.buildClassifier(dataset);
+    	  return m5P;
+      }
+
+
+       public Classifier useLinearRegression (Instances dataset, int classIndex) throws Exception{
+           dataset.setClassIndex(classIndex);
+           LinearRegression lr = new LinearRegression();
+           lr.buildClassifier(dataset);
+           return lr;
+       }
+      
