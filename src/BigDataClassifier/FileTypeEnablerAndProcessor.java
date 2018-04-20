@@ -181,8 +181,7 @@ public class FileTypeEnablerAndProcessor {
     	                    	System.out.println("Name of path " + fileEntry.getAbsolutePath());
     	                    	loader.setSource(folder);
     	                    	traindata = loader.getDataSet();
-                                classIndex = traindata.numAttributes()-1;
-                                this.setClassIndex(classIndex);
+                                this.setClassIndex(traindata.numAttributes()-1);
     	                    	System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
     	                		
@@ -192,6 +191,7 @@ public class FileTypeEnablerAndProcessor {
                                 JSONLoader loader = new JSONLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
+                                this.setClassIndex(traindata.numAttributes()-1);
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                                 }
@@ -199,6 +199,7 @@ public class FileTypeEnablerAndProcessor {
                                 XRFFLoader loader = new XRFFLoader();
     	                    	loader.setSource(new File (fileEntry.getAbsolutePath()));
     	                    	traindata = loader.getDataSet();
+                                this.setClassIndex(traindata.numAttributes()-1);
     	                    	//System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
                                 }
@@ -206,7 +207,9 @@ public class FileTypeEnablerAndProcessor {
                                 {
     	                    	traindata = new Instances(new BufferedReader(new FileReader
     	                    			(fileEntry.getAbsolutePath())));
+                                System.out.println("\n" + "======================================");
     	                    	System.out.println(traindata.toSummaryString());
+                                this.setClassIndex(traindata.numAttributes()-1);
                                 this.chooseClassifier();
                                 }
                                 else if (extension.equalsIgnoreCase("mdf")){
@@ -220,7 +223,7 @@ public class FileTypeEnablerAndProcessor {
                                 // query.setSparseData(true);
                                 Instances data = query.retrieveInstances();
                                 System.out.println(data.toSummaryString());
-                                //this.setClassIndex(data.numAttributes()-1);
+                                this.setClassIndex(data.numAttributes()-1);
                                 this.chooseClassifier();
                                 }
                             }

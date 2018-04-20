@@ -1,4 +1,4 @@
-@relation 'Reuters-21578 Corn ModApte Test-weka.filters.unsupervised.attribute.NumericToBinary-weka.filters.unsupervised.instance.RemoveFolds-S0-N5-F1'
+@relation ReutersCorn-test
 
 @attribute Text string
 @attribute class-att {0,1}

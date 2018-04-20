@@ -319,7 +319,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
                     fp.fileEntry(trainFile);
                 } else {
                     //this.classLabelMenuActionPerformed(evt);
-                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                    //fp.setClassIndex(classLabelMenu.getSelectedIndex());
                     fp.fileEntry(trainFile);
                 }
 //                fp.fileEntry(trainSetTextfield.getText());
