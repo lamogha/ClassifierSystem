@@ -296,7 +296,7 @@ public class FileTypeEnablerAndProcessor {
                     System.out.println("class attribute not found, using a clusterer");
                     //uc.useFarthestFirst(traindata);
                     //uc.useEMClusterer(traindata);
-                    uc.useAutoProbClass(traindata);
+                    uc.autoProbClass(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }
