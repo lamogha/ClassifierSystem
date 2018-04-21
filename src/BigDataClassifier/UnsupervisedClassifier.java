@@ -24,7 +24,7 @@ public class UnsupervisedClassifier {
     private static ArrayList<DenseInstance> cloud = new ArrayList<>();
     private static ArrayList<String> cloudLabels = new ArrayList<>();
     private static ArrayList<String> labels = new ArrayList<>();
-    private static ArrayList<Cloud> clouds = new ArrayList<>();
+    private static ArrayList<Double> euD = new ArrayList<>();
     private static ArrayList<DenseInstance> outliers = new ArrayList<>();
     private static ArrayList<Float> simPercent = new ArrayList<>();
     private static EuclideanDistance eu;
@@ -126,46 +126,57 @@ public class UnsupervisedClassifier {
                     cloud.add(nc);
                     cloudLabels.add("Class"+k);
                     labels.add("Class"+k);
-                    System.out.println(cloudLabels);
+                    //System.out.println(cloudLabels);
 //                    Cloud cloudtoadd = new Cloud(ncFocalpoint,ncZI,ncPoints, (DenseInstance) xk.instance(k));
 //                    clouds.add(cloudtoadd);
-                    System.out.println("First cloud added");
-                    System.out.println("Instance identifier for first cloud " + nc + " is: " + getInstanceIdentifier(nc));
-                    System.out.println("==========");
+                    System.out.println("First instance added");
+                    //System.out.println("==========");
+                    System.out.println("The Instance identifier for first instance is: " + getInstanceIdentifier(nc));
+                    //System.out.println("==========");
                 } else {
                     //read next instance
                     DenseInstance nc = (DenseInstance) iterator.next();
                     //System.out.println(nc.numValues());
                     //get the identifier for that instance
-                    System.out.println("\n" + "Instance identifier for " + nc + " is: " + getInstanceIdentifier(nc));
+                    System.out.println("\n" + "Instance identifier for the new instance is: " + getInstanceIdentifier(nc));
                     //System.out.println(nc.weight());
-                    System.out.println("==========");
+                    //System.out.println("==========");
 
                     ArrayList<Boolean> booleanList = compareInstancesTest(nc);
 //                    ArrayList<String> similarListMeasure = compareInstancesTest(nc);
                     System.out.println("List of how close they are: " + booleanList);
-                    System.out.println("List of how close they are: " + simPercent);
-                   
+                    //System.out.println("==========");
+                    //System.out.println("Euclidean Distance estimates: " + euD);
+                    //System.out.println("==========");
+                    System.out.println("Similarity percentage: " + simPercent);
                     float maximum = Collections.max(simPercent);
-                    System.out.println("The closest is " + maximum + "% at index point " + simPercent.indexOf(maximum) ); 
+                    System.out.println("The closest is " + maximum + "% at index point " + simPercent.indexOf(maximum) );
+                    
+                    System.out.println("==========");
                     if(maximum!=0.0){
                         //cloudLabels.add("Class"+ simPercent.indexOf(maximum));
                         labels.add(labels.get(simPercent.indexOf(maximum)));
-                        System.out.println(labels);
+                        //System.out.println(labels);
                     }
                     else{
                         cloudLabels.add("Class"+cloudLabels.size());
                         labels.add(cloudLabels.get(cloudLabels.size()-1));
-                        System.out.println(labels);
+                        //System.out.println(labels);
                         //newLabelCounter++;
-                        System.out.println(cloudLabels.size());
-                        System.out.println(cloudLabels);
+//                        System.out.println("THE NUMBER OF CLUSTERS CREATED: " +"\n"+cloudLabels.size());
+//                        
+//                        //System.out.println("==========");
+//                        System.out.println("THE CLASS LABELS CREATED ARE: " +"\n"+ cloudLabels);
                     }
                     
                 }
                 k = k + 1;
 
             }
+             System.out.println("THE NUMBER OF CLUSTERS CREATED: " +"\n"+cloudLabels.size());
+                        
+                        //System.out.println("==========");
+             System.out.println("THE CLASS LABELS CREATED ARE: " +"\n"+ cloudLabels);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,7 +192,7 @@ public class UnsupervisedClassifier {
         simPercent = new ArrayList<>();
         
         for (DenseInstance instanceOld : cloud) {
-            System.out.println("==================");
+            //System.out.println("==================");
             //String instanceBIdentifier = getInstanceIdentifier(instanceB);
             for (int i = 0; i < instanceNew.numAttributes(); i++) {
                instanceNewIdentifier = instanceNew.value(i);
@@ -198,7 +209,7 @@ public class UnsupervisedClassifier {
                 }
             }
             
-            System.out.println("Disimilar estimate " + (float)falseScore/instanceOld.numAttributes());
+//            System.out.println("Disimilar estimate " + (float)falseScore/instanceOld.numAttributes());
             //find the fraction of the number of dissimilar values in %
             float diSimilarityMeasure = (float)falseScore/instanceOld.numAttributes() * 100;
             float similarityMeasure = 100 - diSimilarityMeasure;
@@ -206,25 +217,27 @@ public class UnsupervisedClassifier {
 //            NormalizableDistance nd = new EuclideanDistance();
 //            double euclideandistanceMeasure = eu.distance(instance1, instance2);
 //            System.out.println("---------------- EUCdist " + euclideandistanceMeasure );
-            System.out.println("THEY ARE " + similarityMeasure + "% SIMLIAR");
-            System.out.println("SCORE PERCENTAGE OF THE NUMBER OF FALSE MATCHES " + diSimilarityMeasure + "%");
+//            System.out.println("THEY ARE " + similarityMeasure + "% SIMLIAR");
+//            System.out.println("SCORE PERCENTAGE OF THE NUMBER OF FALSE MATCHES " + diSimilarityMeasure + "%");
             
             if (diSimilarityMeasure > 20){
                 howCloseList.add(false);
                 //The distance measure between 
                 double distanceMeasure = eu.distance(instanceOld, instanceNew);
-                System.out.println("---EUCLIDEAN DISTANCE MEASURE IS--- = " + distanceMeasure);
+                euD.add(distanceMeasure);
+                //System.out.println("---EUCLIDEAN DISTANCE MEASURE IS--- = " + distanceMeasure);
                 simPercent.add(0.0f);
             }
             else{
                 howCloseList.add(true);
                 double distanceMeasure = eu.distance(instanceOld, instanceNew);
-                System.out.println("---EUCLIDEAN DISTANCE MEASURE IS--- = " + distanceMeasure);
+                euD.add(distanceMeasure);
+                //System.out.println("---EUCLIDEAN DISTANCE MEASURE IS--- = " + distanceMeasure);
                 simPercent.add(similarityMeasure);
             }
 
-            System.out.println("--TRUE SCORE = " + trueScore);
-            System.out.println("--FALSE SCORE = " + falseScore);
+            //System.out.println("--TRUE SCORE = " + trueScore);
+            //System.out.println("--FALSE SCORE = " + falseScore);
             trueScore = 0;
             falseScore = 0;
         }

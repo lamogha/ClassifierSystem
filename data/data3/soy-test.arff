@@ -89,7 +89,7 @@
 %   34. shriveling:	absent,present,?.
 %   35. roots:		norm,rotted,galls-cysts,?.
 
-@RELATION soybean
+@RELATION soy-test
 
 @ATTRIBUTE date			{april,may,june,july,august,september,october}
 @ATTRIBUTE plant-stand 		{normal,lt-normal}

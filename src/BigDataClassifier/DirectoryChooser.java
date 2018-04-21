@@ -312,8 +312,8 @@ public class DirectoryChooser extends javax.swing.JFrame {
         else {
             try {
                 //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
-                System.out.println("FP class index = " + fp.getClassIndex());
-                System.out.println("chooser class index = " + classLabelMenu.getSelectedIndex());
+                //System.out.println("FP class index = " + fp.getClassIndex());
+                //System.out.println("chooser class index = " + classLabelMenu.getSelectedIndex());
                 if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
                     System.out.println("Class index was not selected");
                     fp.fileEntry(trainFile);

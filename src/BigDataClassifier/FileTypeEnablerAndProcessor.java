@@ -53,7 +53,7 @@ public class FileTypeEnablerAndProcessor {
     	
         folder =  trainFile;
         //folder = new File (filename);
-        System.out.println("file location opened");
+        //System.out.println("file location opened");
     	//fp  = new FileTypeEnablerAndProcessor();
         this.processFolder(folder);
     }
@@ -74,7 +74,7 @@ public class FileTypeEnablerAndProcessor {
     	if(!folder.isDirectory()){
     		//manipulate file here
     	        String fileName = folder.getName();
-    	        System.out.println(fileName);
+    	        //System.out.println(fileName);
                 String extension = getFileExtension(fileName);
                 //traindata = new Instances(new BufferedReader(new FileReader(folder)));
                 if (!fileName.startsWith(".")){
@@ -266,7 +266,7 @@ public class FileTypeEnablerAndProcessor {
              */
 //            classIndex = traindata.numAttributes()-1;
               classIndex = this.getClassIndex();
-              System.out.println("------USED class INDEX IS--------------" + classIndex);
+              //System.out.println("------USED class INDEX IS--------------" + classIndex);
               traindata.setClassIndex(classIndex);
             if(classIndex >= 0)
             {
@@ -293,7 +293,8 @@ public class FileTypeEnablerAndProcessor {
             else 
             {
                 try {
-                    System.out.println("class attribute not found, using a clusterer");
+                    System.out.println("NOT A LABELLED DATASET, HENCE USING AN UNSUPERVISED ALGORITHM");
+                    System.out.println("==========");
                     //uc.useFarthestFirst(traindata);
                     //uc.useEMClusterer(traindata);
                     uc.autoProbClass(traindata);

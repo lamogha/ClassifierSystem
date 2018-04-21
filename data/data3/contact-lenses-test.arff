@@ -1,4 +1,4 @@
-% 1. Number of Instances: 10
+% 1. Number of Instances: 12
 % 
 % 2. Number of Attributes: 5 (all nominal)
 % 
@@ -20,7 +20,7 @@
 %    2. soft contact lenses: 3
 %    3. no contact lenses: 5
 
-@relation contact-lenses
+@relation contact-lenses-test
 
 @attribute age 			{young, pre-presbyopic, presbyopic}
 @attribute spectacle-prescrip	{myope, hypermetrope}
@@ -39,6 +39,7 @@ young,myope,no,reduced,none
 young,myope,yes,normal,hard
 young,hypermetrope,no,reduced,none
 young,hypermetrope,no,normal,soft
+young,hypermetrope,yes,normal,soft
 young,hypermetrope,yes,reduced,none
 young,hypermetrope,yes,normal,hard
 pre-presbyopic,myope,no,reduced,none
