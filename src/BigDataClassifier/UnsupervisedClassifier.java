@@ -75,7 +75,6 @@ public class UnsupervisedClassifier {
             //return an array containing estimated membership probabilities of the test instance in each cluster
             //newEm.distributionForInstance(instance);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return newEm;
     }
@@ -90,7 +89,6 @@ public class UnsupervisedClassifier {
             // System.out.println(nb.distributionForInstance(dataset.instance(15)));
             // System.out.println(nb.getCapabilities().toString());
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return autoClust;

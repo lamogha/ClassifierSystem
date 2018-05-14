@@ -297,7 +297,7 @@ public class FileTypeEnablerAndProcessor {
                     System.out.println("==========");
                     //uc.useFarthestFirst(traindata);
                     //uc.useEMClusterer(traindata);
-                    uc.autoProbClass(traindata);
+                    uc.useAutoProbClass(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }
