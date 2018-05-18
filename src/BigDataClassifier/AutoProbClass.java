@@ -12,45 +12,29 @@ import java.util.ListIterator;
 import weka.clusterers.AbstractDensityBasedClusterer;
 import weka.clusterers.Clusterer;
 import weka.clusterers.MakeDensityBasedClusterer;
+import weka.clusterers.NumberOfClustersRequestable;
+import weka.clusterers.UpdateableClusterer;
 import weka.core.Capabilities;
 import weka.core.DenseInstance;
 import weka.core.EuclideanDistance;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.OptionHandler;
+import weka.core.TechnicalInformation;
+import weka.core.TechnicalInformationHandler;
+import weka.core.WeightedInstancesHandler;
 
 /**
  *
  * @author u1457710
  */
-public class AutoProbClass  extends weka.clusterers.AbstractClusterer implements Clusterer,OptionHandler, Serializable {
-
-    @Override
-    public void buildClusterer(Instances data) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int clusterInstance(Instance instance) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double[] distributionForInstance(Instance instance) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int numberOfClusters() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Capabilities getCapabilities() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+public class AutoProbClass  extends weka.clusterers.AbstractClusterer implements TechnicalInformationHandler, 
+        NumberOfClustersRequestable,UpdateableClusterer, OptionHandler, WeightedInstancesHandler {
     
-     private static final int CLOSENESS_THRESHOLD = 1;
+    /** Minimum improvement in log likelihood when iterating */
+    protected double m_minLogLikelihoodImprovementIterating = 1e-6;
+    
+    private static final int CLOSENESS_THRESHOLD = 1;
     private static ArrayList<DenseInstance> cloud = new ArrayList<>();
     private static ArrayList<String> cloudLabels = new ArrayList<>();
     private static ArrayList<String> labels = new ArrayList<>();
@@ -59,22 +43,78 @@ public class AutoProbClass  extends weka.clusterers.AbstractClusterer implements
     private static ArrayList<Float> simPercent = new ArrayList<>();
     private static EuclideanDistance eu;
     private static double instanceNewIdentifier,instanceOldIdentifier ;
+    
     //private static ArrayList<DenseInstance> oldOutliers = new ArrayList<>();
     AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
     //CheckClusterer check = new CheckClusterer();
-    ClusterEvaluator clustEval = new ClusterEvaluator();
-     /**
-     *
-     * @param dataset
-     */
-    public void autoProbClass(Instances dataset) {
+    ClusterEvaluator clustEval = new ClusterEvaluator();  
+    
+    /**
+   * Returns a string describing this clusterer.
+   * 
+   * @return a description of the evaluator suitable for displaying in the
+   *         explorer/experimenter gui
+   */
+  public String globalInfo() {
+    return "Cluster data using the autoProbClass clustering algorithm, which requires just "
+      + "one pass over the data. Can run in either"
+      + "batch or incremental mode. Results are generally not as good when "
+      + "running incrementally as the min/max for each numeric attribute is not "
+      + "known in advance. Has a heuristic (based on attribute std. deviations), "
+      + "that can be used in batch mode, for setting the T2 distance. The T2 distance "
+      + "determines how many canopies (clusters) are formed. When the user specifies "
+      + "a specific number (N) of clusters to generate, the algorithm will return the "
+      + "top N canopies (as determined by T2 density) when N < number of canopies "
+      + "(this applies to both batch and incremental learning); "
+      + "when N > number of canopies, the difference is made up by selecting training "
+      + "instances randomly (this can only be done when batch training). For more "
+      + "information see:\n\n" + getTechnicalInformation().toString();
 
-       try {
+  }
+  
+   @Override
+    public TechnicalInformation getTechnicalInformation() {
+    TechnicalInformation result;
+
+    result = new TechnicalInformation(TechnicalInformation.Type.INPROCEEDINGS);
+    result.setValue(TechnicalInformation.Field.AUTHOR, "Lamogha Ighoroje");
+    result
+      .setValue(
+        TechnicalInformation.Field.TITLE,
+        "Efficient Clustering of High Dimensional Data Sets with Application to Similarity measures");
+    result.setValue(TechnicalInformation.Field.BOOKTITLE,
+      "Proceedings of the sixth ACM SIGKDD internation conference on "
+        + "knowledge discovery and data mining "
+        + "ACM-SIAM symposium on Discrete algorithms");
+    result.setValue(TechnicalInformation.Field.YEAR, "2018");
+    result.setValue(TechnicalInformation.Field.PAGES, "169-178");
+
+    return result;
+    }
+
+    @Override
+    public void setNumClusters(int i) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateClusterer(Instance instnc) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateFinished() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void buildClusterer(Instances data) throws Exception {
+        try {
 
             //Define the initial zone of influence ZI
             double initialZI = 0.3;
             int k = 0; int newLabelCounter = 0;
-            Instances xk = new Instances(dataset);
+            Instances xk = new Instances(data);
             eu = new EuclideanDistance(xk);
             double ncZI = initialZI;
             int ncPoints = 0;
@@ -140,16 +180,70 @@ public class AutoProbClass  extends weka.clusterers.AbstractClusterer implements
                 k = k + 1;
 
             }
-             System.out.println("THE NUMBER OF CLUSTERS CREATED: " +"\n"+cloudLabels.size());
+             System.out.println("THE NUMBER OF CLUSTERS CREATED: " +"\n"+ this.numberOfClusters());
                         
                         //System.out.println("==========");
              System.out.println("THE CLASS LABELS CREATED ARE: " +"\n"+ cloudLabels);
+             System.out.println("THE MIN LOG LIKELIHOOD: " +"\n"+ this.getMinLogLikelihoodImprovementIterating());
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
+    @Override
+    public int clusterInstance(Instance instance) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double[] distributionForInstance(Instance instance) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int numberOfClusters() throws Exception {
+        return cloudLabels.size();
+        
+    }
+
+    @Override
+    public Capabilities getCapabilities() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    /**
+   * Returns the tip text for this property
+   * 
+   * @return tip text for this property suitable for displaying in the
+   *         explorer/experimenter gui
+   */
+  public String minLogLikelihoodImprovementIteratingTipText() {
+    return "The minimum improvement in log likelihood required to "
+      + "perform another iteration of the E and M steps";
+  }
+
+  /**
+   * Set the minimum improvement in log likelihood necessary to perform another
+   * iteration of the E and M steps.
+   * 
+   * @param min the minimum improvement in log likelihood
+   */
+  public void setMinLogLikelihoodImprovementIterating(double min) {
+    m_minLogLikelihoodImprovementIterating = min;
+  }
+
+  /**
+   * Get the minimum improvement in log likelihood necessary to perform another
+   * iteration of the E and M steps.
+   * 
+   * @return the minimum improvement in log likelihood
+   */
+  public double getMinLogLikelihoodImprovementIterating() {
+    return m_minLogLikelihoodImprovementIterating;
+  }
+    
 
     private static ArrayList<Boolean> compareInstancesTest(DenseInstance instanceNew) {
         //String instanceAIdentifier = getInstanceIdentifier(instanceA);
