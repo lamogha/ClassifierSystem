@@ -25,7 +25,7 @@ public class FileTypeEnablerAndProcessor {
     private static UnsupervisedClassifier uc = new UnsupervisedClassifier();
     private static ClassEvaluator ce = new ClassEvaluator();
     Instances traindata;
-    Instances testdata = null;
+    Instances testdata;
     File folder, folder2;
     int classIndex = -1; //number of attributes must be 1 or greater
 //    private static DirectoryChooser chooseDirectory =  new DirectoryChooser();
@@ -40,12 +40,21 @@ public class FileTypeEnablerAndProcessor {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public void testFileEntry (File testFile) throws Exception {
+    public void testFileEntry (File testFile, File trainFile) throws Exception {
 //        File folder2= file;
 //        folder2 = new File ("H:\\NetBeansProjects\\BigDataClassification\\data\\data3\\soy-test.arff");
         folder2 = testFile;
+        folder = trainFile;
         testdata = new Instances(new BufferedReader(new FileReader
-                            (folder2.getAbsolutePath()))); 
+    	                    			(folder2.getAbsolutePath()))); 
+        if(folder.isDirectory()){
+            this.processFolder(folder);
+        }
+        else{
+            traindata = traindata = new Instances(new BufferedReader(new FileReader
+    	                    			(folder.getAbsolutePath())));
+            this.chooseClassifier();
+        }
         
     }
 
@@ -89,7 +98,7 @@ public class FileTypeEnablerAndProcessor {
     	                traindata = loader.getDataSet();
                         //System.out.println(traindata.toSummaryString());
                         //assumes that if it is a csv file, the last attribute is its class attribute
-                        this.setClassIndex(traindata.numAttributes()-1);
+                        //this.setClassIndex(traindata.numAttributes()-1);
                         this.chooseClassifier();
     	            }
     	                    
@@ -103,7 +112,7 @@ public class FileTypeEnablerAndProcessor {
     	                traindata = loader.getDataSet();
                         System.out.println(loader.getStructure());
                         //assumes that if it is a txt file, the last attribute is its class attribute
-                        this.setClassIndex(traindata.numAttributes()-1);
+                        //this.setClassIndex(traindata.numAttributes()-1);
     	                //System.out.println(traindata.toSummaryString());
                         this.chooseClassifier();
     	                		
@@ -278,7 +287,7 @@ public class FileTypeEnablerAndProcessor {
                         ce.generateFolds(traindata, this.getClassIndex());
                     }
                     //Or call classifier directly if supplied a test set 
-                    else if (classIndex >= 0 && traindata.size()>= testdata.size()){
+                    else if (folder2.exists() && classIndex >= 0 && traindata.size()>= testdata.size()){
                        System.out.println("Initial training set is larger than the test set...." + traindata.size());
                        //System.out.println(testdata.toSummaryString());
                        ce.callClassifier(traindata, testdata, this.getClassIndex());
@@ -314,6 +323,12 @@ public class FileTypeEnablerAndProcessor {
             }
 //              System.out.println(attributeList);
         return attributeList;
+        }
+        
+        public String showPredictions() throws Exception{
+           String predictions = ce.getPredictions();
+           ce.setPredictions(predictions);
+           return predictions;
         }
         
 }

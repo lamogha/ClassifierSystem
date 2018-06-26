@@ -40,11 +40,8 @@ public class ClassifierMain {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new DirectoryChooser().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new DirectoryChooser().setVisible(true);
         });
         
         /*call the FileTypeEnablerAndProcessor class*/

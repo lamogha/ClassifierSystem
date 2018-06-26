@@ -5,16 +5,24 @@
  */
 package BigDataClassifier;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 /**
  *
@@ -23,7 +31,9 @@ import javax.swing.SwingUtilities;
 public class DirectoryChooser extends javax.swing.JFrame {
     private static String trainFileName, testFileName;
     FileTypeEnablerAndProcessor fp = new FileTypeEnablerAndProcessor();
+    ClassEvaluator ce = new ClassEvaluator();
     File trainFile,testFile;
+    java.awt.event.ActionEvent event;
     
     /**
      * Creates new form DirectoryChooser
@@ -53,7 +63,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
         predictButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        textArea = new javax.swing.JTextArea();
+        jTextPane1 = new javax.swing.JTextPane();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -181,24 +191,18 @@ public class DirectoryChooser extends javax.swing.JFrame {
         testDatasetField.getAccessibleContext().setAccessibleName("train text field");
         classLabelMenu.getAccessibleContext().setAccessibleName("jComboBox");
 
-        textArea.setColumns(20);
-        textArea.setForeground(new java.awt.Color(153, 153, 153));
-        textArea.setRows(5);
-        jScrollPane1.setViewportView(textArea);
+        jScrollPane1.setViewportView(jTextPane1);
+        jTextPane1.getAccessibleContext().setAccessibleName("textPane");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -226,13 +230,16 @@ public class DirectoryChooser extends javax.swing.JFrame {
         //chooser1.showOpenDialog(null);
         int returnVal = chooseTrainData.showOpenDialog(this);
         redirectSystemStreams();
+        event = evt;
+                //System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX "+evt.getActionCommand());
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             trainFile = chooseTrainData.getSelectedFile();
-            trainFileName = trainFile.getPath();
-            trainSetTextfield.setText(trainFileName);
+            //trainFileName = trainFile.getPath();
+            trainSetTextfield.setText(trainFile.getPath());
             //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
             if(!trainFile.isDirectory()){
-                fp.getFileExtension(trainFileName);
+                fp.getFileExtension(trainFile.getPath());
                     try {
                         ArrayList items = fp.showSummary(trainFile);
                         Object[] obj = items.toArray();
@@ -257,6 +264,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
 
     private void testSetSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testSetSelectButtonActionPerformed
         // TODO add your handling code here:
+        event = evt;
         JFileChooser chooseTestData = new JFileChooser();
         chooseTestData.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         //chooser2.showOpenDialog(null);
@@ -264,8 +272,10 @@ public class DirectoryChooser extends javax.swing.JFrame {
         redirectSystemStreams();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             testFile = chooseTestData.getSelectedFile();
-            testFileName = testFile.getPath();
-            testDatasetField.setText(testFileName);
+            //testFileName = testFile.getPath();
+            testDatasetField.setText(testFile.getPath());
+            if(!testFile.isDirectory()){
+                fp.getFileExtension(testFile.getPath());
             try {
                 System.out.println("Test Data Exists");
                 //fp.testFileEntry(testFile);
@@ -275,7 +285,11 @@ public class DirectoryChooser extends javax.swing.JFrame {
             } catch (IOException ex) {
                 System.out.println("Problem accessing file "+testFile.getAbsolutePath());
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
-            } 
+            }
+            }
+            else{
+                System.out.println("Processing Datasets");
+            }
         }
         else{
              System.out.println("File access cancelled by user.");
@@ -289,31 +303,13 @@ public class DirectoryChooser extends javax.swing.JFrame {
 
     private void modelBuildProceedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modelBuildProceedButtonActionPerformed
         // TODO add your handling code here:
-        //BigDataClassifier.FileTypeEnablerAndProcessor enabler = null;
-        if (trainSetTextfield.getText().equalsIgnoreCase(trainFileName)&&
-                testDatasetField.getText().equalsIgnoreCase(testFileName) &&
-                classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())) {
-            //start the file type enabler and processor class
-            try {
-                //System.out.println("enabler class index = " + fp.getClassIndex());
-//                if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
-//                    //this.classLabelMenuActionPerformed(evt);
-//                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
-//                } else {
-//                    System.out.println("Class index was not selected");
-//                }
-                fp.setClassIndex(classLabelMenu.getSelectedIndex());
-                fp.testFileEntry(testFile);
-                fp.fileEntry(trainFile);
-            } catch (Exception ex) {
-                Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } 
-        else {
+        //BigDataClassifier.FileTypeEnablerAndProcessor enabler = null; 
+        if (event.getActionCommand().equalsIgnoreCase("Train Dataset")){
             try {
                 //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
-                //System.out.println("FP class index = " + fp.getClassIndex());
-                //System.out.println("chooser class index = " + classLabelMenu.getSelectedIndex());
+                //fp.setClassIndex(-1);
+                System.out.println("FP class index = " + fp.getClassIndex());
+                System.out.println("chooser class index = " + classLabelMenu.getSelectedIndex());
                 if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
                     System.out.println("Class index was not selected");
                     fp.fileEntry(trainFile);
@@ -327,6 +323,23 @@ public class DirectoryChooser extends javax.swing.JFrame {
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        else{
+//            if (!trainSetTextfield.getText().isEmpty() &&
+//                !testDatasetField.getText().isEmpty() &&
+//                classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())) {
+            
+            System.out.println("ClASSINDX === " + classLabelMenu.getSelectedIndex());
+            //start the file type enabler and processor class
+            try {
+                fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                fp.testFileEntry(testFile,trainFile);
+                //fp.fileEntry(trainFile);
+            } catch (Exception ex) {
+                Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+        }
+        }
+        fp.setClassIndex(-1);
     }//GEN-LAST:event_modelBuildProceedButtonActionPerformed
 
 //    public int getSelectedClassIndex(){
@@ -350,29 +363,94 @@ public class DirectoryChooser extends javax.swing.JFrame {
     }//GEN-LAST:event_classLabelMenuActionPerformed
 
     private void predictButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_predictButtonActionPerformed
-        // TODO add your handling code here:
-        
+            // TODO add your handling code here:
+            System.out.println("Predict button is working");
+            //ce.setPredictions();
+            //start the file type enabler and processor class
+            try {
+                //System.out.println("enabler class index = " + fp.getClassIndex());
+//                if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
+//                    //this.classLabelMenuActionPerformed(evt);
+//                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
+//                } else {
+//                    System.out.println("Class index was not selected");
+//                }
+                 fp.showPredictions();
+                //fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                //fp.testFileEntry(testFile,trainFile);
+                //fp.fileEntry(trainFile);
+            } catch (Exception ex) {
+                Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//GEN-LAST:event_predictButtonActionPerformed
-
-    private void updateTextArea(final String text) {
+    String txt;
+    
+    private void updateTextArea(String txt) {
   SwingUtilities.invokeLater(new Runnable() {
     @Override
     public void run() {
-      textArea.append(text);
-    }
+            if(txt.contains("<b>")){
+                for (String s : txt.split("\n")){
+                    if(s.contains("<b>"))
+                    {
+                        s = s.replaceAll("<b>", "");
+                        s = s.replace("</b>", "");
+                        appendToPane(jTextPane1, s+"\n", Color.RED);
+                        
+                    }
+                    else{
+                         appendToPane(jTextPane1, s+"\n", Color.BLACK);
+                    }
+                }
+            }
+            else
+                appendToPane(jTextPane1, txt, Color.BLACK);
+        }
+       //jTextPane1.addStyle(text, style).setText(text);
+//    }
   });
 }
+  
+    private void appendToPane(JTextPane tp, String msg, Color c)
+    {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+
+        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
+        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+
+        int len = tp.getDocument().getLength();
+        tp.setCaretPosition(len);
+        tp.setCharacterAttributes(aset, false);
+        tp.replaceSelection(msg);
+    }
  
-private void redirectSystemStreams() {
-  OutputStream out = new OutputStream() {
+    private void redirectSystemStreams() {
+    OutputStream out = new OutputStream() {
     @Override
     public void write(int b) throws IOException {
-      updateTextArea(String.valueOf((char) b));
+        txt = String.valueOf((char) b);
+//        if(txt.contains("<b>")){ 
+//           txt = txt.replaceAll("<b>", " ");
+//           txt = txt.replace("</b>", " ");
+//           colorRed(txt);
+//        }
+//        else{
+           updateTextArea(txt);
+//        }
     }
  
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
-      updateTextArea(new String(b, off, len));
+          txt = new String(b, off, len);
+//        if(txt.contains("<b>")){ 
+//           txt = txt.replaceAll("<b>", " ");
+//           txt = txt.replace("</b>", " ");
+//           colorRed(txt);
+//        }
+//        else{
+           updateTextArea(txt);
+//        }
     }
  
     @Override
@@ -391,12 +469,12 @@ private void redirectSystemStreams() {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JButton modelBuildProceedButton;
     private javax.swing.JButton predictButton;
     private javax.swing.JTextField selectClassLabelText;
     private javax.swing.JTextField testDatasetField;
     private javax.swing.JButton testSetSelectButton;
-    private javax.swing.JTextArea textArea;
     private javax.swing.JButton trainSetSelectButton;
     private javax.swing.JTextField trainSetTextfield;
     // End of variables declaration//GEN-END:variables

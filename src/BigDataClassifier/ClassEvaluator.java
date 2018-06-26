@@ -1,6 +1,7 @@
 package BigDataClassifier;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +12,7 @@ import static weka.core.Attribute.NOMINAL;
 import static weka.core.Attribute.NUMERIC;
 import static weka.core.Attribute.RELATIONAL;
 import static weka.core.Attribute.STRING;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ArffSaver;
@@ -21,10 +23,9 @@ import weka.gui.visualize.ThresholdVisualizePanel;
 
 public class ClassEvaluator {
     
-    Instances trainDataset2;
-    Instances testDataset2;
-    int trainDatasetSize;
-    int testDatasetSize;
+    Instances trainDataset2, testDataset2;
+    int trainDatasetSize, testDatasetSize, testDatasetIndex;
+    Classifier classifierModel;
     SupervisedClassifier sc = new SupervisedClassifier();
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
     //ClusterEvaluator clusterEval = new ClusterEvaluator();
@@ -53,10 +54,10 @@ public class ClassEvaluator {
                 {
                     trainDataset = randData.trainCV(folds, n);
                     System.out.println("Train dataset size is = "+ trainDataset.size());
-                    Instances testDataset = randData.testCV(folds, n);
-                    System.out.println("Test dataset size is = "+ testDataset.size());
+                    Instances testDatasetGen = randData.testCV(folds, n);
+                    System.out.println("Test dataset size is = "+ testDatasetGen.size());
                     trainDataset2 = trainDataset;
-                    testDataset2 = testDataset;
+                    testDataset2 = testDatasetGen;
                     trainDataset2.setClassIndex(classIndex);
                     System.out.println("--------The number of class labels is:- " + trainDataset2.numClasses()); 
                     //this.callClassifier(trainDataset2,testDataset2,classIndex);
@@ -92,8 +93,12 @@ public class ClassEvaluator {
             return num;
         }
         
-        public void callClassifier(Instances trainData, Instances testData, int classIndex){
+        public void callClassifier(Instances trainData, Instances testData, int classIndexPass){
+            classIndex = classIndexPass;
+            trainDataset2 = trainData;
             trainData.setClassIndex(classIndex);
+            testDatasetIndex = classIndex;
+            testDataset2 = testData;
             //System.out.println("CLASS INDEX " + classIndex);
             System.out.println("-------------------------------------------------------");
             if((trainData.size() >= testData.size()) && trainData.numClasses()!= 0)
@@ -101,7 +106,8 @@ public class ClassEvaluator {
                 if (trainData.classAttribute().isNumeric()){
                     
                      try {
-                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
+                     classifierModel = sc.useRandomForest(trainData, classIndex);    
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("Random Forest used" + "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -111,7 +117,8 @@ public class ClassEvaluator {
                 else if(trainData.classAttribute().isNominal() && trainData.numInstances()<=50 && trainData.numAttributes()<=10 
                         && trainData.numAttributes()==this.numOfNominalAtt(trainData, testData)){
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useJ48(trainData, classIndex));
+                     classifierModel = sc.useJ48(trainData, classIndex);
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("J48 used" + "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -123,7 +130,8 @@ public class ClassEvaluator {
                         && this.numOfNumericAtt(trainData, testData) >= (this.numOfNominalAtt(trainData, testData))/2)
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
+                     classifierModel = sc.useRandomForest(trainData, classIndex);
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("Random Forest used" + "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -134,7 +142,8 @@ public class ClassEvaluator {
                         this.numOfNominalAtt(trainData, testData)> this.numOfNumericAtt(trainData, testData))
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData, classIndex));
+                     classifierModel = sc.useNaiveBayes(trainData, classIndex);    
+                     this.evaluatorClassifier(trainData, testData,classifierModel);
                      System.out.println("Naive Bayes used" + "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -145,7 +154,8 @@ public class ClassEvaluator {
                         && trainData.numAttributes()<= 10 && this.numOfNumericAtt(trainData, testData) >= trainData.numAttributes()-1)
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useSGD(trainData, classIndex));
+                     classifierModel = sc.useSGD(trainData, classIndex);   
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("SGD used"+ "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -157,7 +167,8 @@ public class ClassEvaluator {
                         && trainData.numAttributes()> 10 && this.numOfNumericAtt(trainData, testData) >= trainData.numAttributes()-1)
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
+                     classifierModel = sc.useRandomForest(trainData, classIndex);   
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("Random Forest Used used"+ "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -185,7 +196,8 @@ public class ClassEvaluator {
                          && this.numOfNominalAtt(trainData, testData) == trainData.numAttributes())
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData, classIndex));
+                     classifierModel =  sc.useNaiveBayes(trainData, classIndex);  
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("Naive Bayes Used"+ "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -198,7 +210,8 @@ public class ClassEvaluator {
                          && this.numOfNominalAtt(trainData, testData) == trainData.numAttributes())
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useSGD(trainData, classIndex));
+                     classifierModel =  sc.useSGD(trainData, classIndex);  
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("SGD Used"+ "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -224,7 +237,8 @@ public class ClassEvaluator {
                         trainData.checkForAttributeType(STRING)==true)
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useZeroR(trainData, classIndex));
+                     classifierModel =  sc.useZeroR(trainData, classIndex);  
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("Zero R used"+ "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
@@ -249,7 +263,8 @@ public class ClassEvaluator {
                         && this.numOfNominalAtt(trainData, testData) >= 2*(this.numOfNumericAtt(trainData, testData)))
                 {
                    try {
-                     this.evaluatorClassifier(trainData, testData, sc.useNaiveBayes(trainData, classIndex));
+                     classifierModel = sc.useNaiveBayes(trainData, classIndex);  
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("Naive Bayes used"+ "\n"
                              + "-------------------------------------------------------");
                  } catch (Exception ex) {
@@ -261,13 +276,15 @@ public class ClassEvaluator {
                 else
                 {
                     try {
-                     this.evaluatorClassifier(trainData, testData, sc.useRandomForest(trainData, classIndex));
+                     classifierModel =  sc.useRandomForest(trainData, classIndex);  
+                     this.evaluatorClassifier(trainData, testData, classifierModel);
                      System.out.println("Random Forest used"+ "\n"
                              + "-------------------------------------------------------");
                     } catch (Exception ex) {
                      Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                
                 
             }
             else
@@ -281,6 +298,32 @@ public class ClassEvaluator {
                 }
                 
             }
+        }
+        
+        public String getPredictions() throws Exception{
+            String s = "";
+            //DirectoryChooser dirChooser = new DirectoryChooser();
+            testDataset2.setClassIndex(testDatasetIndex);
+            for (int i=0; i<testDataset2.numInstances(); i++){
+                String actual = testDataset2.classAttribute().value((int)testDataset2.instance(i).classValue());
+                Instance newInst = testDataset2.instance(i);
+                String prediction = testDataset2.classAttribute().value((int) classifierModel.classifyInstance(newInst));
+                if (actual.equalsIgnoreCase(prediction)){
+                   s += "ACTUAL ====== " + actual + " , PREDICTED ====== " + prediction + "\n";
+                }
+                else{
+                    
+                    s += String.format("ACTUAL ====== <b>" + actual + " </b>, PREDICTED ====== " + prediction + "\n", 0) ;
+                }
+                
+                //String.format("<b>" + s + "</b>", 1);
+            }
+            return s;
+        }
+        
+        public void setPredictions(String s) throws Exception{
+            s = this.getPredictions();
+            System.out.println(s);
         }
 	/** 
         public int getTrainDataSize(){
@@ -308,6 +351,7 @@ public class ClassEvaluator {
                 System.out.println("DONE");
                 //System.out.println(eval.areaUnderROC(NUMERIC));
             }
+//            System.out.println(this.getPredictions());
  	      //System.out.println(eval.toMatrixString("Confusion Matrix for this"));
         }
         
@@ -343,8 +387,8 @@ public class ClassEvaluator {
         {
             // generate curve
             ThresholdCurve tc = new ThresholdCurve();
-            int classIndex = 0;
-            Instances result = tc.getCurve(eval.predictions(), classIndex);
+            int indexC = 0;
+            Instances result = tc.getCurve(eval.predictions());
 //            ArffSaver saver = new ArffSaver();
 //            saver.setInstances(result);
 //            saver.setFile(new File("H:\\NetBeansProjects\\BigDataClassification\\data\\result.arff"));
@@ -352,7 +396,7 @@ public class ClassEvaluator {
             //f = System.currentTimeMillis();
             // plot curve
             ThresholdVisualizePanel vmc = new ThresholdVisualizePanel();
-            vmc.setROCString("(AUC for '" + trainDataset2.relationName() +"' dataset = "+ Utils.doubleToString(ThresholdCurve.getROCArea(result), 4) + ")");
+            vmc.setROCString("(AUC for '" + testDataset2.relationName() +"' dataset = "+ Utils.doubleToString(ThresholdCurve.getROCArea(result), 4) + ")");
             vmc.setName(result.relationName());
             PlotData2D tempd = new PlotData2D(result);
             tempd.setPlotName(result.relationName());
