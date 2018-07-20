@@ -291,7 +291,8 @@ public class ClassEvaluator {
             {
                 try {
                     //use unsupervised classifier
-                    uc.autoProbClass(trainData);
+                    uc.useAutoProbClass(trainData);
+                    this.evaluatorClassifier(trainDataset2, testDataset2, classifierModel);
                     //uc.evaluatorClusterer(trainDataset2, (SimpleKMeans) uc.useEMClusterer(trainDataset2));
                 } catch (Exception ex) {
                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
@@ -299,6 +300,18 @@ public class ClassEvaluator {
                 
             }
         }
+        
+//        public void useAutoProbClass(Instances data){
+//            try {
+//                 //AutoProbClass autoClust = new AutoProbClass();
+//                    //use unsupervised classifier
+//                    classifierModel = uc.useAutoProbClass(data);
+//                    this.evaluatorClassifier(trainDataset2, testDataset2, classifierModel);
+//                    //uc.evaluatorClusterer(trainDataset2, (SimpleKMeans) uc.useEMClusterer(trainDataset2));
+//                } catch (Exception ex) {
+//                    Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//        }
         
         public String getPredictions() throws Exception{
             String s = "";

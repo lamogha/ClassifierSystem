@@ -14,6 +14,7 @@ import weka.clusterers.AbstractDensityBasedClusterer;
 import weka.core.DenseInstance;
 import java.math.*;
 import java.util.Collections;
+import weka.classifiers.Classifier;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
 import weka.core.NormalizableDistance;
@@ -79,16 +80,17 @@ public class UnsupervisedClassifier {
         return newEm;
     }
 //    
-       public Clusterer useAutoProbClass(Instances dataset) {
+       public Clusterer useAutoProbClass(Instances dataset) throws Exception {
 
         AutoProbClass autoClust = new AutoProbClass();
-
+        
         try {
             autoClust.buildClusterer(dataset);
             System.out.println(autoClust);
             // System.out.println(nb.distributionForInstance(dataset.instance(15)));
             // System.out.println(nb.getCapabilities().toString());
         } catch (Exception e) {
+            throw e;
         }
 
         return autoClust;

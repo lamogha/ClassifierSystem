@@ -37,6 +37,7 @@ public class FileTypeEnablerAndProcessor {
     /**
      *
      * @param testFile
+     * @param trainFile
      * @throws FileNotFoundException
      * @throws IOException
      */
@@ -306,6 +307,7 @@ public class FileTypeEnablerAndProcessor {
                     System.out.println("==========");
                     //uc.useFarthestFirst(traindata);
                     //uc.useEMClusterer(traindata);
+                    //this.setClassIndex();
                     uc.useAutoProbClass(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);

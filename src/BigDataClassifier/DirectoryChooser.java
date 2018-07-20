@@ -312,16 +312,20 @@ public class DirectoryChooser extends javax.swing.JFrame {
                 System.out.println("chooser class index = " + classLabelMenu.getSelectedIndex());
                 if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
                     System.out.println("Class index was not selected");
+                    //fp.setClassIndex(classLabelMenu.getComponentCount());
                     fp.fileEntry(trainFile);
                 } else {
                     //this.classLabelMenuActionPerformed(evt);
                     //fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                    //fp.setClassIndex(classLabelMenu.getComponentCount());
+                    
                     fp.fileEntry(trainFile);
                 }
 //                fp.fileEntry(trainSetTextfield.getText());
             } catch (Exception ex) {
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
         }
         else{
 //            if (!trainSetTextfield.getText().isEmpty() &&
@@ -337,7 +341,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
             } catch (Exception ex) {
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
 //            }
-        }
+            }
         }
         fp.setClassIndex(-1);
     }//GEN-LAST:event_modelBuildProceedButtonActionPerformed
