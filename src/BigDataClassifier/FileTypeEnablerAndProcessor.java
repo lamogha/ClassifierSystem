@@ -3,7 +3,6 @@
 and determine what classifier to use based on filetype
  */
 package BigDataClassifier;
-import BigDataClassifier.DirectoryChooser;
 import java.io.*;
 import java.util.ArrayList;
 import weka.core.Instances;
