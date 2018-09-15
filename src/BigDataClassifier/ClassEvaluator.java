@@ -2,6 +2,7 @@ package BigDataClassifier;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +13,7 @@ import static weka.core.Attribute.NOMINAL;
 import static weka.core.Attribute.NUMERIC;
 import static weka.core.Attribute.RELATIONAL;
 import static weka.core.Attribute.STRING;
+import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Utils;
@@ -30,44 +32,48 @@ public class ClassEvaluator {
     UnsupervisedClassifier uc = new UnsupervisedClassifier();
     //ClusterEvaluator clusterEval = new ClusterEvaluator();
     private static FileTypeEnablerAndProcessor fp;
+    private static ArrayList<Classifier> classifiers = new ArrayList<>();
 
     //set folds
     int folds = 3;
     int classIndex = 0; 
-
     public ClassEvaluator() {
         fp = new FileTypeEnablerAndProcessor();
     }
     
-	public void generateFolds(Instances trainDataset, int classIndexPassed) throws Exception{
-            //randomize data
-              Random rand = new Random(System.currentTimeMillis());
-              //Random rand = new Random();
-             
-              //create random dataset
-              Instances randData = new Instances(trainDataset);
-              classIndex = classIndexPassed;
-              //int classIndex = trainDataset.numAttributes()-1;
-              randData.randomize(rand);
-                  //cross-validate with 3 folds
-                for(int n=0; n<folds; n++)
-                {
-                    trainDataset = randData.trainCV(folds, n);
-                    System.out.println("Train dataset size is = "+ trainDataset.size());
-                    Instances testDatasetGen = randData.testCV(folds, n);
-                    System.out.println("Test dataset size is = "+ testDatasetGen.size());
-                    trainDataset2 = trainDataset;
-                    testDataset2 = testDatasetGen;
-                    trainDataset2.setClassIndex(classIndex);
-                    System.out.println("--------The number of class labels is:- " + trainDataset2.numClasses()); 
-                    //this.callClassifier(trainDataset2,testDataset2,classIndex);
-                }
-                 System.out.println("--------Calling the right Classifier ------ ");
-                 this.callClassifier(trainDataset2,testDataset2,classIndex);
-              
-              
-              
-         }
+	   public void generateFolds(Instances trainDataset, int classIndexPassed) throws Exception {
+        //randomize data
+        Random rand = new Random(System.currentTimeMillis());
+        //Random rand = new Random();
+
+        //create random dataset
+        Instances randData = new Instances(trainDataset);
+        classIndex = classIndexPassed;
+        //int classIndex = trainDataset.numAttributes()-1;
+        randData.randomize(rand);
+        //cross-validate with 3 folds
+        for (int n = 0; n < folds; n++) {
+            trainDataset = randData.trainCV(folds, n);
+            System.out.println("Train dataset size is = " + trainDataset.size());
+            Instances testDatasetGen = randData.testCV(folds, n);
+            System.out.println("Test dataset size is = " + testDatasetGen.size());
+            trainDataset2 = trainDataset;
+            testDataset2 = testDatasetGen;
+            trainDataset2.setClassIndex(classIndex);
+            System.out.println("--------The number of class labels is:- " + trainDataset2.numClasses());
+            //this.callClassifier(trainDataset2,testDataset2,classIndex);
+        }
+        System.out.println("--------Calling the right Classifier ------ ");
+//        classifiers = sc.getClassifiersLists(trainDataset2, classIndex);
+//        for (int i = 0; i < classifiers.size(); i++) {
+//            classifierModel = classifiers.get(i);
+//            this.evaluatorClassifier(trainDataset2, testDataset2, classifierModel);
+//        }
+        classifierModel = sc.useStacking(trainDataset2, classIndex);
+        this.evaluatorClassifier(trainDataset2, testDataset2, classifierModel);
+        //this.callClassifier(trainDataset2,testDataset2,classIndex);
+
+    }
         
         public int numOfNominalAtt(Instances trainDataset, Instances testDataset){
             int nom = 0;

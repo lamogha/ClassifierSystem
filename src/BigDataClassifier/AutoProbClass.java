@@ -13,6 +13,8 @@ import weka.classifiers.*;
 import weka.clusterers.*;
 import weka.core.*;
 import java.math.*;
+import java.util.Enumeration;
+import weka.estimators.*;
 
 /**
  *
@@ -38,6 +40,12 @@ public class AutoProbClass extends weka.clusterers.AbstractDensityBasedClusterer
     private static double tLogT = 0.0;
     private static double fLogF = 0.0;
     private static double entropy = 0.0;
+  protected boolean m_UseDiscretization = false;
+  protected weka.filters.unsupervised.attribute.Discretize m_Disc = new weka.filters.unsupervised.attribute.Discretize();
+  protected Instances m_Instances;
+  protected int m_NumClasses;
+  protected Estimator[][] m_Distributions = new weka.estimators.Estimator[m_Instances.numAttributes() - 1][m_Instances.numClasses()];
+  protected Estimator m_ClassDistribution = new DiscreteEstimator(m_Instances.numClasses(), true);
 
     //private static ArrayList<DenseInstance> oldOutliers = new ArrayList<>();
     AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
@@ -107,6 +115,8 @@ public class AutoProbClass extends weka.clusterers.AbstractDensityBasedClusterer
         try {
             //data.setClassIndex(data.numAttributes()-1);
             //Define the initial zone of influence ZI
+            m_Instances = data;
+            m_NumClasses = m_Instances.numClasses();
             double initialZI = 0.3;
             int k = 0;
             int newLabelCounter = 0;
@@ -193,8 +203,48 @@ public class AutoProbClass extends weka.clusterers.AbstractDensityBasedClusterer
 
     @Override
     public double[] distributionForInstance(Instance instance) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      
+   if (m_UseDiscretization) {
+      m_Disc.input(instance);
+      instance = m_Disc.output();
     }
+    double[] probs = new double[m_NumClasses];
+    for (int j = 0; j < m_NumClasses; j++) {
+      probs[j] = m_ClassDistribution.getProbability(j);
+    }
+    Enumeration<Attribute> enumAtts = instance.enumerateAttributes();
+    int attIndex = 0;
+    while (enumAtts.hasMoreElements()) {
+      Attribute attribute = enumAtts.nextElement();
+      if (!instance.isMissing(attribute)) {
+        double temp, max = 0;
+        for (int j = 0; j < m_NumClasses; j++) {
+          temp = Math.max(1e-75, Math.pow(m_Distributions[attIndex][j]
+            .getProbability(instance.value(attribute)),
+            m_Instances.attribute(attIndex).weight()));
+          probs[j] *= temp;
+          if (probs[j] > max) {
+            max = probs[j];
+          }
+          if (Double.isNaN(probs[j])) {
+            throw new Exception("NaN returned from estimator for attribute "
+              + attribute.name() + ":\n"
+              + m_Distributions[attIndex][j].toString());
+          }
+        }
+        if ((max > 0) && (max < 1e-75)) { // Danger of probability underflow
+          for (int j = 0; j < m_NumClasses; j++) {
+            probs[j] *= 1e75;
+          }
+        }
+      }
+      attIndex++;
+     }
+
+    // Display probabilities
+    Utils.normalize(probs);
+    return probs;
+  }
 
     @Override
     public int numberOfClusters() throws Exception {

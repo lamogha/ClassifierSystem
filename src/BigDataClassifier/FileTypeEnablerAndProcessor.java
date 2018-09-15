@@ -51,7 +51,7 @@ public class FileTypeEnablerAndProcessor {
             this.processFolder(folder);
         }
         else{
-            traindata = traindata = new Instances(new BufferedReader(new FileReader
+            traindata = new Instances(new BufferedReader(new FileReader
     	                    			(folder.getAbsolutePath())));
             this.chooseClassifier();
         }
