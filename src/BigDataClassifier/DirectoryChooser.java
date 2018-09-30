@@ -272,6 +272,9 @@ public class DirectoryChooser extends javax.swing.JFrame {
         JFileChooser chooseTestData = new JFileChooser();
         chooseTestData.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         //chooser2.showOpenDialog(null);
+        if (lastPath != null){
+            chooseTestData.setCurrentDirectory(lastPath);
+        }
         int returnVal = chooseTestData.showOpenDialog(this);
         redirectSystemStreams();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
