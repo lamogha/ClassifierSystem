@@ -44,13 +44,18 @@ public class AutoProbClass extends weka.clusterers.AbstractDensityBasedClusterer
   protected weka.filters.unsupervised.attribute.Discretize m_Disc = new weka.filters.unsupervised.attribute.Discretize();
   protected Instances m_Instances;
   protected int m_NumClasses;
-  protected Estimator[][] m_Distributions = new weka.estimators.Estimator[m_Instances.numAttributes() - 1][m_Instances.numClasses()];
-  protected Estimator m_ClassDistribution = new DiscreteEstimator(m_Instances.numClasses(), true);
+  private Estimator[][] m_Distributions;
+  private Estimator m_ClassDistribution;
 
     //private static ArrayList<DenseInstance> oldOutliers = new ArrayList<>();
     AbstractDensityBasedClusterer densityClass = new MakeDensityBasedClusterer();
     //CheckClusterer check = new CheckClusterer();
     ClusterEvaluator clustEval = new ClusterEvaluator();
+
+    public AutoProbClass(Instances data) {
+        this.m_ClassDistribution = new DiscreteEstimator(data.numClasses(), true);
+        this.m_Distributions = new weka.estimators.Estimator[data.numAttributes() - 1][data.numClasses()];
+    }
 
     /**
      * Returns a string describing this clusterer.

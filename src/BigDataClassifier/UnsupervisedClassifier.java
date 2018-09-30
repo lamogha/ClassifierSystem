@@ -167,7 +167,7 @@ public class UnsupervisedClassifier {
 
     public Clusterer useAutoProbClass(Instances dataset) throws Exception {
 
-        AutoProbClass autoClust = new AutoProbClass();
+        AutoProbClass autoClust = new AutoProbClass(dataset);
 
         try {
             autoClust.buildClusterer(dataset);

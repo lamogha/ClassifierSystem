@@ -32,7 +32,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
     private static String trainFileName, testFileName;
     FileTypeEnablerAndProcessor fp = new FileTypeEnablerAndProcessor();
     ClassEvaluator ce = new ClassEvaluator();
-    File trainFile,testFile;
+    File trainFile,testFile, lastPath;
     java.awt.event.ActionEvent event;
     
     /**
@@ -227,7 +227,10 @@ public class DirectoryChooser extends javax.swing.JFrame {
         // TODO add your handling code here:
         JFileChooser chooseTrainData = new JFileChooser();
         chooseTrainData.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        //chooser1.showOpenDialog(null);
+        //chooseTrainData.showOpenDialog(this);
+        if (lastPath != null){
+            chooseTrainData.setCurrentDirectory(lastPath);
+        }
         int returnVal = chooseTrainData.showOpenDialog(this);
         redirectSystemStreams();
         event = evt;
@@ -236,6 +239,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             trainFile = chooseTrainData.getSelectedFile();
             //trainFileName = trainFile.getPath();
+            lastPath = trainFile.getParentFile();
             trainSetTextfield.setText(trainFile.getPath());
             //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
             if(!trainFile.isDirectory()){

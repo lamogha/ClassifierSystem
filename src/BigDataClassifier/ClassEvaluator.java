@@ -69,9 +69,9 @@ public class ClassEvaluator {
 //            classifierModel = classifiers.get(i);
 //            this.evaluatorClassifier(trainDataset2, testDataset2, classifierModel);
 //        }
-        classifierModel = sc.useStacking(trainDataset2, classIndex);
-        this.evaluatorClassifier(trainDataset2, testDataset2, classifierModel);
-        //this.callClassifier(trainDataset2,testDataset2,classIndex);
+        //classifierModel = sc.useStacking(trainDataset2, classIndex);
+        //this.evaluatorClassifier(trainDataset2, testDataset2, classifierModel);
+        this.callClassifier(trainDataset2,testDataset2,classIndex);
 
     }
         
