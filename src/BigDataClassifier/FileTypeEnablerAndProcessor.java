@@ -48,15 +48,17 @@ public class FileTypeEnablerAndProcessor {
         folder = trainFile;
         testdata = new Instances(new BufferedReader(new FileReader
     	                    			(folder2.getAbsolutePath()))); 
-        if(folder.isDirectory()){
-            this.processFolder(folder);
-        }
-        else{
-            traindata = new Instances(new BufferedReader(new FileReader
-    	                    			(folder.getAbsolutePath())));
-            this.chooseClassifier();
-        }
-        
+        this.processFolder(folder);
+//        if(folder.isDirectory()){
+//            this.processFolder(folder);
+//        }
+//        else{
+//            traindata = new Instances(new BufferedReader(new FileReader
+//    	                    			(folder.getAbsolutePath())));
+//            //this.chooseClassifier();
+//            this.processFolder(folder);
+//        }
+//        
     }
 
     public void fileEntry (File trainFile) throws Exception{
@@ -290,6 +292,11 @@ public class FileTypeEnablerAndProcessor {
                     //Or call classifier directly if supplied a test set 
                     else if (folder2.exists() && classIndex >= 0 && traindata.size()>= testdata.size()){
                        System.out.println("Initial training set is larger than the test set...." + traindata.size());
+                       //System.out.println(testdata.toSummaryString());
+                       ce.callClassifier(traindata, testdata, this.getClassIndex());
+                    }
+                    else if (folder2.exists() && classIndex >= 0 && testdata.size()>= traindata.size()){
+                        System.out.println(String.format("<b> Initial training set is smaller than the test set.... </b>" + traindata.size(), 0));
                        //System.out.println(testdata.toSummaryString());
                        ce.callClassifier(traindata, testdata, this.getClassIndex());
                     }

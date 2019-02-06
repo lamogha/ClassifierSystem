@@ -258,10 +258,10 @@ public class UnsupervisedClassifier {
                 k = k + 1;
 
             }
-            System.out.println("THE NUMBER OF CLUSTERS CREATED: " + "\n" + cloudLabels.size());
+            System.out.println(String.format("<b> THE NUMBER OF CLUSTERS CREATED:== " + cloudLabels.size() + "</b>", 0));
 
             //System.out.println("==========");
-            System.out.println("THE CLASS LABELS CREATED ARE: " + "\n" + cloudLabels);
+            System.out.println(String.format("<b> THE CLASS LABELS CREATED ARE: " + cloudLabels + "</b>"));
 
         } catch (Exception e) {
             e.printStackTrace();

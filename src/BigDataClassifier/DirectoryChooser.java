@@ -375,7 +375,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
 
     private void predictButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_predictButtonActionPerformed
             // TODO add your handling code here:
-            System.out.println("Predict button is working");
+            //System.out.println("Predict button is working");
             //ce.setPredictions();
             //start the file type enabler and processor class
             try {
