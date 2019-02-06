@@ -14,6 +14,7 @@ import weka.core.converters.DatabaseConnection;
 import weka.core.converters.JSONLoader;
 import weka.core.converters.XRFFLoader;
 import weka.experiment.InstanceQuery;
+import weka.classifiers.meta.AutoWEKAClassifier;
 /**
  *
  * @author lamogha
@@ -304,10 +305,14 @@ public class FileTypeEnablerAndProcessor {
                 try {
                     System.out.println("NOT A LABELLED DATASET, HENCE USING AN UNSUPERVISED ALGORITHM");
                     System.out.println("==========");
+                    if(this.getClassIndex() == -1 && traindata.numAttributes() > 10 && traindata.numInstances() > 50){
+                      uc.useEMClusterer(traindata);
+                      System.out.println("Attribute Statistics:= " + traindata.attributeStats(traindata.numAttributes()-1));
+                    }else{
+                        uc.autoProbClass(traindata);
+                    }
                     //uc.useFarthestFirst(traindata);
-                    //uc.useEMClusterer(traindata);
                     //this.setClassIndex();
-                    uc.useAutoProbClass(traindata);
                 } catch (Exception ex) {
                     Logger.getLogger(FileTypeEnablerAndProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }

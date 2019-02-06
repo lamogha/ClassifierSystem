@@ -39,6 +39,7 @@ import weka.classifiers.functions.Dl4jMlpClassifier;
 import weka.classifiers.meta.MultiClassClassifier;
 import weka.classifiers.pmml.consumer.NeuralNetwork;
 import weka.classifiers.pmml.consumer.PMMLClassifier;
+import weka.classifiers.meta.AutoWEKAClassifier;
 
 /**
  *
@@ -288,6 +289,12 @@ public class SupervisedClassifier {
         return mccWNB;
     }
     
+    public Classifier useAutoWeka(Instances dataset, int classIndex) throws Exception{
+        dataset.setClassIndex(classIndex);
+        AutoWEKAClassifier autoW = new AutoWEKAClassifier();
+        autoW.buildClassifier(dataset);
+        return autoW;
+    }
     /**
      *
      * @param dataset
