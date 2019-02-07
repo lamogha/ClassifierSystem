@@ -151,7 +151,7 @@ public class FileTypeEnablerAndProcessor {
                                 query.setQuery("select * from customers");
                                 // You can declare that your data set is sparse
                                 // query.setSparseData(true);
-                                Instances data = query.retrieveInstances();
+                                traindata = query.retrieveInstances();
                                 //System.out.println(data.toSummaryString());
                                 this.chooseClassifier();
                     }
@@ -160,7 +160,7 @@ public class FileTypeEnablerAndProcessor {
     	}
     	else{
     		//Once it is a file directory, it loops through each one and process it
-    		 for (final File fileEntry : folder.listFiles()) 
+    		 for (File fileEntry : folder.listFiles()) 
     	        {
     	                if (fileEntry.isDirectory()) {
     	                    this.processFolder(fileEntry);

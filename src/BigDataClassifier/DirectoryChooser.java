@@ -161,10 +161,10 @@ public class DirectoryChooser extends javax.swing.JFrame {
                         .addComponent(predictButton)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(trainSetTextfield, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
+                        .addComponent(trainSetTextfield, javax.swing.GroupLayout.DEFAULT_SIZE, 957, Short.MAX_VALUE)
                         .addGap(18, 18, 18))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(testDatasetField, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+                        .addComponent(testDatasetField)
                         .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
@@ -198,11 +198,11 @@ public class DirectoryChooser extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane1)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -224,7 +224,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void trainSetSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trainSetSelectButtonActionPerformed
-        // TODO add your handling code here:
+        
         JFileChooser chooseTrainData = new JFileChooser();
         chooseTrainData.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         //chooseTrainData.showOpenDialog(this);
@@ -253,10 +253,14 @@ public class DirectoryChooser extends javax.swing.JFrame {
                     System.out.println("problem accessing file "+trainFile.getAbsolutePath());
                     Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
                     } 
-                
             }
             else{
-                System.out.println("Processing Datasets");
+                System.out.println("Processing Datasets........");
+//                try {
+//                    fp.processFolder(trainFile.getCanonicalFile());
+//                } catch (Exception ex) {
+//                    Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+//                }
             }
             
         }
@@ -295,7 +299,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
             }
             }
             else{
-                System.out.println("Processing Datasets");
+                System.out.println("Ready to Process datasets, please click the button to build model.....");
             }
         }
         else{
@@ -312,26 +316,30 @@ public class DirectoryChooser extends javax.swing.JFrame {
         // TODO add your handling code here:
         //BigDataClassifier.FileTypeEnablerAndProcessor enabler = null; 
         if (event.getActionCommand().equalsIgnoreCase("Train Dataset")){
-            try {
                 //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
                 //fp.setClassIndex(-1);
                 System.out.println("FP class index = " + fp.getClassIndex());
                 System.out.println("chooser class index = " + classLabelMenu.getSelectedIndex());
                 if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
-                    System.out.println("Class index was not selected");
-                    //fp.setClassIndex(classLabelMenu.getComponentCount());
-                    fp.fileEntry(trainFile);
+                    try {
+                        System.out.println("Class index was not selected");
+                        //fp.setClassIndex(fp.getClassIndex());
+                        fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                        fp.fileEntry(trainFile);
+                    } catch (Exception ex) {
+                        Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } else {
-                    //this.classLabelMenuActionPerformed(evt);
-                    //fp.setClassIndex(classLabelMenu.getSelectedIndex());
-                    //fp.setClassIndex(classLabelMenu.getComponentCount());
-                    
-                    fp.fileEntry(trainFile);
+                    try {
+                        //this.classLabelMenuActionPerformed(evt);
+                        fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                        //fp.setClassIndex(classLabelMenu.getComponentCount());
+                        fp.fileEntry(trainFile);
+                    } catch (Exception ex) {
+                        Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
 //                fp.fileEntry(trainSetTextfield.getText());
-            } catch (Exception ex) {
-                Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
-            }
             
         }
         else{
@@ -350,7 +358,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
 //            }
             }
         }
-        fp.setClassIndex(-1);
+        //fp.setClassIndex(-1);
     }//GEN-LAST:event_modelBuildProceedButtonActionPerformed
 
 //    public int getSelectedClassIndex(){

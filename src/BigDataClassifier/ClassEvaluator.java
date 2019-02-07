@@ -181,7 +181,15 @@ public class ClassEvaluator {
                 System.out.println("SGD used" + "\n"
                         + "-------------------------------------------------------");
             } catch (Exception ex) {
-                Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    classifierModel = sc.useAutoWeka(trainData, classIndex);
+                    this.evaluatorClassifier(trainData, testData, classifierModel);
+                    System.out.println("AutoWEKA engaged" + "\n"
+                            + "-------------------------------------------------------");
+                } catch (Exception ex1) {
+                    Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
             
         } 
@@ -232,6 +240,14 @@ public class ClassEvaluator {
                         + "-------------------------------------------------------");
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                 try {
+                    classifierModel = sc.useAutoWeka(trainData, classIndex);
+                    this.evaluatorClassifier(trainData, testData, classifierModel);
+                    System.out.println("AutoWEKA engaged" + "\n"
+                            + "-------------------------------------------------------");
+                } catch (Exception ex1) {
+                    Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
             
         } //                 
@@ -285,10 +301,10 @@ public class ClassEvaluator {
         } 
         else {
             try {
-                classifierModel = sc.useAutoWeka(trainData, classIndex);
+                classifierModel = sc.useRandomForest(trainData, classIndex);
                 //classifierModel = sc.useAutoWeka(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("AutoWEKA engaged" + "\n"
+                System.out.println("RandomForest used" + "\n"
                         + "-------------------------------------------------------");
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
