@@ -28,6 +28,7 @@ public class FileTypeEnablerAndProcessor {
     Instances testdata;
     File folder, folder2;
     int classIndex = -1; //number of attributes must be 1 or greater
+    String ext = "";
 //    private static DirectoryChooser chooseDirectory =  new DirectoryChooser();
     
     public FileTypeEnablerAndProcessor(){
@@ -97,26 +98,27 @@ public class FileTypeEnablerAndProcessor {
                         System.out.println("Opening CSV Loader");
     	                CSVLoader loader = new CSVLoader();
                         loader.setFile(folder.getAbsoluteFile());
-    	                //loader.setSource(new File (folder.getAbsolutePath()));
+    	                loader.setSource(new File (folder.getAbsolutePath()));
     	                traindata = loader.getDataSet();
-                        //System.out.println(traindata.toSummaryString());
+                        System.out.println(traindata.toSummaryString());
                         //assumes that if it is a csv file, the last attribute is its class attribute
-                        //this.setClassIndex(traindata.numAttributes()-1);
+                        this.setClassIndex(traindata.numAttributes()-1);
                         this.chooseClassifier();
     	            }
     	                    
                     else if (extension.equalsIgnoreCase("txt")){
-    	                    	
+    	                this.setFileExtension("txt");
     	                TextDirectoryLoader loader = new TextDirectoryLoader ();
     	                System.out.println( "About to load text file " + fileName);
     	                System.out.println("Name of path " + folder.getAbsolutePath());
     	                loader.setSource(folder);
     	                //loader.setSource(new File (folder.getAbsolutePath()));
     	                traindata = loader.getDataSet();
+                        testdata = traindata;
                         System.out.println(loader.getStructure());
                         //assumes that if it is a txt file, the last attribute is its class attribute
-                        //this.setClassIndex(traindata.numAttributes()-1);
-    	                //System.out.println(traindata.toSummaryString());
+                        this.setClassIndex(traindata.numAttributes()-1);
+    	                System.out.println(traindata.toSummaryString());
                         this.chooseClassifier();
     	                		
     	            } 
@@ -187,12 +189,13 @@ public class FileTypeEnablerAndProcessor {
                                 }
                                 else if (extension.equalsIgnoreCase("txt"))
                                 {
-    	                    	
+    	                    	this.setFileExtension("txt");
     	                    	TextDirectoryLoader loader = new TextDirectoryLoader ();
     	                    	System.out.println( "About to load text file " + fileName);
     	                    	System.out.println("Name of path " + fileEntry.getAbsolutePath());
     	                    	loader.setSource(folder);
     	                    	traindata = loader.getDataSet();
+                                testdata = loader.getDataSet();
                                 this.setClassIndex(traindata.numAttributes()-1);
     	                    	System.out.println(traindata.toSummaryString());
                                 this.chooseClassifier();
@@ -270,6 +273,9 @@ public class FileTypeEnablerAndProcessor {
             
         return ext;
     }
+        public void setFileExtension(String fileName){
+            ext = fileName;
+        }
         
         public void chooseClassifier() throws Exception{
             /**We can use either a supervised or an un-supervised algorithm if a class attribute already

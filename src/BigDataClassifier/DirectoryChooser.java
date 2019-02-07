@@ -29,12 +29,13 @@ import javax.swing.text.StyleContext;
  * @author u1457710
  */
 public class DirectoryChooser extends javax.swing.JFrame {
+
     private static String trainFileName, testFileName;
     FileTypeEnablerAndProcessor fp = new FileTypeEnablerAndProcessor();
     ClassEvaluator ce = new ClassEvaluator();
-    File trainFile,testFile, lastPath;
+    File trainFile, testFile, lastPath;
     java.awt.event.ActionEvent event;
-    
+
     /**
      * Creates new form DirectoryChooser
      */
@@ -224,50 +225,63 @@ public class DirectoryChooser extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void trainSetSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trainSetSelectButtonActionPerformed
-        
+
         JFileChooser chooseTrainData = new JFileChooser();
         chooseTrainData.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         //chooseTrainData.showOpenDialog(this);
-        if (lastPath != null){
+        if (lastPath != null) {
             chooseTrainData.setCurrentDirectory(lastPath);
         }
         int returnVal = chooseTrainData.showOpenDialog(this);
         redirectSystemStreams();
         event = evt;
-                //System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX "+evt.getActionCommand());
+        //System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX "+evt.getActionCommand());
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             trainFile = chooseTrainData.getSelectedFile();
-            //trainFileName = trainFile.getPath();
+            trainFileName = trainFile.getPath();
+            String ext = fp.getFileExtension(trainFileName);
+            System.out.println("file Extension ===: " + ext);
             lastPath = trainFile.getParentFile();
             trainSetTextfield.setText(trainFile.getPath());
             //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
-            if(!trainFile.isDirectory()){
+            if (!trainFile.isDirectory()) {
                 fp.getFileExtension(trainFile.getPath());
+//                if (!ext.equalsIgnoreCase("txt") || !ext.equalsIgnoreCase("csv")) {
+//                    
+//                }
+                if (ext.equalsIgnoreCase("txt") || ext.equalsIgnoreCase("csv")) {
+                    try {
+                        fp.fileEntry(trainFile);
+                    } catch (Exception ex) {
+                        Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                else{
                     try {
                         ArrayList items = fp.showSummary(trainFile);
                         Object[] obj = items.toArray();
                         classLabelMenu.setModel(new DefaultComboBoxModel(obj));
 //                      jComboBox1.setSelectedIndex(jComboBox1.getItemCount()-1);
+                        System.out.println("problem accessing file " + trainFile.getAbsolutePath());
                     } catch (IOException ex) {
-                    System.out.println("problem accessing file "+trainFile.getAbsolutePath());
-                    Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
-            }
-            else{
-                System.out.println("Processing Datasets........");
+                        Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+            } else {
+                System.out.println("Ready to Process datasets, please click the button to build model.....");
 //                try {
 //                    fp.processFolder(trainFile.getCanonicalFile());
 //                } catch (Exception ex) {
 //                    Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
 //                }
             }
-            
+
+        } else {
+            System.out.println("File access cancelled by user.");
         }
-        else {
-             System.out.println("File access cancelled by user.");
-        }
-        
+
     }//GEN-LAST:event_trainSetSelectButtonActionPerformed
 
     private void testSetSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testSetSelectButtonActionPerformed
@@ -276,7 +290,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
         JFileChooser chooseTestData = new JFileChooser();
         chooseTestData.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         //chooser2.showOpenDialog(null);
-        if (lastPath != null){
+        if (lastPath != null) {
             chooseTestData.setCurrentDirectory(lastPath);
         }
         int returnVal = chooseTestData.showOpenDialog(this);
@@ -285,27 +299,25 @@ public class DirectoryChooser extends javax.swing.JFrame {
             testFile = chooseTestData.getSelectedFile();
             //testFileName = testFile.getPath();
             testDatasetField.setText(testFile.getPath());
-            if(!testFile.isDirectory()){
+            if (!testFile.isDirectory()) {
                 fp.getFileExtension(testFile.getPath());
-            try {
-                System.out.println("Test Data Exists");
-                //fp.testFileEntry(testFile);
-                //fp = new BigDataClassifier.FileTypeEnablerAndProcessor(testFileName); 
-                System.out.println("=====================This is a List of the Attributes in the test dataset===================== " 
-                        + "\n" + fp.showSummary(testFile) );
-            } catch (IOException ex) {
-                System.out.println("Problem accessing file "+testFile.getAbsolutePath());
-                Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    System.out.println("Test Data Exists");
+                    //fp.testFileEntry(testFile);
+                    //fp = new BigDataClassifier.FileTypeEnablerAndProcessor(testFileName); 
+                    System.out.println("=====================This is a List of the Attributes in the test dataset===================== "
+                            + "\n" + fp.showSummary(testFile));
+                } catch (IOException ex) {
+                    System.out.println("Problem accessing file " + testFile.getAbsolutePath());
+                    Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                System.out.println("Processing Datasets........");
             }
-            }
-            else{
-                System.out.println("Ready to Process datasets, please click the button to build model.....");
-            }
+        } else {
+            System.out.println("File access cancelled by user.");
         }
-        else{
-             System.out.println("File access cancelled by user.");
-        }
-        
+
     }//GEN-LAST:event_testSetSelectButtonActionPerformed
 
     private void selectClassLabelTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectClassLabelTextActionPerformed
@@ -315,43 +327,42 @@ public class DirectoryChooser extends javax.swing.JFrame {
     private void modelBuildProceedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modelBuildProceedButtonActionPerformed
         // TODO add your handling code here:
         //BigDataClassifier.FileTypeEnablerAndProcessor enabler = null; 
-        if (event.getActionCommand().equalsIgnoreCase("Train Dataset")){
-                //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
-                //fp.setClassIndex(-1);
-                System.out.println("FP class index = " + fp.getClassIndex());
-                System.out.println("chooser class index = " + classLabelMenu.getSelectedIndex());
-                if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
-                    try {
-                        System.out.println("Class index was not selected");
-                        //fp.setClassIndex(fp.getClassIndex());
-                        fp.setClassIndex(classLabelMenu.getSelectedIndex());
-                        fp.fileEntry(trainFile);
-                    } catch (Exception ex) {
-                        Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    try {
-                        //this.classLabelMenuActionPerformed(evt);
-                        fp.setClassIndex(classLabelMenu.getSelectedIndex());
-                        //fp.setClassIndex(classLabelMenu.getComponentCount());
-                        fp.fileEntry(trainFile);
-                    } catch (Exception ex) {
-                        Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+        if (event.getActionCommand().equalsIgnoreCase("Train Dataset")) {
+            //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
+            //fp.setClassIndex(-1);
+            System.out.println("FP class index = " + fp.getClassIndex());
+            System.out.println("chooser class index = " + classLabelMenu.getSelectedIndex());
+            if (classLabelMenu.getSelectedIndex() != (fp.getClassIndex())) {
+                try {
+                    System.out.println("Class index was not selected");
+                    //fp.setClassIndex(fp.getClassIndex());
+                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                    fp.fileEntry(trainFile);
+                } catch (Exception ex) {
+                    Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            } else {
+                try {
+                    //this.classLabelMenuActionPerformed(evt);
+                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                    //fp.setClassIndex(classLabelMenu.getComponentCount());
+                    fp.fileEntry(trainFile);
+                } catch (Exception ex) {
+                    Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
 //                fp.fileEntry(trainSetTextfield.getText());
-            
-        }
-        else{
+
+        } else {
 //            if (!trainSetTextfield.getText().isEmpty() &&
 //                !testDatasetField.getText().isEmpty() &&
 //                classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())) {
-            
+
             System.out.println("ClASSINDX === " + classLabelMenu.getSelectedIndex());
             //start the file type enabler and processor class
             try {
                 fp.setClassIndex(classLabelMenu.getSelectedIndex());
-                fp.testFileEntry(testFile,trainFile);
+                fp.testFileEntry(testFile, trainFile);
                 //fp.fileEntry(trainFile);
             } catch (Exception ex) {
                 Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
@@ -367,71 +378,68 @@ public class DirectoryChooser extends javax.swing.JFrame {
 //        int index = classLabelMenu.getSelectedIndex();
 //        return index;
 //    }
-    
+
     private void classLabelMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_classLabelMenuActionPerformed
         // TODO add your handling code here:
 //        src.BigDataClassifier.FileTypeEnablerAndProcessor enabler 
 //                = new src.BigDataClassifier.FileTypeEnablerAndProcessor();
         //get selected item as an index
-        if(classLabelMenu.getAction()==null){
+        if (classLabelMenu.getAction() == null) {
             classLabelMenu.setSelectedIndex(classLabelMenu.getSelectedIndex());
             fp.setClassIndex(classLabelMenu.getSelectedIndex());
         } else {
             System.out.println("No Action of selecting class index performed");
-        }  
+        }
     }//GEN-LAST:event_classLabelMenuActionPerformed
 
     private void predictButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_predictButtonActionPerformed
-            // TODO add your handling code here:
-            //System.out.println("Predict button is working");
-            //ce.setPredictions();
-            //start the file type enabler and processor class
-            try {
-                //System.out.println("enabler class index = " + fp.getClassIndex());
+        // TODO add your handling code here:
+        //System.out.println("Predict button is working");
+        //ce.setPredictions();
+        //start the file type enabler and processor class
+        try {
+            //System.out.println("enabler class index = " + fp.getClassIndex());
 //                if (classLabelMenu.getSelectedIndex()!=(fp.getClassIndex())){
 //                    //this.classLabelMenuActionPerformed(evt);
 //                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
 //                } else {
 //                    System.out.println("Class index was not selected");
 //                }
-                 fp.showPredictions();
-                //fp.setClassIndex(classLabelMenu.getSelectedIndex());
-                //fp.testFileEntry(testFile,trainFile);
-                //fp.fileEntry(trainFile);
-            } catch (Exception ex) {
-                Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            fp.showPredictions();
+            //fp.setClassIndex(classLabelMenu.getSelectedIndex());
+            //fp.testFileEntry(testFile,trainFile);
+            //fp.fileEntry(trainFile);
+        } catch (Exception ex) {
+            Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_predictButtonActionPerformed
     String txt;
-    
+
     private void updateTextArea(String txt) {
-  SwingUtilities.invokeLater(new Runnable() {
-    @Override
-    public void run() {
-            if(txt.contains("<b>")){
-                for (String s : txt.split("\n")){
-                    if(s.contains("<b>"))
-                    {
-                        s = s.replaceAll("<b>", "");
-                        s = s.replace("</b>", "");
-                        appendToPane(jTextPane1, s+"\n", Color.RED);
-                        
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (txt.contains("<b>")) {
+                    for (String s : txt.split("\n")) {
+                        if (s.contains("<b>")) {
+                            s = s.replaceAll("<b>", "");
+                            s = s.replace("</b>", "");
+                            appendToPane(jTextPane1, s + "\n", Color.RED);
+
+                        } else {
+                            appendToPane(jTextPane1, s + "\n", Color.BLACK);
+                        }
                     }
-                    else{
-                         appendToPane(jTextPane1, s+"\n", Color.BLACK);
-                    }
+                } else {
+                    appendToPane(jTextPane1, txt, Color.BLACK);
                 }
             }
-            else
-                appendToPane(jTextPane1, txt, Color.BLACK);
-        }
-       //jTextPane1.addStyle(text, style).setText(text);
+            //jTextPane1.addStyle(text, style).setText(text);
 //    }
-  });
-}
-  
-    private void appendToPane(JTextPane tp, String msg, Color c)
-    {
+        });
+    }
+
+    private void appendToPane(JTextPane tp, String msg, Color c) {
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
 
@@ -443,44 +451,44 @@ public class DirectoryChooser extends javax.swing.JFrame {
         tp.setCharacterAttributes(aset, false);
         tp.replaceSelection(msg);
     }
- 
+
     private void redirectSystemStreams() {
-    OutputStream out = new OutputStream() {
-    @Override
-    public void write(int b) throws IOException {
-        txt = String.valueOf((char) b);
+        OutputStream out = new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                txt = String.valueOf((char) b);
 //        if(txt.contains("<b>")){ 
 //           txt = txt.replaceAll("<b>", " ");
 //           txt = txt.replace("</b>", " ");
 //           colorRed(txt);
 //        }
 //        else{
-           updateTextArea(txt);
+                updateTextArea(txt);
 //        }
-    }
- 
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-          txt = new String(b, off, len);
+            }
+
+            @Override
+            public void write(byte[] b, int off, int len) throws IOException {
+                txt = new String(b, off, len);
 //        if(txt.contains("<b>")){ 
 //           txt = txt.replaceAll("<b>", " ");
 //           txt = txt.replace("</b>", " ");
 //           colorRed(txt);
 //        }
 //        else{
-           updateTextArea(txt);
+                updateTextArea(txt);
 //        }
+            }
+
+            @Override
+            public void write(byte[] b) throws IOException {
+                write(b, 0, b.length);
+            }
+        };
+
+        System.setOut(new PrintStream(out, true));
+        System.setErr(new PrintStream(out, true));
     }
- 
-    @Override
-    public void write(byte[] b) throws IOException {
-      write(b, 0, b.length);
-    }
-  };
- 
-  System.setOut(new PrintStream(out, true));
-  System.setErr(new PrintStream(out, true));
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> classLabelMenu;
