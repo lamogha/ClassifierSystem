@@ -241,7 +241,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
             trainFile = chooseTrainData.getSelectedFile();
             trainFileName = trainFile.getPath();
             String ext = fp.getFileExtension(trainFileName);
-            System.out.println("file Extension ===: " + ext);
+            //System.out.println("file Extension ===: " + ext);
             lastPath = trainFile.getParentFile();
             trainSetTextfield.setText(trainFile.getPath());
             //fp = new BigDataClassifier.FileTypeEnablerAndProcessor();
@@ -263,8 +263,8 @@ public class DirectoryChooser extends javax.swing.JFrame {
                         Object[] obj = items.toArray();
                         classLabelMenu.setModel(new DefaultComboBoxModel(obj));
 //                      jComboBox1.setSelectedIndex(jComboBox1.getItemCount()-1);
-                        System.out.println("problem accessing file " + trainFile.getAbsolutePath());
                     } catch (IOException ex) {
+                        System.out.println("problem accessing file " + trainFile.getAbsolutePath());
                         Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -336,7 +336,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
                 try {
                     System.out.println("Class index was not selected");
                     //fp.setClassIndex(fp.getClassIndex());
-                    fp.setClassIndex(classLabelMenu.getSelectedIndex());
+                    //fp.setClassIndex(classLabelMenu.getSelectedIndex());
                     fp.fileEntry(trainFile);
                 } catch (Exception ex) {
                     Logger.getLogger(DirectoryChooser.class.getName()).log(Level.SEVERE, null, ex);
@@ -369,7 +369,7 @@ public class DirectoryChooser extends javax.swing.JFrame {
 //            }
             }
         }
-        //fp.setClassIndex(-1);
+        fp.setClassIndex(-1);
     }//GEN-LAST:event_modelBuildProceedButtonActionPerformed
 
 //    public int getSelectedClassIndex(){

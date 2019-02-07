@@ -133,8 +133,8 @@ public class ClassEvaluator {
             try {
                 classifierModel = sc.useRandomForest(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("Random Forest used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> Random Forest used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -144,8 +144,8 @@ public class ClassEvaluator {
             try {
                 classifierModel = sc.useJ48(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("J48 used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> J48 used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -156,8 +156,8 @@ public class ClassEvaluator {
             try {
                 classifierModel = sc.useRandomForest(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("Random Forest used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> Random Forest used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -167,8 +167,8 @@ public class ClassEvaluator {
             try {
                 classifierModel = sc.useNaiveBayes(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("Naive Bayes used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> Naive Bayes used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -178,15 +178,15 @@ public class ClassEvaluator {
             try {
                 classifierModel = sc.useSGD(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("SGD used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> SGD used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                 try {
                     classifierModel = sc.useAutoWeka(trainData, classIndex);
                     this.evaluatorClassifier(trainData, testData, classifierModel);
-                    System.out.println("AutoWEKA engaged" + "\n"
-                            + "-------------------------------------------------------");
+                    System.out.println(String.format("<b> AutoWEKA Engaged used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
                 } catch (Exception ex1) {
                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex1);
                 }
@@ -198,8 +198,8 @@ public class ClassEvaluator {
             try {
                 classifierModel = sc.useRandomForest(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("Random Forest Used used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> Random Forest used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -223,8 +223,8 @@ public class ClassEvaluator {
             try {
                 classifierModel = sc.useNaiveBayes(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("Naive Bayes Used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> Naive Bayes used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -236,15 +236,15 @@ public class ClassEvaluator {
             try {
                 classifierModel = sc.useSGD(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("SGD Used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> SGD used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                  try {
                     classifierModel = sc.useAutoWeka(trainData, classIndex);
                     this.evaluatorClassifier(trainData, testData, classifierModel);
-                    System.out.println("AutoWEKA engaged" + "\n"
-                            + "-------------------------------------------------------");
+                    System.out.println(String.format("<b> AutoWEKA Engaged used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
                 } catch (Exception ex1) {
                     Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex1);
                 }
@@ -292,8 +292,8 @@ public class ClassEvaluator {
             try {
                 classifierModel = sc.useNaiveBayes(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("Naive Bayes used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> Naive Bayes used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -304,8 +304,8 @@ public class ClassEvaluator {
                 classifierModel = sc.useRandomForest(trainData, classIndex);
                 //classifierModel = sc.useAutoWeka(trainData, classIndex);
                 this.evaluatorClassifier(trainData, testData, classifierModel);
-                System.out.println("RandomForest used" + "\n"
-                        + "-------------------------------------------------------");
+                System.out.println(String.format("<b> Random Forest used </b>" + "\n"
+                        + "<b> -------------------------------------------------------</b>", 0));
             } catch (Exception ex) {
                 Logger.getLogger(ClassEvaluator.class.getName()).log(Level.SEVERE, null, ex);
             }
