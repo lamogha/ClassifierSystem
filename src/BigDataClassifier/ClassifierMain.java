@@ -6,6 +6,7 @@
 package BigDataClassifier;
 
 import BigDataClassifier.DirectoryChooser;
+import weka.core.Utils;
 
 /**
  *Starts the processing of the dataset to be classified or clustered
@@ -42,6 +43,7 @@ public class ClassifierMain {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new DirectoryChooser().setVisible(true);
+            //System.out.println("\n==========Total System build time is==========: " + System.currentTimeMillis());
         });
         
         /*call the FileTypeEnablerAndProcessor class*/

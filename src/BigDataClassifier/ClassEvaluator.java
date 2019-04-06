@@ -359,7 +359,7 @@ public class ClassEvaluator {
         testDataset.setClassIndex(classIndex);
         eval = new Evaluation(trainDataset);
         eval.evaluateModel(cs, testDataset);
-        System.out.println(eval.toSummaryString("Evaluation results:\n", false));
+        System.out.println(eval.toSummaryString("\nEvaluation results:\n", false));
         
         if (testDataset.classAttribute().isNominal()) {
             System.out.println(eval.areaUnderROC(NOMINAL));

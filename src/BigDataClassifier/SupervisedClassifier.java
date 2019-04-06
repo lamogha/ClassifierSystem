@@ -40,6 +40,7 @@ import weka.classifiers.meta.MultiClassClassifier;
 import weka.classifiers.pmml.consumer.NeuralNetwork;
 import weka.classifiers.pmml.consumer.PMMLClassifier;
 import weka.classifiers.meta.AutoWEKAClassifier;
+import weka.core.Utils;
 
 /**
  *
@@ -66,7 +67,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         NaiveBayes nb = new NaiveBayes();
+        long starttime = System.currentTimeMillis();
         nb.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return nb;
         // System.out.println(nb.distributionForInstance(dataset.instance(15)));
         // System.out.println(nb.getCapabilities().toString());
@@ -76,7 +81,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         SGD sgd = new SGD();
+        long starttime = System.currentTimeMillis();
         sgd.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return sgd;
     }
 
@@ -84,7 +93,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         J48 j48 = new J48();
+        long starttime = System.currentTimeMillis();
         j48.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return j48;
     }
 
@@ -92,7 +105,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         ZeroR zeroR = new ZeroR();
+        long starttime = System.currentTimeMillis();
         zeroR.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return zeroR;
     }
 
@@ -100,7 +117,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         RandomForest randomForest = new RandomForest();
+        long starttime = System.currentTimeMillis();
         randomForest.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return randomForest;
     }
 
@@ -114,7 +135,11 @@ public class SupervisedClassifier {
             new J48(), new NaiveBayes(), new RandomForest()
         };
         stacker.setClassifiers(classifiers);
+        long starttime = System.currentTimeMillis();
         stacker.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return stacker;
     }
 
@@ -123,7 +148,11 @@ public class SupervisedClassifier {
         dataset.setClassIndex(classIndex);
         Bagging bagger = new Bagging();
         bagger.setClassifier(new REPTree());
+        long starttime = System.currentTimeMillis();
         bagger.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return bagger;
     }
 
@@ -133,7 +162,11 @@ public class SupervisedClassifier {
         AdaBoostM1 m1 = new AdaBoostM1();
         m1.setClassifier(new DecisionStump());
         m1.setNumIterations(classIndex + 1);
+        long starttime = System.currentTimeMillis();
         m1.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return m1;
     }
 
@@ -142,7 +175,11 @@ public class SupervisedClassifier {
         dataset.setClassIndex(classIndex);
         LWL lwl = new LWL();
         lwl.setClassifier(new DecisionStump());
+        long starttime = System.currentTimeMillis();
         lwl.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return lwl;
     }
 
@@ -152,7 +189,11 @@ public class SupervisedClassifier {
         AttributeSelectedClassifier attSelClass = new AttributeSelectedClassifier();
         attSelClass.setSearch(new BestFirst());
         attSelClass.setClassifier(new J48());
+        long starttime = System.currentTimeMillis();
         attSelClass.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return attSelClass;
     }
 
@@ -162,7 +203,11 @@ public class SupervisedClassifier {
         AttributeSelectedClassifier attSelClass = new AttributeSelectedClassifier();
         attSelClass.setSearch(new GreedyStepwise());
         attSelClass.setClassifier(new J48());
+        long starttime = System.currentTimeMillis();
         attSelClass.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return attSelClass;
     }
 
@@ -172,7 +217,11 @@ public class SupervisedClassifier {
         AttributeSelectedClassifier attSelClass = new AttributeSelectedClassifier();
         attSelClass.setSearch(new BestFirst());
         attSelClass.setClassifier(new NaiveBayes());
+        long starttime = System.currentTimeMillis();
         attSelClass.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return attSelClass;
     }
 
@@ -182,7 +231,11 @@ public class SupervisedClassifier {
         AttributeSelectedClassifier attSelClass = new AttributeSelectedClassifier();
         attSelClass.setSearch(new BestFirst());
         attSelClass.setClassifier(new RandomForest());
+        long starttime = System.currentTimeMillis();
         attSelClass.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return attSelClass;
     }
 
@@ -192,7 +245,11 @@ public class SupervisedClassifier {
         AttributeSelectedClassifier attSelClass = new AttributeSelectedClassifier();
         attSelClass.setSearch(new BestFirst());
         attSelClass.setClassifier(new ZeroR());
+        long starttime = System.currentTimeMillis();
         attSelClass.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return attSelClass;
     }
 
@@ -201,7 +258,11 @@ public class SupervisedClassifier {
         dataset.setClassIndex(classIndex);
         RandomSubSpace randomSub = new RandomSubSpace();
         randomSub.setClassifier(new REPTree());
+        long starttime = System.currentTimeMillis();
         randomSub.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return randomSub;
     }
 
@@ -209,7 +270,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         LinearRegression lr = new LinearRegression();
+        long starttime = System.currentTimeMillis();
         lr.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return lr;
     }
 
@@ -217,7 +282,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         LibSVM libSVM = new LibSVM();
+        long starttime = System.currentTimeMillis();
         libSVM.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return libSVM;
     }
 
@@ -225,7 +294,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         MultilayerPerceptron multiPercep = new MultilayerPerceptron();
+        long starttime = System.currentTimeMillis();
         multiPercep.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return multiPercep;
     }
 
@@ -233,7 +306,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         REPTree repTree = new REPTree();
+        long starttime = System.currentTimeMillis();
         repTree.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return repTree;
     }
 
@@ -241,7 +318,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         KStar kStar = new KStar();
+        long starttime = System.currentTimeMillis();
         kStar.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return kStar;
     }
 
@@ -249,7 +330,11 @@ public class SupervisedClassifier {
 
         dataset.setClassIndex(classIndex);
         Dl4jMlpClassifier dl4j = new Dl4jMlpClassifier();
+        long starttime = System.currentTimeMillis();
         dl4j.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return dl4j;
     }
 
@@ -258,7 +343,11 @@ public class SupervisedClassifier {
         dataset.setClassIndex(classIndex);
         MultiClassClassifier mccWNB = new MultiClassClassifier();
         mccWNB.setClassifier(new NaiveBayes());
+        long starttime = System.currentTimeMillis();
         mccWNB.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return mccWNB;
     }
 
@@ -267,7 +356,11 @@ public class SupervisedClassifier {
         dataset.setClassIndex(classIndex);
         MultiClassClassifier mccWNB = new MultiClassClassifier();
         mccWNB.setClassifier(new SGD());
+        long starttime = System.currentTimeMillis();
         mccWNB.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return mccWNB;
     }
 
@@ -276,7 +369,11 @@ public class SupervisedClassifier {
         dataset.setClassIndex(classIndex);
         MultiClassClassifier mccWNB = new MultiClassClassifier();
         mccWNB.setClassifier(new J48());
+        long starttime = System.currentTimeMillis();
         mccWNB.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return mccWNB;
     }
 
@@ -285,14 +382,22 @@ public class SupervisedClassifier {
         dataset.setClassIndex(classIndex);
         MultiClassClassifier mccWNB = new MultiClassClassifier();
         mccWNB.setClassifier(new RandomForest());
+        long starttime = System.currentTimeMillis();
         mccWNB.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return mccWNB;
     }
     
     public Classifier useAutoWeka(Instances dataset, int classIndex) throws Exception{
         dataset.setClassIndex(classIndex);
         AutoWEKAClassifier autoW = new AutoWEKAClassifier();
+        long starttime = System.currentTimeMillis();
         autoW.buildClassifier(dataset);
+        long stoptime = System.currentTimeMillis();
+        long elapsedtime = stoptime - starttime;
+        System.out.println("\nTime taken to build model: " + Utils.doubleToString(elapsedtime / 1000.0, 2) + " seconds\n");
         return autoW;
     }
     /**
